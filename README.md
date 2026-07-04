@@ -80,7 +80,7 @@ Canonical targets are **pure prerequisite aggregators** (no recipe), so a repo e
 ## Go developer tools
 
 The pinned Go CLIs (`addlicense`, `golangci-lint`, `govulncheck`, `gotestsum`, `gocover-cobertura`, `goreleaser`,
-`syft`, `tflint`, `terraform-docs`, `actionlint`) are **not** vendored through a `tools/go.mod`. `go tool` management is
+`syft`, `tflint`, `terraform-docs`, `actionlint`, `evolve`) are **not** vendored through a `tools/go.mod`. `go tool` management is
 deliberately avoided — golangci-lint in particular breaks under it and its maintainers document that as unsupported.
 Instead:
 

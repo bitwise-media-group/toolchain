@@ -55,6 +55,9 @@ $(eval $(call gotool,syft,github.com/anchore/syft/cmd/syft))
 $(eval $(call gotool,tflint,github.com/terraform-linters/tflint))
 $(eval $(call gotool,terraform-docs,github.com/terraform-docs/terraform-docs))
 $(eval $(call gotool,actionlint,github.com/rhysd/actionlint/cmd/actionlint))
+# evolve — the org's first-party skill-evaluation CLI (bitwise-media-group/evolve),
+# used by the skills repo's lint/test/triggers/evals targets. Pinned like the rest.
+$(eval $(call gotool,evolve,github.com/bitwise-media-group/evolve/cmd/evolve))
 
 # Invocation variables: use these as both a recipe command and a prerequisite, e.g.
 #   license: $(ADDLICENSE) ; @ $(ADDLICENSE) ... .
@@ -68,6 +71,7 @@ SYFT              := $(TOOLS_BIN)/syft
 TFLINT            := $(TOOLS_BIN)/tflint
 TERRAFORM_DOCS    := $(TOOLS_BIN)/terraform-docs
 ACTIONLINT        := $(TOOLS_BIN)/actionlint
+EVOLVE            := $(TOOLS_BIN)/evolve
 
 # Lint the repo's GitHub Actions workflows (no-op where there are none).
 .PHONY: actionlint
