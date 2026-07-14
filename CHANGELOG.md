@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.1](https://github.com/bitwise-media-group/toolchain/compare/v2.1.0...v2.1.1) (2026-07-14)
+
+
+### Bug Fixes
+
+* **deps:** update pinned tool versions ([2f08192](https://github.com/bitwise-media-group/toolchain/commit/2f08192e041c7dc5c60ae1cc1aa7b22f0000d978))
+
 ## [2.1.0](https://github.com/bitwise-media-group/toolchain/compare/v2.0.0...v2.1.0) (2026-07-14)
 
 
