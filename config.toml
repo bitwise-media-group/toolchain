@@ -60,11 +60,11 @@ npm.package_manager = "npm"
 
 [tools]
 go = "1.26.5"
-"node" = "24.18.0"
+node = "26.4.0"
 "aqua:anchore/grype" = "0.115.0"
-"aqua:anchore/syft" = "1.45.1"
+"aqua:anchore/syft" = "1.46.0"
 "aqua:golangci/golangci-lint" = "2.12.2"
-"aqua:goreleaser/goreleaser" = "2.16.0"
+"aqua:goreleaser/goreleaser" = "2.17.0"
 "aqua:gotestyourself/gotestsum" = "1.13.0"
 "aqua:hadolint/hadolint" = "2.14.0"
 "aqua:hashicorp/terraform" = "1.15.7"
@@ -75,11 +75,11 @@ go = "1.26.5"
 "aqua:terraform-docs/terraform-docs" = "0.24.0"
 "aqua:terraform-linters/tflint" = "0.63.1"
 "github:bitwise-media-group/dotty" = "0.1.1"
-"github:bitwise-media-group/evolve" = "0.5.0"
+"github:bitwise-media-group/evolve" = "0.5.1"
 "github:google/addlicense" = "1.2.0"
-"go:golang.org/x/vuln/cmd/govulncheck" = "1.3.0"
-"npm:markdownlint-cli2" = "0.22.1"
-"npm:prettier" = "3.8.5"
+"go:golang.org/x/vuln/cmd/govulncheck" = "1.5.0"
+"npm:markdownlint-cli2" = "0.23.0"
+"npm:prettier" = "3.9.4"
 
 # Structural per-repo knobs, referenced as {{vars.name}} in the task files.
 # Consumers override them in their root mise.toml [vars] (higher precedence).
@@ -220,4 +220,8 @@ run = "./.mise/hack/lint-shell.sh"
 # The composite every archetype's `lint` carries.
 [tasks.lint-containers]
 hide = true
-run = [{ task = "lint-docker" }, { task = "lint-helm" }, { task = "lint-kustomize" }]
+run = [
+  { task = "lint-docker" },
+  { task = "lint-helm" },
+  { task = "lint-kustomize" }
+]
