@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.0](https://github.com/bitwise-media-group/toolchain/compare/v2.2.0...v2.3.0) (2026-07-19)
+
+
+### Features
+
+* add uv, python, and cosign to the mise toolchain ([173fa1c](https://github.com/bitwise-media-group/toolchain/commit/173fa1c6866264d6af3071a7f56284c6221b1aab))
+
 ## [2.2.0](https://github.com/bitwise-media-group/toolchain/compare/v2.1.2...v2.2.0) (2026-07-19)
 
 
