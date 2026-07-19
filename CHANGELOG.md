@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.0](https://github.com/bitwise-media-group/toolchain/compare/v2.1.2...v2.2.0) (2026-07-19)
+
+
+### Features
+
+* task-scope dotty and evolve; add the agent-plugins archetype ([f83ca51](https://github.com/bitwise-media-group/toolchain/commit/f83ca51185cc8651247af7d322219bef52759e8e))
+
 ## [2.1.2](https://github.com/bitwise-media-group/toolchain/compare/v2.1.1...v2.1.2) (2026-07-14)
 
 
