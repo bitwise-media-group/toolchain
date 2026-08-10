@@ -53,7 +53,7 @@ jobs:
         # keep the token so `git push` can update the branch below
 
       - name: Set up mise
-        uses: jdx/mise-action@e6a8b3978addb5a52f2b4cd9d91eafa7f0ab959d # v4.2.0
+        uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
         with:
           version: 2026.7.3
           # sha256 of the mise-v2026.7.3-linux-x64 binary, from the release's
