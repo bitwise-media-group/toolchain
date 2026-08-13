@@ -100,11 +100,11 @@ precedes `lint` inside `pr`.
 
 Every tool (`addlicense`, `golangci-lint`, `govulncheck`, `gotestsum`, `goreleaser`, `syft`, `grype`, `hadolint`,
 `helm`, `kubescape`, `shellcheck`, `terraform`, `tflint`, `terraform-docs`, `actionlint`, `prettier`,
-`markdownlint-cli2`) is pinned in `config.toml` with per-platform sha256 checksums (and, where the publisher provides
-it, cosign/SLSA/GitHub-attestation provenance) locked in `mise.lock`. Tasks run with the pinned tools already on PATH —
-there is no `.bin/`, no `tools/go.mod`, no `package.json` for linters, and no tool-path plumbing anywhere. mise installs
-a tool into its shared per-machine store the first time a task needs it (verifying the checksum) and reuses it across
-every repo.
+`markdownlint-cli2`) floats on `"latest"` in `config.toml` (`node` on `"lts"`) with the real pin — exact version plus
+per-platform sha256 checksums (and, where the publisher provides it, cosign/SLSA/GitHub-attestation provenance) — locked
+in `mise.lock`. Tasks run with the pinned tools already on PATH — there is no `.bin/`, no `tools/go.mod`, no
+`package.json` for linters, and no tool-path plumbing anywhere. mise installs a tool into its shared per-machine store
+the first time a task needs it (verifying the checksum) and reuses it across every repo.
 
 `dotty` and `evolve` are the exception: first-party CLIs, **task-scoped** (a `tools` map on just the tasks that run
 them) rather than pinned in `[tools]`, so the mise-installed copy never shadows a locally installed one on the activated
@@ -114,19 +114,23 @@ wrapper, which engages dotty only when the module directory has a `.env.dotty`; 
 plugin/marketplace repo, so only the `agent-plugins` archetype carries it — its `lint`/`test` gates and eval tasks
 (`triggers`, `evals`, `all`, `report`) read the repo's `.evolve.{yaml,json,jsonc}`.
 
-- The tooling runtimes themselves are pins (`go`, `node`), provisioned by mise — no system Go or Node is needed.
-- Bumping a tool for the **whole fleet** is one commit here (the daily updater below, or a hand-edit of `config.toml` +
-  `mise lock`) plus a submodule bump in the consumers.
+- The tooling runtimes themselves are locked too (`go`, `node`), provisioned by mise — no system Go or Node is needed.
+- Bumping a tool for the **whole fleet** is one commit here (the daily updater below, or `mise lock --bump` by hand)
+  plus a submodule bump in the consumers.
 - A repo can override a tool version (or add tools) in its root `mise.toml [tools]` — the root config wins.
 - **Never run `mise lock` or `mise upgrade` in a consumer repo**: the lockfile lives in this library, so a consumer-side
   re-lock writes into the submodule working tree.
 
 Consuming repos should keep `coverage/` (and `node_modules/`) in `.gitignore`; `.bin/` is no longer created.
 
-Dependabot has no mise ecosystem, so `.github/workflows/update-tools.yaml` replaces it: it runs `mise upgrade --bump`
-daily, which honours `minimum_release_age = "7d"` — a release must be at least 7 days old before it is adopted, a
-Dependabot-style cooldown — re-locks the checksums with `mise lock`, and opens a single `fix(deps):` PR. Run it by hand
-with `mise upgrade --bump && mise lock` in this directory (or `mise outdated` to just report).
+Dependabot has no mise ecosystem, so `.github/workflows/update-tools.yaml` replaces it — a thin caller of the reusable
+`update-tools.yaml` in [`github-workflows`](https://github.com/bitwise-media-group/github-workflows), reused by any repo
+with separately locked repo-local tools. It runs `mise lock --bump` daily, which re-resolves the `"latest"`/`"lts"`
+selectors against releases at least 7 days old (`minimum_release_age = "7d"`, a Dependabot-style cooldown) and rewrites
+`mise.lock` only — `config.toml` is never modified — then opens a single `fix(deps):` PR. Run it by hand with
+`mise lock --bump` in this directory (or `mise lock --bump --dry-run --json` to just report). Note that unauthenticated
+GitHub API calls can silently drop lockfile entries — set `GITHUB_TOKEN` (e.g. `GITHUB_TOKEN="$(gh auth token)"`) when
+running it by hand.
 
 ## Knobs
 
