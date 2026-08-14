@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.4.0](https://github.com/bitwise-media-group/toolchain/compare/v2.3.0...v2.4.0) (2026-08-14)
+
+
+### Features
+
+* fold the skills repo's plugin lint extras into agent-plugins ([41208d9](https://github.com/bitwise-media-group/toolchain/commit/41208d99aab8876a94611aa15299ea04c1a4385b))
+* **tools:** float [tools] on latest/lts selectors pinned by mise.lock ([a413ff8](https://github.com/bitwise-media-group/toolchain/commit/a413ff850e141c441e8087dc7abfc5c484c527f3))
+
 ## [2.3.0](https://github.com/bitwise-media-group/toolchain/compare/v2.2.0...v2.3.0) (2026-07-19)
 
 
