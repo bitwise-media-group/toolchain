@@ -5,9 +5,6 @@ lint/license policy — with a thin Makefile shim on top. Each repo consumes thi
 `.mise/` (bumped by Dependabot's `gitsubmodule` ecosystem) and reduces its own `Makefile` to one include and its own
 mise config to a few lines. (Formerly named `make`, from its Makefile-fragment era; GitHub redirects the old URL.)
 
-See [RECOMMENDATION.md](RECOMMENDATION.md) for the original design rationale and the per-repo migration map (its
-Makefile-fragment mechanics are superseded by the mise-task layout described here).
-
 ## Layout
 
 ```text
