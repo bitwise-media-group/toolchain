@@ -1,0 +1,35 @@
+# Copyright 2026 BitWise Media Group Ltd
+# SPDX-License-Identifier: MIT
+
+# Thin caller for the reusable security analysis. It owns the triggers and grants
+# the analyze permissions; the reusable workflow detects languages at the repo
+# root. This repo has no root go.mod or package.json, so the matrix is just
+# `actions` (build-free CodeQL over the GitHub Actions workflows). Dropping a
+# zizmor.yml at the root (or under .github/) would additionally opt the actions
+# leg into zizmor.
+#
+# Pinned to a full commit SHA (tag in the comment); Dependabot keeps it fresh.
+name: Security Analysis
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: ["main", "releases/*"]
+  schedule:
+    - cron: "28 20 * * 4"
+
+# ceiling for the reusable workflow's analyze job
+permissions:
+  # upload analysis results to code scanning
+  security-events: write
+  # fetch internal or private CodeQL packs
+  packages: read
+  # only required for workflows in private repositories
+  actions: read
+  # check out the repository
+  contents: read
+
+jobs:
+  analyze:
+    uses: bitwise-media-group/github-workflows/.github/workflows/security.yaml@b9c031429f149794bedb5411b08d5a787b8d9959 # v6.0.1
