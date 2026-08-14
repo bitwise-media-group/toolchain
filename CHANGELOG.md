@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.4.1](https://github.com/bitwise-media-group/toolchain/compare/v2.4.0...v2.4.1) (2026-08-14)
+
+
+### Bug Fixes
+
+* **deps:** update dependency aqua:anchore/grype to v0.117.0 ([#42](https://github.com/bitwise-media-group/toolchain/issues/42)) ([da0437c](https://github.com/bitwise-media-group/toolchain/commit/da0437c01597aaec45cefb9109d6232bfc7253ca))
+* **deps:** update dependency aqua:anchore/syft to v1.51.0 ([#44](https://github.com/bitwise-media-group/toolchain/issues/44)) ([5580c5e](https://github.com/bitwise-media-group/toolchain/commit/5580c5e48d96f2b3d9bfce4d70fb00592130a322))
+* **deps:** update dependency aqua:astral-sh/uv to v0.12.3 ([#41](https://github.com/bitwise-media-group/toolchain/issues/41)) ([9a89a6f](https://github.com/bitwise-media-group/toolchain/commit/9a89a6f3d48c2930396ae6a2fe0361fe63adacdc))
+
 ## [2.4.0](https://github.com/bitwise-media-group/toolchain/compare/v2.3.0...v2.4.0) (2026-08-14)
 
 
