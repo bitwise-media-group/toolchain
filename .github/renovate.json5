@@ -1,0 +1,30 @@
+// Copyright 2026 BitWise Media Group Ltd
+// SPDX-License-Identifier: MIT
+
+// Repo layer on top of the shared org preset (renovate-config:default.json5),
+// covering what only this repo needs:
+//
+//   - The fleet's tool pins live in a ROOT-level config.toml (the dogfood
+//     inversion: consumers see it as .mise/config.toml, which the preset's
+//     ignorePaths excludes). The mise manager's default file patterns only
+//     match mise.toml / */mise/config.toml, so the root file is invisible
+//     without the pattern below. managerFilePatterns is mergeable — this
+//     APPENDS to the defaults — and mise maps config.toml to the sibling
+//     mise.lock, which the bot regenerates (`mise lock`) with every pin bump.
+//
+//   - Tool bumps here ship to the whole fleet via the consumers' .mise
+//     submodule, so they land as fix(deps) (overriding the preset's
+//     chore(deps) default) and release-please cuts a patch release.
+//
+//   - This repo's own workflow callers are CI plumbing, not library content:
+//     actions bumps land as release-please-ignored `ci` (the preset's
+//     org-wide fix(deps) is for github-workflows, where the workflows ARE
+//     the shipped product) — the same split the old dependabot.yaml made.
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  mise: { managerFilePatterns: ["config.toml"] },
+  packageRules: [
+    { matchManagers: ["mise"], semanticCommitType: "fix" },
+    { matchManagers: ["github-actions"], semanticCommitType: "ci" },
+  ],
+}

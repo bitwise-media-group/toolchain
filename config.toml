@@ -30,9 +30,9 @@
 # prettier and markdownlint-cli2 are npm packages with no standalone binaries, so
 # they install from the npm registry (npm: backend) using the Node runtime pinned
 # below — again provisioned by mise, so repos need no package.json just to lint
-# prose. Top-level versions resolve to the exact pin in mise.lock; unlike a
-# package-lock.json, transitive npm dependencies are not pinned (prettier has
-# none; markdownlint-cli2's tree is
+# prose. Top-level versions are pinned exactly here (checksums in mise.lock);
+# unlike a package-lock.json, transitive npm dependencies are not pinned
+# (prettier has none; markdownlint-cli2's tree is
 # small). mise forwards minimum_release_age into transitive resolution (npm >=
 # 11.10 --min-release-age), so even transitives can't pull a release younger than
 # the cooldown. npm.package_manager is pinned to npm because the "auto" default
@@ -72,17 +72,19 @@
 # resolving {{vars.claude_code_version}}'s "latest" honours
 # minimum_release_age like any other tool.
 #
-# Updates: every [tools] entry floats on "latest" (node on "lts") and the real
-# pin lives in mise.lock. The daily update-tools workflow runs `mise lock
-# --bump`, which re-resolves those selectors against the newest matching
-# releases and rewrites the lockfile only — config files are never modified. It
-# honours minimum_release_age below — a release must be at least 7 days old
-# before it is adopted (Dependabot-style cooldown), giving the ecosystem time to
-# flag a malicious or broken release. Bumps land as a human-reviewed PR; they
-# cover [tools] only, since the task-scoped dotty/evolve float on "latest"
-# outside the lockfile. Never run `mise lock` or `mise upgrade` in a consumer
-# repo: the lockfile lives in this library, and consumer-side writes would land
-# inside the submodule.
+# Updates: every [tools] entry is an exact pin, bumped by the org Renovate bot
+# (bitwise-media-group/renovate-config) — one PR per tool that updates the pin
+# here AND regenerates mise.lock (`mise lock`, the manager's artifact step) in
+# the same commit. The release cooldown is Renovate's minimumReleaseAge (3 days
+# org-wide, surfaced as the renovate/stability-days check against real release
+# timestamps); stable minor/patch bumps automerge, majors and 0.x wait for a
+# human. minimum_release_age below no longer gates these bumps — it still
+# guards the task-scoped "latest" tools (claude-code) and npm transitive
+# resolution. The bot finds this ROOT config.toml via .github/renovate.json5
+# (the dogfood inversion hides it from the mise manager's default file
+# patterns). Never run `mise lock` or `mise upgrade` in a consumer repo: the
+# lockfile lives in this library, and consumer-side writes would land inside
+# the submodule.
 
 [settings]
 lockfile = true
@@ -98,28 +100,28 @@ minimum_release_age_excludes = [
 npm.package_manager = "npm"
 
 [tools]
-go = "latest"
-node = "lts"
-python = "latest"
-"aqua:anchore/grype" = "latest"
-"aqua:anchore/syft" = "latest"
-"aqua:astral-sh/uv" = "latest"
-"aqua:golangci/golangci-lint" = "latest"
-"aqua:goreleaser/goreleaser" = "latest"
-"aqua:gotestyourself/gotestsum" = "latest"
-"aqua:hadolint/hadolint" = "latest"
-"aqua:hashicorp/terraform" = "latest"
-"aqua:helm/helm" = "latest"
-"aqua:koalaman/shellcheck" = "latest"
-"aqua:kubescape/kubescape" = "latest"
-"aqua:rhysd/actionlint" = "latest"
-"aqua:sigstore/cosign" = "latest"
-"aqua:terraform-docs/terraform-docs" = "latest"
-"aqua:terraform-linters/tflint" = "latest"
-"github:google/addlicense" = "latest"
-"go:golang.org/x/vuln/cmd/govulncheck" = "latest"
-"npm:markdownlint-cli2" = "latest"
-"npm:prettier" = "latest"
+go = "1.26.6"
+node = "24.19.0"
+python = "3.14.7"
+"aqua:anchore/grype" = "0.116.1"
+"aqua:anchore/syft" = "1.50.0"
+"aqua:astral-sh/uv" = "0.12.2"
+"aqua:golangci/golangci-lint" = "2.12.2"
+"aqua:goreleaser/goreleaser" = "2.17.1"
+"aqua:gotestyourself/gotestsum" = "1.13.0"
+"aqua:hadolint/hadolint" = "2.15.1"
+"aqua:hashicorp/terraform" = "1.15.8"
+"aqua:helm/helm" = "4.2.3"
+"aqua:koalaman/shellcheck" = "0.11.0"
+"aqua:kubescape/kubescape" = "4.0.11"
+"aqua:rhysd/actionlint" = "1.7.12"
+"aqua:sigstore/cosign" = "3.1.3"
+"aqua:terraform-docs/terraform-docs" = "0.24.0"
+"aqua:terraform-linters/tflint" = "0.64.0"
+"github:google/addlicense" = "1.2.0"
+"go:golang.org/x/vuln/cmd/govulncheck" = "1.6.0"
+"npm:markdownlint-cli2" = "0.23.2"
+"npm:prettier" = "3.9.6"
 
 # Structural per-repo knobs, referenced as {{vars.name}} in the task files.
 # Consumers override them in their root mise.toml [vars] (higher precedence).
