@@ -1,0 +1,31 @@
+# Copyright 2026 BitWise Media Group Ltd
+# SPDX-License-Identifier: MIT
+
+# Thin caller for the reusable add-to-project workflow. When an issue is opened
+# here it is added to the shared org "Roadmap" project, so every repo's issues
+# collect in one board. GITHUB_TOKEN cannot write an org-level project, so the
+# reusable workflow mints its own token from the "Project Sync" GitHub App; this
+# caller grants nothing.
+#
+# Org prerequisites: the "Project Sync" App (organization projects read/write,
+# issues + pull-requests read) installed on all repositories, exposed as the
+# ADD_TO_PROJECT_CLIENT_ID variable + ADD_TO_PROJECT_PRIVATE_KEY secret.
+#
+# Pinned to a full commit SHA (tag in the comment); Dependabot keeps it fresh.
+name: Add to Project
+
+on:
+  issues:
+    types: [opened]
+
+# the App token does the privileged work; the caller grants nothing
+permissions: {}
+
+jobs:
+  add:
+    uses: bitwise-media-group/github-workflows/.github/workflows/add-to-project.yaml@1eaff010e2929a3583c50ffa325690216bc70462 # v6.2.0
+    with:
+      project-url: https://github.com/orgs/bitwise-media-group/projects/1
+      app-client-id: ${{ vars.ADD_TO_PROJECT_CLIENT_ID }}
+    secrets:
+      app-private-key: ${{ secrets.ADD_TO_PROJECT_PRIVATE_KEY }}
