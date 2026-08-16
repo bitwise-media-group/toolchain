@@ -79,7 +79,7 @@
 [settings]
 lockfile = true
 locked = false
-minimum_release_age = "7d"
+minimum_release_age = "3d"
 # dotty is task-scoped on "latest" (see above): fresh resolution of latest
 # honours the cooldown, and our own same-day releases must install
 # immediately, so the exclusion outlives the tool's departure from [tools].
