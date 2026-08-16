@@ -46,21 +46,13 @@
 # shellcheck are plain release binaries (helm ships via get.helm.sh rather
 # than GitHub releases), checksum-locked like everything else.
 #
-# dotty — our own first-party CLI — is deliberately NOT in [tools]:
-# developers install and rely on a local copy, and a mise pin shadowing it on
-# every activated PATH was a recurring source of version skew. It is
-# task-scoped instead (a `tools` map on just the tasks that need it, installed
-# into the task environment without ever touching the activated PATH): the
-# terraform archetype carries it for its tf-run.sh wrapper.
-# It floats on "latest" via {{vars.dotty_version}} — a fully trusted
-# first-party supply chain, so no cooldown, no lockfile pinning, no bump PRs.
-# Two consequences of task-scoping: it is invisible to mise.lock and
-# `mise lock --bump`, and mise resolves "latest" to the newest *installed*
-# version once one exists — a machine keeps what it first installed until
-# `mise install github:bitwise-media-group/dotty@latest` refreshes it; fresh
-# machines and CI runners always resolve the true latest. A consumer that
-# needs determinism can override the version var in its root mise.toml [vars]
-# with an exact pin.
+# dotty — our own first-party CLI — is deliberately absent from [tools] and
+# never mise-installed at all: it is only ever invoked (via hack/tf-run.sh) to
+# inject secrets when a terraform module directory carries a .env.dotty, which
+# is a local-dev convenience and never present in CI. tf-run.sh checks for
+# dotty on PATH itself (falling through to an uninjected run if it's missing,
+# rather than mise provisioning — and thereby pinning/shadowing — a CLI that
+# CI never needs and every developer already has their own copy of).
 #
 # Updates: every [tools] entry is an exact pin, bumped by the org Renovate bot
 # (bitwise-media-group/renovate-config) — one PR per tool that updates the pin
@@ -80,10 +72,6 @@
 lockfile = true
 locked = false
 minimum_release_age = "3d"
-# dotty is task-scoped on "latest" (see above): fresh resolution of latest
-# honours the cooldown, and our own same-day releases must install
-# immediately, so the exclusion outlives the tool's departure from [tools].
-minimum_release_age_excludes = ["github:bitwise-media-group/dotty"]
 npm.package_manager = "npm"
 
 [tools]
@@ -132,11 +120,6 @@ version_pkg = ""
 # hack/tf-run.sh always wraps the state-touching tasks and engages dotty only
 # when the module directory carries a .env.dotty.
 terraform_binary = "terraform"
-# First-party CLI version for the task-scoped dotty tool (see the header).
-# "latest" resolves through the github: backend at first install on a
-# machine; override in a consumer's [vars] to pin an exact version for that
-# repo.
-dotty_version = "latest"
 # container/deploy lint: minimum severity that fails the gate — grype
 # --fail-on for Dockerfile base images, kubescape --severity-threshold for
 # helm charts and kustomize directories. low|medium|high|critical.

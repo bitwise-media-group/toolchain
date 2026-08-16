@@ -96,17 +96,16 @@ precedes `lint` inside `pr`.
 
 Every tool (`addlicense`, `golangci-lint`, `govulncheck`, `gotestsum`, `goreleaser`, `syft`, `grype`, `hadolint`,
 `helm`, `kubescape`, `shellcheck`, `terraform`, `tflint`, `terraform-docs`, `actionlint`, `prettier`,
-`markdownlint-cli2`) floats on `"latest"` in `config.toml` (`node` on `"lts"`) with the real pin — exact version plus
-per-platform sha256 checksums (and, where the publisher provides it, cosign/SLSA/GitHub-attestation provenance) — locked
-in `mise.lock`. Tasks run with the pinned tools already on PATH — there is no `.bin/`, no `tools/go.mod`, no
-`package.json` for linters, and no tool-path plumbing anywhere. mise installs a tool into its shared per-machine store
-the first time a task needs it (verifying the checksum) and reuses it across every repo.
+`markdownlint-cli2`) is pinned in `config.toml [tools]` — exact version plus per-platform sha256 checksums (and, where
+the publisher provides it, cosign/SLSA/GitHub-attestation provenance) — locked in `mise.lock`. Tasks run with the pinned
+tools already on PATH — there is no `.bin/`, no `tools/go.mod`, no `package.json` for linters, and no tool-path plumbing
+anywhere. mise installs a tool into its shared per-machine store the first time a task needs it (verifying the checksum)
+and reuses it across every repo.
 
-`dotty` is the exception: a first-party CLI, **task-scoped** (a `tools` map on just the tasks that run it) rather than
-pinned in `[tools]`, so the mise-installed copy never shadows a locally installed one on the activated PATH. It floats
-on `latest` (override `dotty_version` in a repo's `[vars]` to pin) and lives outside `mise.lock` — see the `config.toml`
-header for the trade-offs. The terraform archetype carries it for its `tf-run.sh` wrapper, which engages dotty only when
-the module directory has a `.env.dotty`.
+`dotty` is the exception: our own first-party CLI, never mise-installed at all. The terraform archetype's `tf-run.sh`
+wrapper invokes it only to inject secrets when a module directory carries a `.env.dotty` — a local-dev convenience
+that's never present in CI — so the wrapper checks for `dotty` on PATH itself and fails with a clear message if it's
+missing, rather than having mise provision (and thereby pin/shadow) a CLI most tasks never touch.
 
 - The tooling runtimes themselves are locked too (`go`, `node`), provisioned by mise — no system Go or Node is needed.
 - Bumping a tool for the **whole fleet** is one commit here (a Renovate PR per tool, or by hand: edit the pin in

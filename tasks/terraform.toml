@@ -11,12 +11,10 @@
 #
 # hack/tf-run.sh wraps every state-touching invocation: it injects secrets/env
 # via dotty only when the module directory carries a .env.dotty and calls the
-# binary directly otherwise (dotty fails hard with nothing to inject). dotty is
-# task-scoped (a `tools` map on each task that runs the wrapper, floating on
-# {{vars.dotty_version}} — see the library config header) rather than a global
-# pin, so it never shadows a locally installed dotty outside these tasks. It
-# still installs for these tasks even when the wrapper skips it — override the
-# tasks themselves if that ever matters.
+# binary directly otherwise (dotty fails hard with nothing to inject). dotty
+# is never mise-installed (see the library config header) — it's a local-dev
+# convenience CI never needs, so the wrapper checks for it on PATH itself
+# rather than any task carrying a `tools` map for it.
 #
 # {{vars.terraform_binary}} picks the driver: "terraform" (the shared pin) by
 # default; an OpenTofu repo sets it to "tofu" and adds the opentofu pin to its
@@ -29,7 +27,6 @@
 [init]
 description = "initialise the terraform module"
 dir = "{{cwd}}"
-tools = { "github:bitwise-media-group/dotty" = "{{vars.dotty_version}}" }
 run = "{{config_root}}/.mise/hack/tf-run.sh {{vars.terraform_binary}} init"
 
 # Backend-less init used by lint (validate needs an initialised module but no
@@ -37,19 +34,16 @@ run = "{{config_root}}/.mise/hack/tf-run.sh {{vars.terraform_binary}} init"
 [init-no-backend]
 hide = true
 dir = "{{cwd}}"
-tools = { "github:bitwise-media-group/dotty" = "{{vars.dotty_version}}" }
 run = "{{config_root}}/.mise/hack/tf-run.sh {{vars.terraform_binary}} init -backend=false -input=false"
 
 [plan]
 description = "plan infrastructure changes"
 dir = "{{cwd}}"
-tools = { "github:bitwise-media-group/dotty" = "{{vars.dotty_version}}" }
 run = "{{config_root}}/.mise/hack/tf-run.sh {{vars.terraform_binary}} plan -out=plan.tfplan"
 
 [apply]
 description = "apply infrastructure changes"
 dir = "{{cwd}}"
-tools = { "github:bitwise-media-group/dotty" = "{{vars.dotty_version}}" }
 run = [{ task = "plan" }, "{{config_root}}/.mise/hack/tf-run.sh {{vars.terraform_binary}} apply plan.tfplan"]
 
 # Auto-format pass wired into `fmt`.
