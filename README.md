@@ -23,7 +23,6 @@ toolchain/                # this repo == the consumer's .mise/ directory
 │   ├── node-lib.toml      #   tsup build + type-check
 │   ├── docs-site.toml     #   zensical build/serve
 │   ├── markdown-lib.toml  #   prose + license only
-│   ├── agent-plugins.toml #   markdown-lib + the evolve eval suite
 │   └── terraform.toml     #   init/plan/apply + tf fmt/lint/docs
 └── mise.mk                # the whole make surface: thin forwarders to mise
 ```
@@ -103,13 +102,11 @@ in `mise.lock`. Tasks run with the pinned tools already on PATH — there is no 
 `package.json` for linters, and no tool-path plumbing anywhere. mise installs a tool into its shared per-machine store
 the first time a task needs it (verifying the checksum) and reuses it across every repo.
 
-`dotty` and `evolve` are the exception: first-party CLIs, **task-scoped** (a `tools` map on just the tasks that run
-them) rather than pinned in `[tools]`, so the mise-installed copy never shadows a locally installed one on the activated
-PATH. They float on `latest` (override `dotty_version` / `evolve_version` in a repo's `[vars]` to pin) and live outside
-`mise.lock` — see the `config.toml` header for the trade-offs. The terraform archetype carries dotty for its `tf-run.sh`
-wrapper, which engages dotty only when the module directory has a `.env.dotty`; evolve only ever runs in a
-plugin/marketplace repo, so only the `agent-plugins` archetype carries it — its `lint`/`test` gates and eval tasks
-(`triggers`, `evals`, `all`, `report`) read the repo's `.evolve.{yaml,json,jsonc}`.
+`dotty` is the exception: a first-party CLI, **task-scoped** (a `tools` map on just the tasks that run it) rather than
+pinned in `[tools]`, so the mise-installed copy never shadows a locally installed one on the activated PATH. It floats
+on `latest` (override `dotty_version` in a repo's `[vars]` to pin) and lives outside `mise.lock` — see the `config.toml`
+header for the trade-offs. The terraform archetype carries it for its `tf-run.sh` wrapper, which engages dotty only when
+the module directory has a `.env.dotty`.
 
 - The tooling runtimes themselves are locked too (`go`, `node`), provisioned by mise — no system Go or Node is needed.
 - Bumping a tool for the **whole fleet** is one commit here (a Renovate PR per tool, or by hand: edit the pin in
