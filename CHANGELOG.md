@@ -1,5 +1,20 @@
 # Changelog
 
+## [2.4.2](https://github.com/bitwise-media-group/toolchain/compare/v2.4.1...v2.4.2) (2026-08-17)
+
+
+### Bug Fixes
+
+* **deps:** lock file maintenance ([#45](https://github.com/bitwise-media-group/toolchain/issues/45)) ([c01c893](https://github.com/bitwise-media-group/toolchain/commit/c01c8933f6d2e1c9a5302777347a8a510e403e00))
+* **deps:** update dependency aqua:astral-sh/uv to v0.12.4 ([#50](https://github.com/bitwise-media-group/toolchain/issues/50)) ([a364606](https://github.com/bitwise-media-group/toolchain/commit/a36460656c4036696a7b44643f3c700968b7a74d))
+* **deps:** update dependency aqua:helm/helm to v4.2.4 ([#49](https://github.com/bitwise-media-group/toolchain/issues/49)) ([bb25c31](https://github.com/bitwise-media-group/toolchain/commit/bb25c31a12ecf8c99a68eaf02c4a36e49b0adc68))
+* **deps:** update dependency aqua:kubescape/kubescape to v4.0.12 ([#48](https://github.com/bitwise-media-group/toolchain/issues/48)) ([46de623](https://github.com/bitwise-media-group/toolchain/commit/46de623dd4dec59d221461ae96cc7e4a975a63ee))
+
+
+### Reverts
+
+* drop the agent-plugins archetype ([a2149dd](https://github.com/bitwise-media-group/toolchain/commit/a2149dd0de15db1137416ee3830e50f48d60357d))
+
 ## [2.4.1](https://github.com/bitwise-media-group/toolchain/compare/v2.4.0...v2.4.1) (2026-08-14)
 
 
