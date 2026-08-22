@@ -75,7 +75,7 @@ minimum_release_age = "3d"
 npm.package_manager = "npm"
 
 [tools]
-go = "1.26.7"
+go = "1.27.0"
 node = "24.19.0"
 python = "3.14.7"
 "aqua:anchore/grype" = "0.117.0"
