@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.4.3](https://github.com/bitwise-media-group/toolchain/compare/v2.4.2...v2.4.3) (2026-08-22)
+
+
+### Bug Fixes
+
+* **deps:** lock file maintenance ([#54](https://github.com/bitwise-media-group/toolchain/issues/54)) ([af74219](https://github.com/bitwise-media-group/toolchain/commit/af7421948ad8373bf99f8ccabc4d2f5bf7116cf1))
+* **deps:** update dependency aqua:astral-sh/uv to v0.12.5 ([#52](https://github.com/bitwise-media-group/toolchain/issues/52)) ([3cd86dc](https://github.com/bitwise-media-group/toolchain/commit/3cd86dcc6633544488c0444edb4d38ae6c48cb00))
+* **deps:** update dependency aqua:hashicorp/terraform to v1.15.9 ([#55](https://github.com/bitwise-media-group/toolchain/issues/55)) ([96d08cb](https://github.com/bitwise-media-group/toolchain/commit/96d08cba5f3c78f1c179deab3f8c9890525d2eaa))
+* **deps:** update dependency go to v1.26.7 ([#56](https://github.com/bitwise-media-group/toolchain/issues/56)) ([de0bf07](https://github.com/bitwise-media-group/toolchain/commit/de0bf07212e1fb8da02ee336fb727506c94bf98b))
+* **deps:** update dependency go to v1.27.0 ([#57](https://github.com/bitwise-media-group/toolchain/issues/57)) ([f678148](https://github.com/bitwise-media-group/toolchain/commit/f678148f815e04dd12d19fcc2fc1019bdead1d2d))
+
 ## [2.4.2](https://github.com/bitwise-media-group/toolchain/compare/v2.4.1...v2.4.2) (2026-08-17)
 
 
