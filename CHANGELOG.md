@@ -1,5 +1,33 @@
 # Changelog
 
+## [2.4.3](https://github.com/bitwise-media-group/toolchain/compare/v2.4.2...v2.4.3) (2026-09-05)
+
+
+### Bug Fixes
+
+* **deps:** lock file maintenance ([#54](https://github.com/bitwise-media-group/toolchain/issues/54)) ([af74219](https://github.com/bitwise-media-group/toolchain/commit/af7421948ad8373bf99f8ccabc4d2f5bf7116cf1))
+* **deps:** lock file maintenance ([#60](https://github.com/bitwise-media-group/toolchain/issues/60)) ([5483e28](https://github.com/bitwise-media-group/toolchain/commit/5483e28bc7d9df82468dd0d19ec910a23b7cc87d))
+* **deps:** lock file maintenance ([#69](https://github.com/bitwise-media-group/toolchain/issues/69)) ([a073148](https://github.com/bitwise-media-group/toolchain/commit/a073148b1f2eb26792c9c009ff7941bc0cac1799))
+* **deps:** update dependency aqua:anchore/grype to v0.118.0 ([#66](https://github.com/bitwise-media-group/toolchain/issues/66)) ([4db3a75](https://github.com/bitwise-media-group/toolchain/commit/4db3a7593038dfb6e5ba818c67125c74c2f8c721))
+* **deps:** update dependency aqua:anchore/syft to v1.51.1 ([#65](https://github.com/bitwise-media-group/toolchain/issues/65)) ([d3859d2](https://github.com/bitwise-media-group/toolchain/commit/d3859d2440434973f85de9b56aff7c752ea7628e))
+* **deps:** update dependency aqua:astral-sh/uv to v0.12.5 ([#52](https://github.com/bitwise-media-group/toolchain/issues/52)) ([3cd86dc](https://github.com/bitwise-media-group/toolchain/commit/3cd86dcc6633544488c0444edb4d38ae6c48cb00))
+* **deps:** update dependency aqua:astral-sh/uv to v0.12.6 ([#62](https://github.com/bitwise-media-group/toolchain/issues/62)) ([89d73dc](https://github.com/bitwise-media-group/toolchain/commit/89d73dcca97e785bd95b4ada5467acc170d2b410))
+* **deps:** update dependency aqua:astral-sh/uv to v0.12.7 ([#67](https://github.com/bitwise-media-group/toolchain/issues/67)) ([1b6b281](https://github.com/bitwise-media-group/toolchain/commit/1b6b281e7e817ff9bd6a04fca141bee97b5d5758))
+* **deps:** update dependency aqua:astral-sh/uv to v0.12.8 ([#70](https://github.com/bitwise-media-group/toolchain/issues/70)) ([2d57066](https://github.com/bitwise-media-group/toolchain/commit/2d57066bda1551d3954b3a2588a67f0e7f01d3ad))
+* **deps:** update dependency aqua:astral-sh/uv to v0.12.9 ([#72](https://github.com/bitwise-media-group/toolchain/issues/72)) ([4bc5a0a](https://github.com/bitwise-media-group/toolchain/commit/4bc5a0ab2c329cba1c807eb21d8937bea5df4a1e))
+* **deps:** update dependency aqua:golangci/golangci-lint to v2.13.0 ([#58](https://github.com/bitwise-media-group/toolchain/issues/58)) ([5106284](https://github.com/bitwise-media-group/toolchain/commit/510628405e389f1a8c77fc52c00b180accd852b5))
+* **deps:** update dependency aqua:golangci/golangci-lint to v2.13.1 ([#59](https://github.com/bitwise-media-group/toolchain/issues/59)) ([e2cf920](https://github.com/bitwise-media-group/toolchain/commit/e2cf920bb5e7a50060106019c0c53cb8e42b7626))
+* **deps:** update dependency aqua:golangci/golangci-lint to v2.13.2 ([#68](https://github.com/bitwise-media-group/toolchain/issues/68)) ([7eb2755](https://github.com/bitwise-media-group/toolchain/commit/7eb275533e7bb5706cea70ac9bf2db216445dc33))
+* **deps:** update dependency aqua:goreleaser/goreleaser to v2.18.0 ([#61](https://github.com/bitwise-media-group/toolchain/issues/61)) ([fcef902](https://github.com/bitwise-media-group/toolchain/commit/fcef9020dd8622136093802cf09f0e59a39dbbfe))
+* **deps:** update dependency aqua:hashicorp/terraform to v1.15.9 ([#55](https://github.com/bitwise-media-group/toolchain/issues/55)) ([96d08cb](https://github.com/bitwise-media-group/toolchain/commit/96d08cba5f3c78f1c179deab3f8c9890525d2eaa))
+* **deps:** update dependency aqua:hashicorp/terraform to v1.16.0 ([#64](https://github.com/bitwise-media-group/toolchain/issues/64)) ([fc78725](https://github.com/bitwise-media-group/toolchain/commit/fc78725d4e7e352b697aa6cd3c37937525e41468))
+* **deps:** update dependency aqua:hashicorp/terraform to v1.16.1 ([#74](https://github.com/bitwise-media-group/toolchain/issues/74)) ([f011585](https://github.com/bitwise-media-group/toolchain/commit/f011585c062a2b9a84dc76013e684f131511f213))
+* **deps:** update dependency aqua:kubescape/kubescape to v4.0.13 ([#73](https://github.com/bitwise-media-group/toolchain/issues/73)) ([ae1639e](https://github.com/bitwise-media-group/toolchain/commit/ae1639eeaaac94db25565c547ffd66af88f8c474))
+* **deps:** update dependency go to v1.26.7 ([#56](https://github.com/bitwise-media-group/toolchain/issues/56)) ([de0bf07](https://github.com/bitwise-media-group/toolchain/commit/de0bf07212e1fb8da02ee336fb727506c94bf98b))
+* **deps:** update dependency go to v1.27.0 ([#57](https://github.com/bitwise-media-group/toolchain/issues/57)) ([f678148](https://github.com/bitwise-media-group/toolchain/commit/f678148f815e04dd12d19fcc2fc1019bdead1d2d))
+* **deps:** update dependency go to v1.27.1 ([#71](https://github.com/bitwise-media-group/toolchain/issues/71)) ([28fafa5](https://github.com/bitwise-media-group/toolchain/commit/28fafa54030e9fa4f13f1323985091904a9bf8d8))
+* **deps:** update node.js to v24.20.0 ([#63](https://github.com/bitwise-media-group/toolchain/issues/63)) ([281887a](https://github.com/bitwise-media-group/toolchain/commit/281887a125a28713762fcf90ce914d3c01d614de))
+
 ## [2.4.2](https://github.com/bitwise-media-group/toolchain/compare/v2.4.1...v2.4.2) (2026-08-17)
 
 
