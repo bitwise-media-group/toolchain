@@ -73,11 +73,16 @@ CGO_ENABLED=0 go build -trimpath ${build_tags:+-tags "$build_tags"} -ldflags "$l
 
 # --skip=sign: cosign keyless signing needs the GitHub Actions OIDC token, so it
 # only works in the release workflow — locally it would fail or prompt.
+# --skip=notarize: a repo with a notarize.macos block enables it whenever
+# MACOS_SIGN_P12 is exported, so a developer who has the org's signing material
+# in their shell does not Developer ID-sign and notarize a throwaway snapshot by
+# accident (run goreleaser by hand for a deliberate end-to-end test).
 # GoReleaser shells out to syft for SBOMs; syft is on PATH via the pins.
 [snapshot]
-description = "build a local release snapshot (binaries + archives, no publish or signing)"
+description = "build a local release snapshot (binaries + archives, no publish, signing, or notarization)"
 dir = "{{cwd}}"
-run = "goreleaser release --snapshot --clean --skip=sign"
+run = "goreleaser release --snapshot --clean --skip=sign,notarize"
+
 
 [release]
 description = "build and publish a release (needs a vX.Y.Z tag + creds)"
