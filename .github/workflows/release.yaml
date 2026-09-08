@@ -89,7 +89,8 @@ jobs:
           private-key: ${{ secrets.FF_MERGE_PRIVATE_KEY }}
           # only needs to move the branch ref
           permission-contents: write
-      - name: Checkout repository
+      # the persisted App token IS how the push step below authenticates
+      - name: Checkout repository # zizmor: ignore[artipacked]
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           # push under the App token (ruleset bypass), and fetch full history so the

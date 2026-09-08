@@ -1,11 +1,19 @@
 # Copyright 2026 BitWise Media Group Ltd
 # SPDX-License-Identifier: MIT
 #
-# This repo dogfoods its own markdown-lib archetype, with the layout INVERTED
-# relative to consumers: in a consumer, config.toml is the submodule mounted at
-# .mise/ (loaded natively as .mise/config.toml) and the archetype include lives
-# in a real root mise.toml like this one; here config.toml sits at the repo
-# root, so the .mise/ entries are symlinks back to it (see .mise/) and only the
-# include path differs (tasks/… instead of .mise/tasks/…).
+# This repo dogfoods its own common-only contract, with the layout INVERTED
+# relative to consumers: in a consumer, config.toml is the submodule mounted
+# at .mise/ (loaded natively as .mise/config.toml) and the includes live in a
+# real root mise.toml like this one; here config.toml, common/ and archetypes/
+# sit at the repo root, so the .mise/ entries are symlinks back to them (see
+# .mise/) and only the include path differs (common/… instead of
+# .mise/common/…).
 [task_config]
-includes = ["tasks/markdown-lib.toml"]
+includes = ["common/tasks.toml"]
+
+# The consumer-facing lint-shell pass only sweeps a repo's root scripts/ and
+# hack/, so the library's own task scripts need their own shellcheck sweep;
+# the Makefile hangs it off `lint` as a make-side prerequisite.
+[tasks.lint-scripts]
+description = "shellcheck the library's own task scripts"
+run = "shellcheck common/scripts/*.sh archetypes/*/scripts/*.sh"

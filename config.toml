@@ -1,43 +1,62 @@
 # Copyright 2026 BitWise Media Group Ltd
 # SPDX-License-Identifier: MIT
 #
-# The fleet's shared mise config: pinned developer CLIs, knob defaults, and the
-# universal tasks every archetype uses. Consumer repos mount this library as a
-# git submodule at `.mise/`, so mise loads this file natively as
-# `.mise/config.toml` — no per-repo tool setup, no symlinks. The consumer's own
-# root mise.toml layers on top (higher precedence): it picks an archetype via
-# `[task_config] includes = [".mise/tasks/<archetype>.toml"]`, overrides [vars],
-# and adds repo-local tasks.
+# The fleet's shared mise config: pinned developer CLIs and knob defaults.
+# Consumer repos mount this library as a git submodule at `.mise/`, so mise
+# loads this file natively as `.mise/config.toml` — no per-repo tool setup, no
+# symlinks. The consumer's own root mise.toml layers on top (higher
+# precedence): it pins the repo's primary language runtime in [tools], picks
+# the task files via
+#   [task_config] includes = [".mise/common/tasks.toml", ".mise/archetypes/<lang>/tasks.toml"]
+# (common first, then exactly one archetype), overrides [vars], and adds
+# repo-local tasks. The tasks themselves live in common/tasks.toml (shared by
+# every archetype) and archetypes/<lang>/tasks.toml — never here.
 #
 # IMPORTANT: this file must never contain [task_config] — its include paths
-# would resolve against each consumer's repo root and break. Archetype selection
-# always lives in the consumer's root mise.toml (this repo's own root mise.toml
-# dogfoods the same way).
+# would resolve against each consumer's repo root and break. Archetype
+# selection always lives in the consumer's root mise.toml (this repo's own
+# root mise.toml dogfoods the same way).
 #
-# Backends are spelled out explicitly (aqua:/github:/go:) so the trust path
-# for each tool is pinned and cannot drift with registry default changes. Every
-# tool but govulncheck is a prebuilt release binary: sha256 checksums are locked
-# per platform in mise.lock and verified on every install, plus cosign/SLSA/
+# Language runtimes are NOT pinned here. go, python and node are per-repo
+# concerns so each repo can track its own version at its own cadence: a Go
+# repo pins `go` (and govulncheck, below) in its root [tools], a Node repo pins
+# `node`, and a Python repo lets uv provision Python from .python-version /
+# requires-python (or pins `python` itself). Each repo's own Renovate bumps
+# those pins.
+#
+# node IS pinned here, but only as the runtime for the npm-backed prose tools
+# (prettier, markdownlint-cli2): mise's npm backend does not provision node on
+# its own, and repos must be able to lint prose without a package.json. A Node
+# repo's root [tools] pin wins over this one (root config has precedence), so
+# the shared pin never dictates a Node repo's runtime.
+#
+# govulncheck is deliberately absent: it publishes no binaries and must be
+# `go install`ed by the same Go the repo builds with, so every Go repo pins
+# "go:golang.org/x/vuln/cmd/govulncheck" in its own root [tools] next to `go`.
+# The go archetype's lint still runs it, so `mise run lint` and the CI gate
+# stay in parity. golangci-lint, gotestsum and goreleaser stay shared: they are
+# prebuilt release binaries, not coupled to the repo's Go version — a repo
+# whose Go outpaces the shared golangci-lint can override that one pin in its
+# root [tools].
+#
+# Backends are spelled out explicitly (aqua:/github:/npm:) so the trust path
+# for each tool is pinned and cannot drift with registry default changes.
+# Every tool is a prebuilt release binary: sha256 checksums are locked per
+# platform in mise.lock and verified on every install, plus cosign/SLSA/
 # GitHub-attestation verification where the publisher provides it (all on by
 # default).
 #
-# govulncheck publishes no binaries, so it compiles via `go install` (Go module
-# proxy + checksum database) using the Go toolchain pinned below — mise installs
-# that toolchain itself (checksum-verified core backend), so nothing here needs a
-# system Go. It stays in the library, not just CI, so `mise run lint` and the CI
-# gate stay in parity.
-#
-# prettier and markdownlint-cli2 are npm packages with no standalone binaries, so
-# they install from the npm registry (npm: backend) using the Node runtime pinned
-# below — again provisioned by mise, so repos need no package.json just to lint
-# prose. Top-level versions are pinned exactly here (checksums in mise.lock);
-# unlike a package-lock.json, transitive npm dependencies are not pinned
-# (prettier has none; markdownlint-cli2's tree is
-# small). mise forwards minimum_release_age into transitive resolution (npm >=
-# 11.10 --min-release-age), so even transitives can't pull a release younger than
-# the cooldown. npm.package_manager is pinned to npm because the "auto" default
-# silently prefers aube wherever it happens to be installed — same resolution on
-# every machine matters more than install speed for two packages.
+# prettier and markdownlint-cli2 are npm packages with no standalone binaries,
+# so they install from the npm registry (npm: backend) using the Node runtime
+# pinned below. Top-level versions are pinned exactly here (checksums in
+# mise.lock); unlike a package-lock.json, transitive npm dependencies are not
+# pinned (prettier has none; markdownlint-cli2's tree is small). mise forwards
+# minimum_release_age into transitive resolution (npm >= 11.10
+# --min-release-age), so even transitives can't pull a release younger than
+# the cooldown. npm.package_manager is pinned to npm because the "auto"
+# default silently prefers aube wherever it happens to be installed — same
+# resolution on every machine matters more than install speed for two
+# packages.
 #
 # grype and kubescape pull external data at runtime rather than at install:
 # grype fetches its vulnerability database on first use (~200 MB, cached in
@@ -47,12 +66,13 @@
 # than GitHub releases), checksum-locked like everything else.
 #
 # dotty — our own first-party CLI — is deliberately absent from [tools] and
-# never mise-installed at all: it is only ever invoked (via hack/tf-run.sh) to
-# inject secrets when a terraform module directory carries a .env.dotty, which
-# is a local-dev convenience and never present in CI. tf-run.sh checks for
-# dotty on PATH itself (falling through to an uninjected run if it's missing,
-# rather than mise provisioning — and thereby pinning/shadowing — a CLI that
-# CI never needs and every developer already has their own copy of).
+# never mise-installed at all: it is only ever invoked (via the terraform
+# archetype's tf-run.sh) to inject secrets when a terraform module directory
+# carries a .env.dotty, which is a local-dev convenience and never present in
+# CI. tf-run.sh checks for dotty on PATH itself (falling through to an
+# uninjected run if it's missing, rather than mise provisioning — and thereby
+# pinning/shadowing — a CLI that CI never needs and every developer already
+# has their own copy of).
 #
 # Updates: every [tools] entry is an exact pin, bumped by the org Renovate bot
 # (bitwise-media-group/renovate-config) — one PR per tool that updates the pin
@@ -62,11 +82,10 @@
 # timestamps); stable minor/patch bumps automerge, majors and 0.x wait for a
 # human. minimum_release_age below no longer gates these bumps — it still
 # guards npm transitive resolution. The bot finds this ROOT config.toml via
-# .github/renovate.json5
-# (the dogfood inversion hides it from the mise manager's default file
-# patterns). Never run `mise lock` or `mise upgrade` in a consumer repo: the
-# lockfile lives in this library, and consumer-side writes would land inside
-# the submodule.
+# .github/renovate.json5 (the dogfood inversion hides it from the mise
+# manager's default file patterns). Never run `mise lock` or `mise upgrade` in
+# a consumer repo: the lockfile lives in this library, and consumer-side
+# writes would land inside the submodule.
 
 [settings]
 lockfile = true
@@ -75,9 +94,8 @@ minimum_release_age = "3d"
 npm.package_manager = "npm"
 
 [tools]
-go = "1.27.1"
-node = "24.20.0"
-python = "3.14.7"
+# runtime for the npm-backed prose tools only; a Node repo's root pin wins
+node = "lts"
 "aqua:anchore/grype" = "0.118.0"
 "aqua:anchore/syft" = "1.51.1"
 "aqua:astral-sh/uv" = "0.12.10"
@@ -93,8 +111,8 @@ python = "3.14.7"
 "aqua:sigstore/cosign" = "3.1.3"
 "aqua:terraform-docs/terraform-docs" = "0.24.0"
 "aqua:terraform-linters/tflint" = "0.64.0"
+"aqua:zizmorcore/zizmor" = "1.30.0"
 "github:google/addlicense" = "1.2.0"
-"go:golang.org/x/vuln/cmd/govulncheck" = "1.6.0"
 "npm:markdownlint-cli2" = "0.23.2"
 "npm:prettier" = "3.9.6"
 
@@ -107,141 +125,30 @@ python = "3.14.7"
 # per repo — a single value here is the point. Override only if a repo genuinely
 # needs a different holder.
 license_holder = "BitWise Media Group Ltd"
-# go-cli: output binary (empty = repo directory name) and main package.
+# go: output binary (empty = repo directory name) and main package.
 app = ""
 app_pkg = "."
-# go-cli: extra build tags (e.g. an embedded UI: build_tags = "withui").
+# go: extra build tags (e.g. an embedded UI: build_tags = "withui").
 build_tags = ""
-# go-cli: package declaring Version/Commit/BuildDate (empty = <module>/internal/version).
+# go: package declaring Version/Commit/BuildDate (empty = <module>/internal/version).
 version_pkg = ""
+# node: flags for `npm ci`. --ignore-scripts is the safe default for a
+# library; a GitHub Action repo that relies on lifecycle scripts sets
+# npm_ci_flags = "" in its root [vars]. NPM_CI_FLAGS in the environment
+# overrides per invocation (unset-only, so NPM_CI_FLAGS= forces a plain npm ci).
+npm_ci_flags = "--ignore-scripts --no-fund"
 # terraform: which binary the terraform archetype drives — set to "tofu" in
 # an OpenTofu repo (and add the opentofu pin to that repo's root [tools]; the
 # shared [tools] only pins terraform). Secrets/env injection is not a knob:
-# hack/tf-run.sh always wraps the state-touching tasks and engages dotty only
-# when the module directory carries a .env.dotty.
+# tf-run.sh always wraps the state-touching tasks and engages dotty only when
+# the module directory carries a .env.dotty.
 terraform_binary = "terraform"
 # container/deploy lint: minimum severity that fails the gate — grype
 # --fail-on for Dockerfile base images, kubescape --severity-threshold for
 # helm charts and kustomize directories. low|medium|high|critical.
 grype_fail_on = "high"
 kubescape_severity = "high"
-
-# Universal tasks shared by every archetype. Each runs in the invoker's
-# directory ({{cwd}}), matching where make recipes used to run. Helper tasks
-# that only exist to be wired into aggregates are hidden, mirroring the old
-# "no ## comment" convention.
-
-# Run an agent-prepared commit batch if one is waiting. The `pr` gate calls this
-# last so a green local run flows straight into the (user-signed) commit.
-[tasks.commit]
-description = "run ./commit.sh (agent-prepared commit batch) if present"
-dir = "{{cwd}}"
-run = "if [ -x ./commit.sh ]; then ./commit.sh; fi"
-
-# House default ignores (generated/vendored trees, incl. the .mise/ submodule,
-# and the agent-prepared commit.sh handoff every repo may transiently carry)
-# plus one -ignore flag per non-empty line in the repo's .licenseignore
-# (patterns never contain whitespace, so the word-split is safe; set -f keeps
-# the shell from glob-expanding them). A repo with no .licenseignore simply
-# gets the defaults.
-[tasks.license]
-description = "inject SPDX license headers (addlicense)"
-dir = "{{cwd}}"
-run = """
-set -euf
-ignores="-ignore node_modules/** -ignore .mise/** -ignore .claude/** -ignore .venv/** -ignore coverage/** -ignore commit.sh"
-if [ -f .licenseignore ]; then
-  for pattern in $(cat .licenseignore); do ignores="$ignores -ignore $pattern"; done
-fi
-addlicense -l mit -c '{{vars.license_holder}}' -s=only $ignores .
-"""
-
-# Check-mode counterpart wired into the `lint` aggregates.
-[tasks.license-check]
-hide = true
-dir = "{{cwd}}"
-run = """
-set -euf
-ignores="-ignore node_modules/** -ignore .mise/** -ignore .claude/** -ignore .venv/** -ignore coverage/** -ignore commit.sh"
-if [ -f .licenseignore ]; then
-  for pattern in $(cat .licenseignore); do ignores="$ignores -ignore $pattern"; done
-fi
-addlicense -l mit -c '{{vars.license_holder}}' -s=only $ignores -check .
-"""
-
-# Prose format/lint via the pinned prettier + markdownlint-cli2, wired into
-# every archetype: all *.md, excluding generated/vendored content. The house
-# defaults are this library's own .prettierrc.yaml / .prettierignore /
-# .markdownlint-cli2.yaml (read from .mise/ in a consumer); a repo that carries
-# its own copy of a file overrides that file wholesale. Runs from the repo root
-# (config_root) so the whole repo is covered no matter where make is invoked
-# (e.g. a terraform environment subdirectory). Patterns in the house ignore
-# files are deliberately unanchored — prettier and markdownlint resolve them
-# against the invoking repo, not against .mise/.
-[tasks.fmt-prose]
-hide = true
-dir = "{{config_root}}"
-run = """
-set -eu
-pcfg=".prettierrc.yaml";        [ -f "$pcfg" ] || pcfg=".mise/.prettierrc.yaml"
-pign=".prettierignore";         [ -f "$pign" ] || pign=".mise/.prettierignore"
-mcfg=".markdownlint-cli2.yaml"; [ -f "$mcfg" ] || mcfg=".mise/.markdownlint-cli2.yaml"
-prettier --config "$pcfg" --ignore-path .gitignore --ignore-path "$pign" --no-error-on-unmatched-pattern --write "**/*.md"
-markdownlint-cli2 --config "$mcfg" --fix
-"""
-
-[tasks.lint-prose]
-hide = true
-dir = "{{config_root}}"
-run = """
-set -eu
-pcfg=".prettierrc.yaml";        [ -f "$pcfg" ] || pcfg=".mise/.prettierrc.yaml"
-pign=".prettierignore";         [ -f "$pign" ] || pign=".mise/.prettierignore"
-mcfg=".markdownlint-cli2.yaml"; [ -f "$mcfg" ] || mcfg=".mise/.markdownlint-cli2.yaml"
-markdownlint-cli2 --config "$mcfg"
-prettier --config "$pcfg" --ignore-path .gitignore --ignore-path "$pign" --no-error-on-unmatched-pattern --check "**/*.md"
-"""
-
-# Lint the repo's GitHub Actions workflows (no-op where there are none).
-[tasks.actionlint]
-description = "lint .github/workflows with actionlint"
-dir = "{{cwd}}"
-run = "actionlint"
-
-# Container/deploy/shell lint, runtime-detected: each helper script probes
-# for its marker files from the repo root and no-ops silently when the repo
-# has none, so every archetype carries these unconditionally. Items found
-# but not checkable (a kustomize Component, an unresolvable ${ARG} base
-# image) are skipped with a one-line message, never silently. The logic
-# lives in hack/ (shellcheck-linted, including by itself) rather than
-# inline; .mise/hack/ resolves via the same submodule/symlink inversion as
-# config.toml itself.
-
-[tasks.lint-docker]
-hide = true
-dir = "{{config_root}}"
-run = 'GRYPE_FAIL_ON="{{vars.grype_fail_on}}" ./.mise/hack/lint-docker.sh'
-
-[tasks.lint-helm]
-hide = true
-dir = "{{config_root}}"
-run = 'KUBESCAPE_SEVERITY="{{vars.kubescape_severity}}" ./.mise/hack/lint-helm.sh'
-
-[tasks.lint-kustomize]
-hide = true
-dir = "{{config_root}}"
-run = 'KUBESCAPE_SEVERITY="{{vars.kubescape_severity}}" ./.mise/hack/lint-kustomize.sh'
-
-[tasks.lint-shell]
-hide = true
-dir = "{{config_root}}"
-run = "./.mise/hack/lint-shell.sh"
-
-# The composite every archetype's `lint` carries.
-[tasks.lint-containers]
-hide = true
-run = [
-  { task = "lint-docker" },
-  { task = "lint-helm" },
-  { task = "lint-kustomize" }
-]
+# workflow lint: lowest zizmor finding severity that fails `lint`
+# (unknown|informational|low|medium|high). Repos silence accepted findings
+# with a zizmor.yml (auto-loaded from the repo root or .github/).
+zizmor_min_severity = "low"

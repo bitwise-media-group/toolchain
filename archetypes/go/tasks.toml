@@ -1,7 +1,21 @@
 # Copyright 2026 BitWise Media Group Ltd
 # SPDX-License-Identifier: MIT
 #
-# go-cli — archetype for a Go CLI application (dotty, evolve, gh-claude).
+# go — archetype for a Go CLI application (dotty, evolve, gh-claude).
+#
+# Include AFTER common/tasks.toml in the consumer's root mise.toml:
+#   [task_config]
+#   includes = [".mise/common/tasks.toml", ".mise/archetypes/go/tasks.toml"]
+#
+# Required root [tools] pins — the library pins neither, so each repo tracks
+# its own Go at its own cadence:
+#   go = "1.27.1"
+#   "go:golang.org/x/vuln/cmd/govulncheck" = "1.6.0"   # go install'ed by that Go
+# govulncheck must be compiled by the same Go the repo builds with, which is
+# why it rides with the go pin rather than the shared config. golangci-lint,
+# gotestsum, goreleaser and syft come from the shared pins (prebuilt
+# binaries); override golangci-lint in root [tools] if the repo's Go outpaces
+# it.
 #
 # Structural knobs come from [vars] in the consumer's root mise.toml (app,
 # app_pkg, build_tags, version_pkg); per-invocation values (VERSION, COMMIT,
@@ -13,63 +27,43 @@
 # `docs` is intentionally left to the repo — regenerating a CLI reference is
 # app-specific (`./<app> docs …`). A repo defines a `docs` task in its root
 # mise.toml [tasks] and appends it to the gate (`pr: docs` in its Makefile, or
-# a redefined `pr` task). `serve`, `docs-build`, and `sync` come ready-made.
-# No `e2e` here: the reusable CI's e2e job is opt-in and no Go repo opts in; a
-# repo that does defines its own e2e task.
+# a redefined `pr` task). `serve`, `docs-build`, and `sync` (zensical via the
+# shared uv pin) come ready-made, so a Go repo with a docs site includes only
+# this archetype. No `e2e` here: the reusable CI's e2e job is opt-in and no Go
+# repo opts in; a repo that does defines its own e2e task.
 
 [tidy]
 description = "tidy the go module graph"
 dir = "{{cwd}}"
 run = ["rm -f go.sum", "go mod tidy"]
 
-# Auto-fix pass wired into the `fmt` aggregate.
+# Auto-fix pass wired into the `fmt` rollup.
 [go-fmt]
 hide = true
 dir = "{{cwd}}"
 run = ["go fmt ./...", "golangci-lint run --fix"]
 
-# Check-mode pass wired into the `lint` aggregate. govulncheck stays here (not
+# Check-mode pass wired into the `lint` rollup. govulncheck stays here (not
 # only in CI) so the local lint gate and the CI gate check the same things.
 [go-lint]
 hide = true
 dir = "{{cwd}}"
 run = ["golangci-lint run", "govulncheck ./..."]
 
-# -covermode=atomic is the race-safe counter mode -race requires. gotestsum runs
-# the suite and writes a JUnit report in one pass (propagating the exit code a
-# bare `go test | …` pipe would swallow). Codecov ingests the native Go profile
-# directly; coverage/ is where the reusable CI workflow uploads from.
+# gotestsum + race detector + coverage profile → coverage/ (see scripts/test.sh).
 [go-test]
 hide = true
 dir = "{{cwd}}"
-run = """
-set -eu
-mkdir -p coverage
-gotestsum --junitfile coverage/junit.xml -- \
-  -race -covermode=atomic -coverprofile=coverage/coverage.out ./...
-"""
+run = "{{config_root}}/.mise/archetypes/go/scripts/test.sh"
 
-# Version metadata stamped into the binary via -ldflags. GoReleaser injects the
-# same vars at the same import path on tagged releases.
+# Version metadata stamped into the binary via -ldflags (see scripts/build.sh).
+# The knob defaults reach the script as TOOLCHAIN_* so the plain APP/APP_PKG/…
+# spellings stay free for per-invocation env overrides.
 [go-build]
 hide = true
 dir = "{{cwd}}"
-run = """
-set -eu
-app="${APP:-{{vars.app}}}"; app="${app:-$(basename "$PWD")}"
-app_pkg="${APP_PKG:-{{vars.app_pkg}}}"
-module="${MODULE:-$(go list -m 2>/dev/null || true)}"
-version="${VERSION:-$(git describe --tags --always --dirty 2>/dev/null || echo dev)}"
-commit="${COMMIT:-$(git rev-parse --short HEAD 2>/dev/null || echo none)}"
-date="${DATE:-$(date -u +%Y-%m-%dT%H:%M:%SZ)}"
-version_pkg="${VERSION_PKG:-{{vars.version_pkg}}}"; version_pkg="${version_pkg:-$module/internal/version}"
-build_tags="${BUILD_TAGS:-{{vars.build_tags}}}"
-ldflags="${LDFLAGS:--s -w \
-  -X $version_pkg.Version=$version \
-  -X $version_pkg.Commit=$commit \
-  -X $version_pkg.BuildDate=$date}"
-CGO_ENABLED=0 go build -trimpath ${build_tags:+-tags "$build_tags"} -ldflags "$ldflags" -o "$app" "$app_pkg"
-"""
+env = { TOOLCHAIN_APP = "{{vars.app}}", TOOLCHAIN_APP_PKG = "{{vars.app_pkg}}", TOOLCHAIN_BUILD_TAGS = "{{vars.build_tags}}", TOOLCHAIN_VERSION_PKG = "{{vars.version_pkg}}" }
+run = "{{config_root}}/.mise/archetypes/go/scripts/build.sh"
 
 # --skip=sign: cosign keyless signing needs the GitHub Actions OIDC token, so it
 # only works in the release workflow — locally it would fail or prompt.
@@ -83,7 +77,6 @@ description = "build a local release snapshot (binaries + archives, no publish, 
 dir = "{{cwd}}"
 run = "goreleaser release --snapshot --clean --skip=sign,notarize"
 
-
 [release]
 description = "build and publish a release (needs a vX.Y.Z tag + creds)"
 dir = "{{cwd}}"
@@ -93,17 +86,14 @@ run = "goreleaser release --clean"
 [fuzz]
 description = "fuzz one target (FUZZ=FuzzName FUZZTIME=20s FUZZ_PKG=./pkg)"
 dir = "{{cwd}}"
-run = """
-set -eu
-go test -run '^$' -fuzz "^${FUZZ:-.}$" -fuzztime "${FUZZTIME:-20s}" "${FUZZ_PKG:-./...}"
-"""
+run = "{{config_root}}/.mise/archetypes/go/scripts/fuzz.sh"
 
-# Zensical documentation site (Python via uv). `uv` provisions Python +
-# zensical from pyproject.toml on first use; the built site/ is git-ignored.
+# Zensical documentation site (Python via uv). `uv sync` provisions Python +
+# zensical from pyproject.toml; the built site/ is git-ignored.
 [sync]
 hide = true
 dir = "{{cwd}}"
-run = "uv run sync"
+run = "uv sync"
 
 [docs-build]
 description = "build the documentation site (zensical)"
@@ -125,7 +115,14 @@ run = [{ task = "go-fmt" }, { task = "fmt-prose" }, { task = "license" }]
 
 [lint]
 description = "all check-mode static analysis"
-run = [{ task = "license-check" }, { task = "go-lint" }, { task = "lint-containers" }, { task = "lint-shell" }, { task = "lint-prose" }]
+run = [
+  { task = "license-check" },
+  { task = "go-lint" },
+  { task = "lint-containers" },
+  { task = "lint-shell" },
+  { task = "lint-workflows" },
+  { task = "lint-prose" },
+]
 
 [build]
 description = "build the application binary"

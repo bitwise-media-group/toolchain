@@ -1,0 +1,108 @@
+# Copyright 2026 BitWise Media Group Ltd
+# SPDX-License-Identifier: MIT
+#
+# python — archetype for a repo whose primary language is Python: a package
+# or application (ruff + pytest + `uv build`) and/or a Zensical documentation
+# site (bitwise-media-group.github.io, podcast-workflow).
+#
+# Include AFTER common/tasks.toml in the consumer's root mise.toml:
+#   [task_config]
+#   includes = [".mise/common/tasks.toml", ".mise/archetypes/python/tasks.toml"]
+#
+# uv-native: the shared `uv` pin provisions the interpreter itself, from the
+# repo's .python-version / requires-python, and the project environment from
+# pyproject.toml + uv.lock. No mise python pin is needed (a repo that wants
+# one adds `python = "…"` to its root [tools]). ruff and pytest come from the
+# project's own dev dependencies, so the repo controls their versions; a
+# project without them (a docs-only site) skips those passes with a message
+# rather than failing — see scripts/. The house prose format/lint runs
+# alongside ruff: ruff owns the code, prettier + markdownlint own the
+# markdown.
+
+# Provision the project environment (Python + locked dependencies).
+[sync]
+hide = true
+dir = "{{cwd}}"
+run = "uv sync"
+
+# Auto-fix pass wired into `fmt`: ruff format, then ruff check --fix.
+[py-fmt]
+hide = true
+dir = "{{cwd}}"
+depends = ["sync"]
+run = "{{config_root}}/.mise/archetypes/python/scripts/ruff.sh fmt"
+
+# Check-mode pass wired into `lint`: ruff check, then ruff format --check.
+[py-lint]
+hide = true
+dir = "{{cwd}}"
+depends = ["sync"]
+run = "{{config_root}}/.mise/archetypes/python/scripts/ruff.sh check"
+
+# pytest with coverage → coverage/ (see scripts/test.sh).
+[py-test]
+hide = true
+dir = "{{cwd}}"
+depends = ["sync"]
+run = "{{config_root}}/.mise/archetypes/python/scripts/test.sh"
+
+# `uv build` for a packaged project and/or `zensical build` for a docs site
+# (see scripts/build.sh).
+[py-build]
+hide = true
+dir = "{{cwd}}"
+depends = ["sync"]
+run = "{{config_root}}/.mise/archetypes/python/scripts/build.sh"
+
+# Zensical documentation site; the built site/ is git-ignored.
+[docs-build]
+description = "build the documentation site (zensical)"
+dir = "{{cwd}}"
+depends = ["sync"]
+run = "uv run zensical build"
+
+[serve]
+description = "serve the docs site locally (zensical)"
+dir = "{{cwd}}"
+depends = ["sync"]
+run = "uv run zensical serve"
+
+# license runs FIRST here (the other archetypes run it last): addlicense
+# inserts the header with one blank line after it, and ruff format wants two
+# before a top-level definition, so the ruff pass must see the header.
+[fmt]
+description = "inject license headers, ruff format + fix, prose format"
+run = [{ task = "license" }, { task = "py-fmt" }, { task = "fmt-prose" }]
+
+[lint]
+description = "ruff check + prose, license, container, shell and workflow checks"
+run = [
+  { task = "license-check" },
+  { task = "py-lint" },
+  { task = "lint-containers" },
+  { task = "lint-shell" },
+  { task = "lint-workflows" },
+  { task = "lint-prose" },
+]
+
+[build]
+description = "uv build (package) and/or zensical build (docs site)"
+run = [{ task = "py-build" }]
+
+[test]
+description = "pytest with coverage"
+run = [{ task = "py-test" }]
+
+[ci]
+description = "the gates the reusable CI workflow runs"
+run = [{ task = "lint" }, { task = "test" }, { task = "build" }]
+
+[pr]
+description = "full local gate before a pull request"
+run = [
+  { task = "fmt" },
+  { task = "lint" },
+  { task = "test" },
+  { task = "build" },
+  { task = "commit" },
+]

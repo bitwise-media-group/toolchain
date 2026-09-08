@@ -2,29 +2,32 @@
 
 Shared build tasks for the bitwise-media-group ecosystem — pinned developer tools, mise task archetypes, and house
 lint/license policy — with a thin Makefile shim on top. Each repo consumes this library as a git submodule mounted at
-`.mise/` (bumped by Dependabot's `gitsubmodule` ecosystem) and reduces its own `Makefile` to one include and its own
-mise config to a few lines. (Formerly named `make`, from its Makefile-fragment era; GitHub redirects the old URL.)
+`.mise/` (bumped by Dependabot's `gitsubmodule` ecosystem), pins its own language runtime in its root `mise.toml`, and
+reduces its `Makefile` to one include. (Formerly named `make`, from its Makefile-fragment era; GitHub redirects the old
+URL.)
 
 ## Layout
 
 ```text
-toolchain/                # this repo == the consumer's .mise/ directory
-├── config.toml           # shared config: [settings], [tools] pins, [vars] knob
-│                         #   defaults, and the universal tasks (license, prose
-│                         #   lint, commit, actionlint, container/deploy/shell
-│                         #   lint); consumers load it natively as
-│                         #   .mise/config.toml
-├── mise.lock              # per-platform sha256 + provenance for every pin
-├── hack/                  # shell scripts behind the universal lint tasks
-│                          #   (hadolint+grype, helm+kubescape, shellcheck)
-├── tasks/                 # one self-contained task file per archetype
-│   ├── go-cli.toml        #   go build/test/lint/release + zensical docs
-│   ├── node-action.toml   #   biome + tsc + rollup + vitest
-│   ├── node-lib.toml      #   tsup build + type-check
-│   ├── docs-site.toml     #   zensical build/serve
-│   ├── markdown-lib.toml  #   prose + license only
-│   └── terraform.toml     #   init/plan/apply + tf fmt/lint/docs
-└── mise.mk                # the whole make surface: thin forwarders to mise
+toolchain/                    # this repo == the consumer's .mise/ directory
+├── config.toml               # shared config: [settings], [tools] pins, [vars] knob
+│                             #   defaults — NO tasks; consumers load it natively as
+│                             #   .mise/config.toml
+├── mise.lock                 # per-platform sha256 + provenance for every pin
+├── common/                   # what every repo gets, whatever its language
+│   ├── tasks.toml            #   commit, license, prose fmt/lint, actionlint + zizmor,
+│   │                         #   container/helm/kustomize/shell lint, and the
+│   │                         #   fmt/lint/ci/pr rollups for a common-only repo
+│   ├── include.mk            #   the whole make surface: thin forwarders to mise
+│   └── scripts/              #   the shell behind the tasks (shellcheck-clean)
+└── archetypes/               # exactly ONE per repo, included after common
+    ├── go/                   #   build/test/lint/fuzz/release + zensical docs
+    ├── node/                 #   npm-script contract: check/typecheck/build/test
+    ├── python/               #   uv-native: ruff + pytest + uv build + zensical
+    └── terraform/            #   init/plan/apply + tf fmt/lint/docs
+        ├── tasks.toml        #   each archetype: its tasks + fmt/lint/ci/pr rollups
+        ├── include.mk        #   its make shim (pulls in common/include.mk)
+        └── scripts/          #   its task scripts
 ```
 
 ## Usage
@@ -35,16 +38,21 @@ Add the submodule once, mounted at `.mise/`:
 git submodule add https://github.com/bitwise-media-group/toolchain.git .mise
 ```
 
-Create a root `mise.toml` that picks the archetype and sets any knobs, then reduce the `Makefile` to one line:
+Create a root `mise.toml` that pins the repo's runtime, includes `common` and then its archetype, and sets any knobs;
+then reduce the `Makefile` to one line:
 
 ```toml
 # mise.toml — a Go CLI (dotty, evolve, gh-claude)
+[tools]
+go = "1.27.1"
+"go:golang.org/x/vuln/cmd/govulncheck" = "1.6.0" # must be built by the repo's own Go
+
 [vars]
 app = "dotty"
 app_pkg = "./cmd"
 
 [task_config]
-includes = [".mise/tasks/go-cli.toml"]
+includes = [".mise/common/tasks.toml", ".mise/archetypes/go/tasks.toml"] # common first, archetype second
 
 # repo-local tasks live here too, e.g. the app-specific CLI reference:
 [tasks.docs]
@@ -55,11 +63,38 @@ run = ["mise run build", "./dotty docs --out docs/cli --format markdown", "mise 
 
 ```makefile
 # Makefile — the whole thing
-include .mise/mise.mk
+include .mise/archetypes/go/include.mk
 
 # append repo-local work to a canonical gate (runs before `mise run pr`):
 pr: docs
 ```
+
+Per archetype, the root `mise.toml` differs only in what it pins and includes:
+
+| archetype     | root `[tools]`                         | `includes` second entry / `Makefile` include       |
+| ------------- | -------------------------------------- | -------------------------------------------------- |
+| go            | `go`, `go:…/govulncheck`               | `.mise/archetypes/go/…`                            |
+| node          | `node`                                 | `.mise/archetypes/node/…`                          |
+| python        | nothing (uv provisions Python)         | `.mise/archetypes/python/…`                        |
+| terraform     | nothing (`opentofu` for a `tofu` repo) | `.mise/archetypes/terraform/…`                     |
+| _common only_ | nothing                                | no second entry; `include .mise/common/include.mk` |
+
+A Markdown/YAML repo with nothing to build or test (github-workflows, skills, `.github`) includes only `common`:
+
+```toml
+[task_config]
+includes = [".mise/common/tasks.toml"]
+```
+
+```makefile
+include .mise/common/include.mk
+```
+
+**Archetypes do not stack**: mise merges included task files whole-task with the later include winning, so a second
+archetype would silently replace the first's `fmt`/`lint`/`build`/`test`/`ci`/`pr` rollups. Cross-language needs are
+carried _inside_ an archetype instead — the go archetype ships the zensical docs tasks (`docs-build`, `serve`, `sync`),
+so a Go repo with a docs site includes only `archetypes/go` and wires `docs-build` into a repo-local `docs` task. The
+python archetype is for repos whose primary language is Python (including docs-only zensical sites).
 
 Run `mise trust --all` once per clone (CI trusts the workspace automatically), and `make help` (or `mise tasks`) to list
 what the repo exposes. Because the Makefile only forwards, `make <anything>` and `mise run <anything>` are
@@ -71,9 +106,11 @@ natively without touching this library.
 The reusable CI workflow (`bitwise-media-group/github-workflows`) runs a matrix of **`make lint`**, **`make build`**,
 **`make test`** (and opt-in **`make e2e`**), discovering which of those tasks a repo actually defines via
 `mise tasks ls --name-only` and skipping the rest; release drives GoReleaser / Zensical directly. There are therefore
-**no no-op stubs anywhere**: an archetype defines only real work (markdown-lib has no `build`/`test` at all), and a repo
-that grows tests or an e2e suite just defines that task in its root `mise.toml [tasks]`. Every archetype also provides
-**`fmt`**, **`ci`**, and **`pr`** for local use.
+**no no-op stubs anywhere**: an archetype defines only real work (a common-only repo has no `build`/`test` at all), and
+a repo that grows tests or an e2e suite just defines that task in its root `mise.toml [tasks]`. The one tolerated
+exception is the node archetype, whose optional npm scripts run through `npm run --if-present` — a library with no
+`test:coverage` script gets a trivially passing `test`. Every archetype also provides **`fmt`**, **`ci`**, and **`pr`**
+for local use.
 
 Extension works both ways:
 
@@ -86,35 +123,77 @@ Extension works both ways:
 
   ```toml
   [task_config]
-  includes = [".mise/tasks/go-cli.toml", "tasks.toml"] # tasks.toml redefines e.g. fuzz or pr
+  # tasks.toml redefines e.g. fuzz or pr
+  includes = [".mise/common/tasks.toml", ".mise/archetypes/go/tasks.toml", "tasks.toml"]
   ```
 
-Aggregates (`fmt`, `lint`, `ci`, `pr`) are sequential task composites, so mutating passes never race and `fmt` always
+Rollups (`fmt`, `lint`, `ci`, `pr`) are sequential task composites, so mutating passes never race and `fmt` always
 precedes `lint` inside `pr`.
+
+### Archetypes
+
+| archetype | `fmt`                                             | `lint`                                                                            | `build`                            | `test`                       | extras                                                       |
+| --------- | ------------------------------------------------- | --------------------------------------------------------------------------------- | ---------------------------------- | ---------------------------- | ------------------------------------------------------------ |
+| go        | `go fmt`, `golangci-lint --fix`, prose, license   | golangci-lint, govulncheck, license, containers, shell, workflows, prose          | `go build` with version ldflags    | gotestsum, `-race`, coverage | `tidy`, `fuzz`, `snapshot`, `release`, `docs-build`, `serve` |
+| node      | `npm run check:fix` / `format`, prose, license    | `npm run check` / `typecheck`, license, containers, shell, workflows, prose       | `npm run build`                    | `npm run test:coverage`      | —                                                            |
+| python    | license, `ruff format`, `ruff check --fix`, prose | `ruff check`, `ruff format --check`, license, containers, shell, workflows, prose | `uv build` and/or `zensical build` | pytest (+ pytest-cov)        | `docs-build`, `serve`                                        |
+| terraform | `terraform fmt -recursive`, prose                 | validate, tflint, containers, shell, workflows, prose                             | —                                  | —                            | `init`, `plan`, `apply`, `docs`                              |
+| _common_  | prose, license                                    | license, containers, shell, workflows, prose                                      | —                                  | —                            | `commit`, `actionlint`, `zizmor`                             |
+
+- **go** — `go` and `govulncheck` are pinned by the repo (govulncheck must be `go install`ed by the same Go that builds
+  the module). Structural knobs `app`, `app_pkg`, `build_tags`, `version_pkg` come from `[vars]`. `docs` is left to the
+  repo (a CLI reference is app-specific) with `docs-build`/`serve`/`sync` (zensical via uv) ready to wire in.
+- **node** — one archetype for libraries and GitHub Actions, on the npm-script contract `check`, `check:fix`, `format`,
+  `typecheck`, `build`, `test:coverage`; `typecheck` and `build` are required, the rest optional (`--if-present`).
+  `npm ci` runs with `npm_ci_flags` (`--ignore-scripts --no-fund` by default); an action repo that runs lifecycle
+  scripts sets `npm_ci_flags = ""`. biome owns the code, prettier + markdownlint own the markdown.
+- **python** — uv-native: `uv` (a shared pin) provisions Python from `.python-version`/`requires-python` and the project
+  environment from `pyproject.toml`/`uv.lock`; ruff, pytest and pytest-cov come from the project's dev dependencies. A
+  project without ruff or pytest (a docs-only site) skips those passes with a message. `build` runs `uv build` when
+  `pyproject.toml` has a `[build-system]` and `zensical build` when a `zensical.toml` is present.
+- **terraform** — every task runs in the invoking directory (`environments/<name>/`); `tf-run.sh` injects secrets via
+  `dotty` only when the module carries a `.env.dotty`. `terraform_binary = "tofu"` switches to OpenTofu. No license
+  tasks (addlicense would stamp `.tf` files).
 
 ## Developer tools
 
-Every tool (`addlicense`, `golangci-lint`, `govulncheck`, `gotestsum`, `goreleaser`, `syft`, `grype`, `hadolint`,
-`helm`, `kubescape`, `shellcheck`, `terraform`, `tflint`, `terraform-docs`, `actionlint`, `prettier`,
+Every developer CLI (`addlicense`, `golangci-lint`, `gotestsum`, `goreleaser`, `syft`, `grype`, `hadolint`, `helm`,
+`kubescape`, `shellcheck`, `terraform`, `tflint`, `terraform-docs`, `actionlint`, `zizmor`, `uv`, `prettier`,
 `markdownlint-cli2`) is pinned in `config.toml [tools]` — exact version plus per-platform sha256 checksums (and, where
 the publisher provides it, cosign/SLSA/GitHub-attestation provenance) — locked in `mise.lock`. Tasks run with the pinned
 tools already on PATH — there is no `.bin/`, no `tools/go.mod`, no `package.json` for linters, and no tool-path plumbing
 anywhere. mise installs a tool into its shared per-machine store the first time a task needs it (verifying the checksum)
 and reuses it across every repo.
 
+**Language runtimes are per-repo**, not fleet-wide, so each repo tracks its own version at its own cadence:
+
+- **Go repos** pin `go` and `go:golang.org/x/vuln/cmd/govulncheck` in their root `mise.toml [tools]`. govulncheck
+  publishes no binaries and must be compiled by the repo's own Go, which is why it left the shared pins with it. mise
+  keys a `go:` install by the tool version alone, so after bumping `go` on a machine that already has govulncheck,
+  rebuild it once: `mise install -f "go:golang.org/x/vuln/cmd/govulncheck"` (a fresh CI runner compiles it with the
+  pinned Go automatically). golangci-lint, gotestsum and goreleaser stay shared (prebuilt binaries); override
+  `golangci-lint` in the root `[tools]` if the repo's Go outpaces the shared pin.
+- **Node repos** pin `node` in their root `[tools]`. The library _also_ pins `node`, purely as the runtime for the
+  npm-backed prettier and markdownlint-cli2 (mise's npm backend does not provision node, and repos must be able to lint
+  prose without a `package.json`); the repo's root pin takes precedence, so the shared one never dictates a Node repo's
+  runtime.
+- **Python repos** pin nothing: `uv` provisions the interpreter. A repo that wants a mise-managed Python adds `python`
+  to its root `[tools]`.
+
+Each repo's own Renovate then bumps its runtime pins in its root `mise.toml` (the org preset already covers root
+`mise.toml`); bumping a shared tool for the **whole fleet** is one commit here (a Renovate PR per tool, or by hand: edit
+the pin in `config.toml` and re-run `mise lock`) plus a submodule bump in the consumers. A repo can override any shared
+tool version (or add tools) in its root `mise.toml [tools]` — the root config wins. **Never run `mise lock` or
+`mise upgrade` in a consumer repo**: the lockfile lives in this library, so a consumer-side re-lock writes into the
+submodule working tree.
+
 `dotty` is the exception: our own first-party CLI, never mise-installed at all. The terraform archetype's `tf-run.sh`
 wrapper invokes it only to inject secrets when a module directory carries a `.env.dotty` — a local-dev convenience
-that's never present in CI — so the wrapper checks for `dotty` on PATH itself and fails with a clear message if it's
+that's never present in CI — so the wrapper checks for `dotty` on PATH itself and runs the command uninjected if it's
 missing, rather than having mise provision (and thereby pin/shadow) a CLI most tasks never touch.
 
-- The tooling runtimes themselves are locked too (`go`, `node`), provisioned by mise — no system Go or Node is needed.
-- Bumping a tool for the **whole fleet** is one commit here (a Renovate PR per tool, or by hand: edit the pin in
-  `config.toml` and re-run `mise lock`) plus a submodule bump in the consumers.
-- A repo can override a tool version (or add tools) in its root `mise.toml [tools]` — the root config wins.
-- **Never run `mise lock` or `mise upgrade` in a consumer repo**: the lockfile lives in this library, so a consumer-side
-  re-lock writes into the submodule working tree.
-
-Consuming repos should keep `coverage/` (and `node_modules/`) in `.gitignore`; `.bin/` is no longer created.
+Consuming repos should keep `coverage/` (and `node_modules/`, `.venv/`, `site/`, `dist/` as applicable) in `.gitignore`;
+`.bin/` is no longer created.
 
 Dependabot has no mise ecosystem, so the org Renovate bot
 ([`renovate-config`](https://github.com/bitwise-media-group/renovate-config)) replaces it: every `[tools]` entry in
@@ -130,39 +209,58 @@ lockfile entries — set `GITHUB_TOKEN` (e.g. `GITHUB_TOKEN="$(gh auth token)"`)
 
 Two tiers, replacing the old before-the-include make variables:
 
-| tier                           | where                   | examples                                                                                                                   |
-| ------------------------------ | ----------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| structural (set once per repo) | root `mise.toml [vars]` | `app`, `app_pkg`, `build_tags`, `version_pkg`, `license_holder`, `terraform_binary`, `grype_fail_on`, `kubescape_severity` |
-| per-invocation (runtime)       | environment variables   | `VERSION`, `COMMIT`, `DATE`, `LDFLAGS`, `MODULE`, `FUZZ`, `FUZZTIME`, `FUZZ_PKG`, `NPM_CI_FLAGS`                           |
+| tier                           | where                   | examples                                                                                                                                                          |
+| ------------------------------ | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| structural (set once per repo) | root `mise.toml [vars]` | `app`, `app_pkg`, `build_tags`, `version_pkg`, `license_holder`, `npm_ci_flags`, `terraform_binary`, `grype_fail_on`, `kubescape_severity`, `zizmor_min_severity` |
+| per-invocation (runtime)       | environment variables   | `VERSION`, `COMMIT`, `DATE`, `LDFLAGS`, `MODULE`, `FUZZ`, `FUZZTIME`, `FUZZ_PKG`, `NPM_CI_FLAGS`                                                                  |
 
-`make build VERSION=1.2.3` still works — make exports command-line variables to the forwarded `mise run`, and the go-cli
+`make build VERSION=1.2.3` still works — make exports command-line variables to the forwarded `mise run`, and the go
 scripts also accept the old spellings (`APP`, `APP_PKG`, …) from the environment.
 
 ## Other conventions the library assumes
 
 - **License holder** is `BitWise Media Group Ltd` (override `license_holder` in `[vars]`). The license tasks ignore
   generated/vendored trees (`node_modules/`, `.mise/`, `.claude/`, `.venv/`, `coverage/`) by default; a repo's
-  `.licenseignore` adds to that.
+  `.licenseignore` adds to that. Every archetype but terraform runs them — a node action repo whose committed `dist/`
+  bundle must stay byte-identical to the build output lists `dist/**` in its `.licenseignore`.
 - **Prose is linted in every archetype, with zero per-repo config**: `fmt`/`lint` always run the pinned prettier +
   markdownlint-cli2 over all `*.md` from the repo root, excluding generated and vendored content (`CHANGELOG.md`,
   `node_modules/`, `.mise/`, `.venv/`, `.claude/`). The house defaults are this library's own `.prettierrc.yaml` /
   `.prettierignore` / `.markdownlint-cli2.yaml`, read from `.mise/` — a repo that commits its own copy of one of those
-  files overrides that file wholesale. Node Action **npm scripts** are named `check`, `check:fix`, `typecheck`, `build`,
-  `test:coverage` (biome + rollup + vitest); biome owns the code, prettier + markdownlint own the markdown.
+  files overrides that file wholesale.
+- **GitHub Actions workflows are linted in every archetype, with zero per-repo config**: `lint` runs actionlint (syntax,
+  expressions, embedded shell) and zizmor (security: injection, unpinned actions, excessive permissions, dangerous
+  triggers) over `.github/workflows`, no-op where there are none. zizmor fails the gate at **low** severity and up by
+  default (`zizmor_min_severity` in `[vars]`); silence an accepted finding inline (`# zizmor: ignore[audit-name]`) or in
+  a repo `zizmor.yml`. `make actionlint` / `make zizmor` run either tool alone.
 - **Container, deploy, and shell artifacts are linted when present, with zero per-repo config**: every archetype's
-  `lint` runs runtime-detected passes (scripts in `hack/`) that no-op silently when a repo has none of the artifacts. A
-  root `Dockerfile`/`Dockerfile.*` gets hadolint plus a grype vulnerability scan of the external base images named in
-  its `FROM` lines (pulled straight from the registry — no docker daemon; build-stage aliases, `scratch`, and
-  unresolvable `${ARG}` refs are skipped, simple `ARG` defaults resolved). Each `helm/*/Chart.yaml` chart gets
-  `helm lint` plus a kubescape misconfiguration scan; every `kustomization.yaml`/`.yml` directory gets a kubescape scan
-  (`kind: Component` dirs are skipped — they only build through an overlay). Any `*.sh` under `scripts/` or `hack/` gets
-  shellcheck. Gates fail at **high** severity by default (`grype_fail_on` / `kubescape_severity` in `[vars]`); grype
-  passes `--only-fixed`, so only vulnerabilities an updated base image would fix break the build. Repos silence accepted
-  findings with their own `.grype.yaml` / `.hadolint.yaml` (auto-loaded by the tools from the repo root) or a
+  `lint` runs runtime-detected passes (scripts in `common/scripts/`) that no-op silently when a repo has none of the
+  artifacts. A root `Dockerfile`/`Dockerfile.*` gets hadolint plus a grype vulnerability scan of the external base
+  images named in its `FROM` lines (pulled straight from the registry — no docker daemon; build-stage aliases,
+  `scratch`, and unresolvable `${ARG}` refs are skipped, simple `ARG` defaults resolved). Each `helm/*/Chart.yaml` chart
+  gets `helm lint` plus a kubescape misconfiguration scan; every `kustomization.yaml`/`.yml` directory gets a kubescape
+  scan (`kind: Component` dirs are skipped — they only build through an overlay). Any `*.sh` under `scripts/` or `hack/`
+  gets shellcheck. Gates fail at **high** severity by default (`grype_fail_on` / `kubescape_severity` in `[vars]`);
+  grype passes `--only-fixed`, so only vulnerabilities an updated base image would fix break the build. Repos silence
+  accepted findings with their own `.grype.yaml` / `.hadolint.yaml` (auto-loaded by the tools from the repo root) or a
   `.kubescape/exceptions.json` (passed as `--exceptions`). hadolint fails on any warning by default — use inline
   `# hadolint ignore=…` comments or `.hadolint.yaml`. First run on a machine downloads grype's vulnerability database
   (~200 MB, cached in `~/.cache/grype`) and kubescape's controls artifacts (`~/.kubescape`), so it needs network; the
   scans never contact a Kubernetes cluster (`KUBECONFIG` is pointed at nothing).
-- **This repo's own layout is inverted**: `config.toml` sits at the root (it _is_ the consumer's `.mise/`), the dogfood
-  archetype include lives in the root `mise.toml`, and `.mise/` here contains symlinks back to the root files so mise
-  resolves the tools the same way it does in a consumer.
+- **This repo's own layout is inverted**: `config.toml`, `common/` and `archetypes/` sit at the root (it _is_ the
+  consumer's `.mise/`), the dogfood include lives in the root `mise.toml`, and `.mise/` here contains symlinks back to
+  the root entries so mise resolves tools and scripts the same way it does in a consumer.
+
+## Migrating from v2 (`tasks/<archetype>.toml` + `mise.mk`)
+
+1. Move the runtime pins into the repo's root `mise.toml [tools]`: `go` + `"go:golang.org/x/vuln/cmd/govulncheck"` for a
+   Go repo, `node` for a Node repo (Python repos pin nothing).
+2. Replace `includes = [".mise/tasks/<archetype>.toml"]` with
+   `includes = [".mise/common/tasks.toml", ".mise/archetypes/<lang>/tasks.toml"]` — `go-cli` → `go`, `node-lib` /
+   `node-action` → `node` (an action repo adds `npm_ci_flags = ""` to `[vars]`), `docs-site` → `python`, `markdown-lib`
+   → common only.
+3. Replace `include .mise/mise.mk` with `include .mise/archetypes/<lang>/include.mk` (or
+   `include .mise/common/include.mk`).
+4. Node repos: the license tasks now run — add `dist/**` (and anything else generated) to `.licenseignore`; make sure a
+   `typecheck` script exists.
+5. Workflow lint now includes zizmor: run `make lint` once and address or ignore its findings.

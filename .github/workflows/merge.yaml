@@ -17,7 +17,9 @@
 # Pinned to a full commit SHA (tag in the comment); Dependabot keeps it fresh.
 name: Merge
 
-on:
+# issue_comment + workflow_run are the point (see above); zizmor flags the
+# triggers themselves, the reusable workflow does the privilege handling
+on: # zizmor: ignore[dangerous-triggers]
   issue_comment:
     types: [created]
   workflow_run:

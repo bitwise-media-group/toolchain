@@ -10,7 +10,8 @@
 # Pinned to a full commit SHA (tag in the comment); Dependabot keeps it fresh.
 name: Merge Notice
 
-on:
+# pull_request_target is the point (see above); zizmor flags the trigger itself
+on: # zizmor: ignore[dangerous-triggers]
   pull_request_target:
     types: [opened]
 

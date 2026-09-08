@@ -1,0 +1,153 @@
+# Copyright 2026 BitWise Media Group Ltd
+# SPDX-License-Identifier: MIT
+#
+# common — the tasks every archetype shares, plus the canonical fmt/lint/ci/pr
+# rollups for a repo with nothing to compile or test (a Markdown/YAML library:
+# github-workflows, skills, .github). Every consumer's root mise.toml includes
+# this file FIRST, then (optionally) exactly one archetypes/<lang>/tasks.toml:
+#
+#   [task_config]
+#   includes = [".mise/common/tasks.toml", ".mise/archetypes/go/tasks.toml"]
+#
+# Included task files use the simplified format (top-level keys ARE task
+# names) and cannot nest includes, which is why the consumer lists both. Task
+# merging is whole-task replacement with later includes winning, so an
+# archetype's fmt/lint/ci/pr rollups replace the ones defined here — and two
+# archetypes can never stack (the second would clobber the first's rollups).
+#
+# Leaf tasks run in the invoker's directory ({{cwd}}) or the repo root
+# ({{config_root}}), matching where make recipes used to run. Helpers that
+# only exist to be wired into rollups are hidden. Anything longer than a
+# one-liner lives in common/scripts/ (POSIX sh, shellcheck-linted, resolved
+# through the same .mise/ submodule mount as this file); structural knobs
+# reach the scripts as environment variables set per task.
+#
+# There are no build/test/e2e stubs: the reusable CI workflow discovers which
+# canonical tasks a repo defines (mise tasks ls --name-only) and only runs
+# those.
+
+# Run an agent-prepared commit batch if one is waiting. The `pr` gate calls this
+# last so a green local run flows straight into the (user-signed) commit.
+[commit]
+description = "run ./commit.sh (agent-prepared commit batch) if present"
+dir = "{{cwd}}"
+run = "if [ -x ./commit.sh ]; then ./commit.sh; fi"
+
+# addlicense with the house default ignores (generated/vendored trees, incl.
+# the .mise/ submodule, and the agent-prepared commit.sh handoff every repo
+# may transiently carry) plus one -ignore per non-empty line of the repo's
+# .licenseignore. See scripts/license.sh.
+[license]
+description = "inject SPDX license headers (addlicense)"
+dir = "{{cwd}}"
+env = { LICENSE_HOLDER = "{{vars.license_holder}}" }
+run = "{{config_root}}/.mise/common/scripts/license.sh"
+
+# Check-mode counterpart wired into the `lint` rollups.
+[license-check]
+hide = true
+dir = "{{cwd}}"
+env = { LICENSE_HOLDER = "{{vars.license_holder}}" }
+run = "{{config_root}}/.mise/common/scripts/license.sh --check"
+
+# Prose format/lint via the pinned prettier + markdownlint-cli2, wired into
+# every archetype: all *.md, excluding generated/vendored content. The house
+# defaults are this library's own .prettierrc.yaml / .prettierignore /
+# .markdownlint-cli2.yaml (read from .mise/ in a consumer); a repo that carries
+# its own copy of a file overrides that file wholesale. Runs from the repo root
+# (config_root) so the whole repo is covered no matter where make is invoked
+# (e.g. a terraform environment subdirectory). See scripts/prose.sh.
+[fmt-prose]
+hide = true
+dir = "{{config_root}}"
+run = "{{config_root}}/.mise/common/scripts/prose.sh fmt"
+
+[lint-prose]
+hide = true
+dir = "{{config_root}}"
+run = "{{config_root}}/.mise/common/scripts/prose.sh check"
+
+# GitHub Actions workflow lint: actionlint (syntax, expressions, shellcheck of
+# run: steps) and zizmor (security: injection, unpinned actions, excessive
+# permissions, ...). The two visible tasks run the tools directly for ad-hoc
+# use; `lint-workflows` is the guarded pass every `lint` rollup carries — it
+# no-ops silently in a repo with no .github/workflows.
+[actionlint]
+description = "lint .github/workflows with actionlint"
+dir = "{{config_root}}"
+run = "actionlint"
+
+[zizmor]
+description = "security-audit .github/workflows with zizmor"
+dir = "{{config_root}}"
+run = "zizmor --min-severity {{vars.zizmor_min_severity}} .github/workflows"
+
+[lint-workflows]
+hide = true
+dir = "{{config_root}}"
+env = { ZIZMOR_MIN_SEVERITY = "{{vars.zizmor_min_severity}}" }
+run = "{{config_root}}/.mise/common/scripts/lint-workflows.sh"
+
+# Container/deploy/shell lint, runtime-detected: each script probes for its
+# marker files from the repo root and no-ops silently when the repo has none,
+# so every archetype carries these unconditionally. Items found but not
+# checkable (a kustomize Component, an unresolvable ${ARG} base image) are
+# skipped with a one-line message, never silently.
+
+[lint-docker]
+hide = true
+dir = "{{config_root}}"
+env = { GRYPE_FAIL_ON = "{{vars.grype_fail_on}}" }
+run = "{{config_root}}/.mise/common/scripts/lint-docker.sh"
+
+[lint-helm]
+hide = true
+dir = "{{config_root}}"
+env = { KUBESCAPE_SEVERITY = "{{vars.kubescape_severity}}" }
+run = "{{config_root}}/.mise/common/scripts/lint-helm.sh"
+
+[lint-kustomize]
+hide = true
+dir = "{{config_root}}"
+env = { KUBESCAPE_SEVERITY = "{{vars.kubescape_severity}}" }
+run = "{{config_root}}/.mise/common/scripts/lint-kustomize.sh"
+
+[lint-shell]
+hide = true
+dir = "{{config_root}}"
+run = "{{config_root}}/.mise/common/scripts/lint-shell.sh"
+
+# The composite every archetype's `lint` carries.
+[lint-containers]
+hide = true
+run = [
+  { task = "lint-docker" },
+  { task = "lint-helm" },
+  { task = "lint-kustomize" }
+]
+
+# Canonical contract for a common-only repo. Rollups are sequential
+# composites — the mutating fmt passes must not race, and fmt always precedes
+# lint inside pr. An archetype include replaces these whole-task.
+
+[fmt]
+description = "format prose, inject license headers"
+run = [{ task = "fmt-prose" }, { task = "license" }]
+
+[lint]
+description = "prose lint (prettier + markdownlint) + license, container, shell and workflow checks"
+run = [
+  { task = "license-check" },
+  { task = "lint-containers" },
+  { task = "lint-shell" },
+  { task = "lint-workflows" },
+  { task = "lint-prose" },
+]
+
+[ci]
+description = "the gates the reusable CI workflow runs"
+run = [{ task = "lint" }]
+
+[pr]
+description = "full local gate before a pull request"
+run = [{ task = "fmt" }, { task = "lint" }, { task = "commit" }]

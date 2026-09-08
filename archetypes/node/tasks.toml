@@ -1,0 +1,110 @@
+# Copyright 2026 BitWise Media Group Ltd
+# SPDX-License-Identifier: MIT
+#
+# node — archetype for a Node/TypeScript repo: a library (design-system,
+# evolve-design-system) or a GitHub Action (ff-merge, setup-evolve).
+#
+# Include AFTER common/tasks.toml in the consumer's root mise.toml, and pin
+# the runtime in the repo's own root [tools] (the library pins node only as
+# the runtime for the prose tools; the root pin wins):
+#   [tools]
+#   node = "24.20.0"
+#   [task_config]
+#   includes = [".mise/common/tasks.toml", ".mise/archetypes/node/tasks.toml"]
+#
+# The contract is the repo's npm scripts, by ecosystem convention:
+#   check / check:fix   biome (lint + format check / auto-fix)      optional
+#   format              a formatter pass beyond biome --write        optional
+#   typecheck           tsc --noEmit                                 required
+#   build               tsup / tsc / rollup                          required
+#   test:coverage       vitest with coverage → coverage/            optional
+# Optional scripts run through `npm run --if-present`, so a library with no
+# tests still has a (trivially passing) `test` task — the one place the
+# library tolerates a task that may do nothing, since the script set is the
+# repo's declaration of what applies. biome owns the code; prettier +
+# markdownlint (common) own the markdown.
+#
+# `npm ci` runs with the npm_ci_flags var (--ignore-scripts --no-fund by
+# default, the safe choice for a library). A GitHub Action repo that runs
+# lifecycle scripts on install sets npm_ci_flags = "" in its root [vars];
+# NPM_CI_FLAGS in the environment overrides per invocation (unset-only, so
+# NPM_CI_FLAGS= forces a plain npm ci). No `e2e`: running an action for real
+# would mutate refs; covered by unit tests.
+
+# Install exactly as locked in package-lock.json, and run everything straight
+# from node_modules (never npx or a global). sources/outputs replace the old
+# touch-sentinel: the install is skipped while the lockfile copy npm leaves in
+# node_modules is newer than the manifests.
+[node-install]
+hide = true
+dir = "{{cwd}}"
+sources = ["package.json", "package-lock.json"]
+outputs = ["node_modules/.package-lock.json"]
+run = "npm ci ${NPM_CI_FLAGS-{{vars.npm_ci_flags}}}"
+
+# Auto-fix pass wired into `fmt`.
+[node-fmt]
+hide = true
+dir = "{{cwd}}"
+depends = ["node-install"]
+run = ["npm run --if-present check:fix", "npm run --if-present format"]
+
+# Check-mode static analysis wired into `lint`: biome (when present) then the
+# TypeScript type-check.
+[node-lint]
+hide = true
+dir = "{{cwd}}"
+depends = ["node-install"]
+run = ["npm run --if-present check", "npm run typecheck"]
+
+# The reusable CI fails an action PR if the committed dist/ then differs from
+# source, so the build must be reproducible.
+[node-build]
+hide = true
+dir = "{{cwd}}"
+depends = ["node-install"]
+run = "npm run build"
+
+# vitest with coverage — emits coverage/cobertura-coverage.xml + coverage/junit.xml.
+[node-test]
+hide = true
+dir = "{{cwd}}"
+depends = ["node-install"]
+run = "npm run --if-present test:coverage"
+
+[fmt]
+description = "npm run check:fix / format + prose format, inject license headers"
+run = [{ task = "node-fmt" }, { task = "fmt-prose" }, { task = "license" }]
+
+[lint]
+description = "npm run check + typecheck + prose, license, container, shell and workflow checks"
+run = [
+  { task = "license-check" },
+  { task = "node-lint" },
+  { task = "lint-containers" },
+  { task = "lint-shell" },
+  { task = "lint-workflows" },
+  { task = "lint-prose" },
+]
+
+[build]
+description = "npm run build"
+run = [{ task = "node-build" }]
+
+[test]
+description = "npm run test:coverage (if the repo defines it)"
+run = [{ task = "node-test" }]
+
+[ci]
+description = "the gates the reusable CI workflow runs"
+run = [{ task = "lint" }, { task = "build" }, { task = "test" }]
+
+[pr]
+description = "full local gate before a pull request"
+run = [
+  { task = "fmt" },
+  { task = "lint" },
+  { task = "build" },
+  { task = "test" },
+  { task = "commit" },
+]

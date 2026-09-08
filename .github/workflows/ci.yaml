@@ -1,11 +1,13 @@
 # Copyright 2026 BitWise Media Group Ltd
 # SPDX-License-Identifier: MIT
 
-# The make library dogfoods its own markdown-lib archetype. This thin caller runs
-# the reusable CI (v5+: mise-task aware), which discovers the canonical tasks the
-# repo defines via `mise tasks ls --name-only` and runs `make <target>` for each —
-# here only `lint` (addlicense + prettier + markdownlint + actionlint); build and
-# test don't exist in this archetype and are skipped. The pinned tooling installs
+# The toolchain library dogfoods its own common-only contract. This thin caller
+# runs the reusable CI (v5+: mise-task aware), which discovers the canonical
+# tasks the repo defines via `mise tasks ls --name-only` and runs `make <target>`
+# for each — here only `lint` (addlicense + prettier + markdownlint, plus the
+# actionlint + zizmor workflow lint common carries, and shellcheck over the
+# library's own task scripts); build and test don't exist in a common-only
+# repo and are skipped. The pinned tooling installs
 # via mise from the repo-root config.toml/mise.lock (the file consumers load as
 # .mise/config.toml); the reusable workflow's Setup mise step puts a pinned mise
 # on PATH.
