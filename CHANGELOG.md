@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.0.0](https://github.com/bitwise-media-group/toolchain/compare/v2.5.0...v3.0.0) (2026-09-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* consumers must (1) pin their runtime in the root mise.toml [tools] — go + "go:golang.org/x/vuln/cmd/govulncheck" for Go repos, node for Node repos, nothing for Python (uv); (2) replace includes = [".mise/tasks/<archetype>.toml"] with includes = [".mise/common/tasks.toml", ".mise/archetypes/<lang>/tasks.toml"] (go-cli -> go, node-lib/node-action -> node, docs-site -> python, markdown-lib -> common only; action repos set npm_ci_flags = ""); (3) replace `include .mise/mise.mk` with `include .mise/archetypes/<lang>/include.mk` (or .mise/common/include.mk); (4) Node repos now run the license tasks — add generated output such as dist/** to .licenseignore and provide a typecheck npm script; (5) lint now runs zizmor over .github/workflows — address or ignore its findings.
+
+### Features
+
+* per-repo language toolchains, common/ + archetypes/&lt;lang&gt;/ layout ([46873be](https://github.com/bitwise-media-group/toolchain/commit/46873be4eb9094c1fd58ad9764f3d3f1eb4122f0))
+
 ## [2.5.0](https://github.com/bitwise-media-group/toolchain/compare/v2.4.2...v2.5.0) (2026-09-08)
 
 
