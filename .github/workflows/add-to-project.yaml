@@ -11,7 +11,7 @@
 # issues + pull-requests read) installed on all repositories, exposed as the
 # ADD_TO_PROJECT_CLIENT_ID variable + ADD_TO_PROJECT_PRIVATE_KEY secret.
 #
-# Pinned to a full commit SHA (tag in the comment); Dependabot keeps it fresh.
+# Pinned to a full commit SHA (tag in the comment); Renovate keeps it fresh.
 name: Add to Project
 
 on:

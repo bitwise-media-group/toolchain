@@ -12,7 +12,7 @@
 # .mise/config.toml); the reusable workflow's Setup mise step puts a pinned mise
 # on PATH.
 #
-# Pinned to a full commit SHA (tag in the comment); Dependabot keeps it fresh.
+# Pinned to a full commit SHA (tag in the comment); Renovate keeps it fresh.
 name: Continuous Integration
 
 on:

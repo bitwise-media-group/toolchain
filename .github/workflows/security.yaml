@@ -8,7 +8,7 @@
 # zizmor.yml at the root (or under .github/) would additionally opt the actions
 # leg into zizmor.
 #
-# Pinned to a full commit SHA (tag in the comment); Dependabot keeps it fresh.
+# Pinned to a full commit SHA (tag in the comment); Renovate keeps it fresh.
 name: Security Analysis
 
 on:

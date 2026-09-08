@@ -10,7 +10,7 @@
 # Keep "Merge Review Ack" in merge.yaml's `workflow_run.workflows` list. No secret
 # needed — the completed run is the only signal.
 #
-# Pinned to a full commit SHA (tag in the comment); Dependabot keeps it fresh.
+# Pinned to a full commit SHA (tag in the comment); Renovate keeps it fresh.
 name: Merge Review Ack
 
 on:

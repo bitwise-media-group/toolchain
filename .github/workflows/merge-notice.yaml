@@ -7,7 +7,7 @@
 # posts a static comment with a pull-requests:write token, so the elevated context
 # is safe. No secret needed.
 #
-# Pinned to a full commit SHA (tag in the comment); Dependabot keeps it fresh.
+# Pinned to a full commit SHA (tag in the comment); Renovate keeps it fresh.
 name: Merge Notice
 
 # pull_request_target is the point (see above); zizmor flags the trigger itself

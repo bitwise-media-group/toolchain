@@ -2,9 +2,9 @@
 
 Shared build tasks for the bitwise-media-group ecosystem — pinned developer tools, mise task archetypes, and house
 lint/license policy — with a thin Makefile shim on top. Each repo consumes this library as a git submodule mounted at
-`.mise/` (bumped by Dependabot's `gitsubmodule` ecosystem), pins its own language runtime in its root `mise.toml`, and
-reduces its `Makefile` to one include. (Formerly named `make`, from its Makefile-fragment era; GitHub redirects the old
-URL.)
+`.mise/` (bumped to each new semver tag by Renovate's `git-submodules` manager), pins its own language runtime in its
+root `mise.toml`, and reduces its `Makefile` to one include. (Formerly named `make`, from its Makefile-fragment era;
+GitHub redirects the old URL.)
 
 ## Layout
 
@@ -14,6 +14,9 @@ toolchain/                    # this repo == the consumer's .mise/ directory
 │                             #   defaults — NO tasks; consumers load it natively as
 │                             #   .mise/config.toml
 ├── mise.lock                 # per-platform sha256 + provenance for every pin
+├── .prettierrc.yaml          # house prose defaults, read from .mise/ by every
+├── .prettierignore           #   consumer that does not commit its own copy
+├── .markdownlint-cli2.yaml   #   (see "Other conventions")
 ├── common/                   # what every repo gets, whatever its language
 │   ├── tasks.toml            #   commit, license, prose fmt/lint, actionlint + zizmor,
 │   │                         #   container/helm/kustomize/shell lint, and the
@@ -32,7 +35,7 @@ toolchain/                    # this repo == the consumer's .mise/ directory
 
 ## Usage
 
-Add the submodule once, mounted at `.mise/`:
+Add the submodule once, mounted at `.mise/` (Renovate then proposes a bump whenever a new `vX.Y.Z` tag is cut):
 
 ```sh
 git submodule add https://github.com/bitwise-media-group/toolchain.git .mise
@@ -157,13 +160,13 @@ precedes `lint` inside `pr`.
 
 ## Developer tools
 
-Every developer CLI (`addlicense`, `golangci-lint`, `gotestsum`, `goreleaser`, `syft`, `grype`, `hadolint`, `helm`,
-`kubescape`, `shellcheck`, `terraform`, `tflint`, `terraform-docs`, `actionlint`, `zizmor`, `uv`, `prettier`,
+Every developer CLI (`addlicense`, `golangci-lint`, `gotestsum`, `goreleaser`, `syft`, `grype`, `cosign`, `hadolint`,
+`helm`, `kubescape`, `shellcheck`, `terraform`, `tflint`, `terraform-docs`, `actionlint`, `zizmor`, `uv`, `prettier`,
 `markdownlint-cli2`) is pinned in `config.toml [tools]` — exact version plus per-platform sha256 checksums (and, where
 the publisher provides it, cosign/SLSA/GitHub-attestation provenance) — locked in `mise.lock`. Tasks run with the pinned
-tools already on PATH — there is no `.bin/`, no `tools/go.mod`, no `package.json` for linters, and no tool-path plumbing
-anywhere. mise installs a tool into its shared per-machine store the first time a task needs it (verifying the checksum)
-and reuses it across every repo.
+tools already on PATH — there is no `tools/go.mod`, no `package.json` for linters, and no tool-path plumbing anywhere.
+mise installs a tool into its shared per-machine store the first time a task needs it (verifying the checksum) and
+reuses it across every repo.
 
 **Language runtimes are per-repo**, not fleet-wide, so each repo tracks its own version at its own cadence:
 
@@ -180,30 +183,31 @@ and reuses it across every repo.
 - **Python repos** pin nothing: `uv` provisions the interpreter. A repo that wants a mise-managed Python adds `python`
   to its root `[tools]`.
 
-Each repo's own Renovate then bumps its runtime pins in its root `mise.toml` (the org preset already covers root
-`mise.toml`); bumping a shared tool for the **whole fleet** is one commit here (a Renovate PR per tool, or by hand: edit
-the pin in `config.toml` and re-run `mise lock`) plus a submodule bump in the consumers. A repo can override any shared
-tool version (or add tools) in its root `mise.toml [tools]` — the root config wins. **Never run `mise lock` or
-`mise upgrade` in a consumer repo**: the lockfile lives in this library, so a consumer-side re-lock writes into the
-submodule working tree.
+Each repo's own Renovate bumps its runtime pins in its root `mise.toml` (the org preset already covers root
+`mise.toml`). A repo can override any shared tool version (or add tools) in its root `mise.toml [tools]` — the root
+config wins.
 
 `dotty` is the exception: our own first-party CLI, never mise-installed at all. The terraform archetype's `tf-run.sh`
 wrapper invokes it only to inject secrets when a module directory carries a `.env.dotty` — a local-dev convenience
 that's never present in CI — so the wrapper checks for `dotty` on PATH itself and runs the command uninjected if it's
 missing, rather than having mise provision (and thereby pin/shadow) a CLI most tasks never touch.
 
-Consuming repos should keep `coverage/` (and `node_modules/`, `.venv/`, `site/`, `dist/` as applicable) in `.gitignore`;
-`.bin/` is no longer created.
+Consuming repos should keep `coverage/` (and `node_modules/`, `.venv/`, `site/`, `dist/` as applicable) in `.gitignore`.
 
-Dependabot has no mise ecosystem, so the org Renovate bot
-([`renovate-config`](https://github.com/bitwise-media-group/renovate-config)) replaces it: every `[tools]` entry in
-`config.toml` is an exact pin, and the bot opens one PR per tool that bumps the pin and regenerates `mise.lock`
+### Updating the shared pins
+
+Bumping a shared tool for the **whole fleet** is one commit here plus a submodule bump in the consumers. The org
+Renovate bot ([`renovate-config`](https://github.com/bitwise-media-group/renovate-config)) does it: every `[tools]`
+entry in `config.toml` is an exact pin, and the bot opens one PR per tool that bumps the pin and regenerates `mise.lock`
 (`mise lock`) in the same commit, under the org's 3-day release cooldown (`minimumReleaseAge`, surfaced as the
 `renovate/stability-days` check). Stable minor/patch bumps automerge; majors and 0.x wait for review. The repo-local
 `.github/renovate.json5` teaches the mise manager about the root `config.toml` (the dogfood inversion hides it from the
-default file patterns) and lands tool bumps as `fix(deps):` so release-please cuts a patch for consumers. To bump by
-hand: edit the pin in `config.toml` and run `mise lock`. Note that unauthenticated GitHub API calls can silently drop
-lockfile entries — set `GITHUB_TOKEN` (e.g. `GITHUB_TOKEN="$(gh auth token)"`) when running it by hand.
+default file patterns) and lands tool bumps as `fix(deps):` so release-please cuts a patch for consumers.
+
+To bump by hand: edit the pin in `config.toml` and run `mise lock`. Unauthenticated GitHub API calls can silently drop
+lockfile entries, so set `GITHUB_TOKEN` (e.g. `GITHUB_TOKEN="$(gh auth token)"`) first. **Never run `mise lock` or
+`mise upgrade` in a consumer repo**: the lockfile lives in this library, so a consumer-side re-lock writes into the
+submodule working tree.
 
 ## Knobs
 
@@ -220,9 +224,10 @@ scripts also accept the old spellings (`APP`, `APP_PKG`, …) from the environme
 ## Other conventions the library assumes
 
 - **License holder** is `BitWise Media Group Ltd` (override `license_holder` in `[vars]`). The license tasks ignore
-  generated/vendored trees (`node_modules/`, `.mise/`, `.claude/`, `.venv/`, `coverage/`) by default; a repo's
-  `.licenseignore` adds to that. Every archetype but terraform runs them — a node action repo whose committed `dist/`
-  bundle must stay byte-identical to the build output lists `dist/**` in its `.licenseignore`.
+  generated/vendored trees (`node_modules/`, `.mise/`, `.claude/`, `.venv/`, `coverage/`) and an agent-prepared
+  `commit.sh` by default; a repo's `.licenseignore` adds to that. Every archetype but terraform runs them — a node
+  action repo whose committed `dist/` bundle must stay byte-identical to the build output lists `dist/**` in its
+  `.licenseignore`.
 - **Prose is linted in every archetype, with zero per-repo config**: `fmt`/`lint` always run the pinned prettier +
   markdownlint-cli2 over all `*.md` from the repo root, excluding generated and vendored content (`CHANGELOG.md`,
   `node_modules/`, `.mise/`, `.venv/`, `.claude/`). The house defaults are this library's own `.prettierrc.yaml` /
@@ -232,7 +237,8 @@ scripts also accept the old spellings (`APP`, `APP_PKG`, …) from the environme
   expressions, embedded shell) and zizmor (security: injection, unpinned actions, excessive permissions, dangerous
   triggers) over `.github/workflows`, no-op where there are none. zizmor fails the gate at **low** severity and up by
   default (`zizmor_min_severity` in `[vars]`); silence an accepted finding inline (`# zizmor: ignore[audit-name]`) or in
-  a repo `zizmor.yml`. `make actionlint` / `make zizmor` run either tool alone.
+  a repo `zizmor.yml`. zizmor's online-only audits run only when `GH_TOKEN` is exported (it prints a notice otherwise).
+  `make actionlint` / `make zizmor` run either tool alone.
 - **Container, deploy, and shell artifacts are linted when present, with zero per-repo config**: every archetype's
   `lint` runs runtime-detected passes (scripts in `common/scripts/`) that no-op silently when a repo has none of the
   artifacts. A root `Dockerfile`/`Dockerfile.*` gets hadolint plus a grype vulnerability scan of the external base
@@ -264,3 +270,4 @@ scripts also accept the old spellings (`APP`, `APP_PKG`, …) from the environme
 4. Node repos: the license tasks now run — add `dist/**` (and anything else generated) to `.licenseignore`; make sure a
    `typecheck` script exists.
 5. Workflow lint now includes zizmor: run `make lint` once and address or ignore its findings.
+6. `.bin/` is no longer created; drop it from `.gitignore` and delete any stale copy.
