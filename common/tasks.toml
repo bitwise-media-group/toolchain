@@ -150,4 +150,4 @@ run = [{ task = "lint" }]
 
 [pr]
 description = "full local gate before a pull request"
-run = [{ task = "fmt" }, { task = "lint" }, { task = "commit" }]
+run = [{ task = "fmt" }, { task = "lint" }]
