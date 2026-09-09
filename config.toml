@@ -132,6 +132,13 @@ app_pkg = "."
 build_tags = ""
 # go: package declaring Version/Commit/BuildDate (empty = <module>/internal/version).
 version_pkg = ""
+# go: space-separated GOOS list that lint and test cover (e.g. a cross-platform
+# CLI: goos = "linux darwin windows"). Empty = the host's GOOS only. Each entry
+# gets its own golangci-lint + govulncheck pass; test runs the full suite on the
+# host's GOOS and compile-checks the test binaries for every other entry
+# (cross-compiled tests cannot execute). GOOS in the environment overrides per
+# invocation (`make test GOOS=windows`).
+goos = ""
 # node: flags for `npm ci`. --ignore-scripts is the safe default for a
 # library; a GitHub Action repo that relies on lifecycle scripts sets
 # npm_ci_flags = "" in its root [vars]. NPM_CI_FLAGS in the environment
