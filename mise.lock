@@ -179,7 +179,7 @@ provenance = "github-attestations"
 [[tools."aqua:goreleaser/goreleaser"]]
 version = "2.18.1"
 backend = "aqua:goreleaser/goreleaser"
-specifiers = ["2.18.0"]
+specifiers = ["2.18.1"]
 
 [tools."aqua:goreleaser/goreleaser"."platforms.linux-arm64"]
 checksum = "sha256:93dba7614308e167158bd26978e8275971fd4b9147e7f3c687a64f5939d42d27"
