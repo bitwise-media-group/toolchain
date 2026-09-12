@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.0.1](https://github.com/bitwise-media-group/toolchain/compare/v3.0.0...v3.0.1) (2026-09-12)
+
+
+### Bug Fixes
+
+* **common:** do not run commit scripts in pr task ([8247ae5](https://github.com/bitwise-media-group/toolchain/commit/8247ae53ab746489ad809411c75a7f20f748fb10))
+* **deps:** lock file maintenance ([#86](https://github.com/bitwise-media-group/toolchain/issues/86)) ([cf73930](https://github.com/bitwise-media-group/toolchain/commit/cf7393095d23a9243a994b425f4a9c39b495a891))
+* **deps:** lock file maintenance ([#87](https://github.com/bitwise-media-group/toolchain/issues/87)) ([f9e8ed9](https://github.com/bitwise-media-group/toolchain/commit/f9e8ed978621ab8cf62bc06cb841d0e14b55c572))
+* **deps:** update dependency aqua:astral-sh/uv to v0.12.11 ([#88](https://github.com/bitwise-media-group/toolchain/issues/88)) ([1fb8c8c](https://github.com/bitwise-media-group/toolchain/commit/1fb8c8c6b583ef600573ef81a5698145f883e50e))
+* **deps:** update dependency aqua:goreleaser/goreleaser to v2.18.1 ([#81](https://github.com/bitwise-media-group/toolchain/issues/81)) ([a34d3c6](https://github.com/bitwise-media-group/toolchain/commit/a34d3c6cf6dc2a04bfa6b1fae3a5b7dda5fe9709))
+* **deps:** update dependency aqua:zizmorcore/zizmor to v1.30.1 ([#89](https://github.com/bitwise-media-group/toolchain/issues/89)) ([57839d0](https://github.com/bitwise-media-group/toolchain/commit/57839d0bb4bc1068d0dda1d35b5d350bd6529cb2))
+
 ## [3.0.0](https://github.com/bitwise-media-group/toolchain/compare/v2.5.0...v3.0.0) (2026-09-08)
 
 
