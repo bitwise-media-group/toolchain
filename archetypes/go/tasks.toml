@@ -18,8 +18,8 @@
 # it.
 #
 # Structural knobs come from [vars] in the consumer's root mise.toml (app,
-# app_pkg, build_tags, version_pkg); per-invocation values (VERSION, COMMIT,
-# DATE, LDFLAGS, MODULE, FUZZ, FUZZTIME, FUZZ_PKG) are environment variables
+# app_pkg, build_tags, version_pkg, goos); per-invocation values (VERSION,
+# COMMIT, DATE, LDFLAGS, MODULE, FUZZ, FUZZTIME, FUZZ_PKG, GOOS) are environment variables
 # with defaults computed inside the scripts — `make build VERSION=x` still
 # works because make exports command-line variables to recipe subshells, and
 # the go knobs also accept env (`make build APP=x`) for muscle-memory parity.
@@ -43,17 +43,22 @@ hide = true
 dir = "{{cwd}}"
 run = ["go fmt ./...", "golangci-lint run --fix"]
 
-# Check-mode pass wired into the `lint` rollup. govulncheck stays here (not
-# only in CI) so the local lint gate and the CI gate check the same things.
+# Check-mode pass wired into the `lint` rollup: golangci-lint + govulncheck
+# once per GOOS in the goos knob (see scripts/lint.sh). govulncheck stays here
+# (not only in CI) so the local lint gate and the CI gate check the same things.
 [go-lint]
 hide = true
 dir = "{{cwd}}"
-run = ["golangci-lint run", "govulncheck ./..."]
+env = { TOOLCHAIN_GOOS = "{{vars.goos}}" }
+run = "{{config_root}}/.mise/archetypes/go/scripts/lint.sh"
 
-# gotestsum + race detector + coverage profile → coverage/ (see scripts/test.sh).
+# gotestsum + race detector + coverage profile → coverage/ on the host's GOOS,
+# plus a compile-only pass per additional GOOS in the goos knob (see
+# scripts/test.sh).
 [go-test]
 hide = true
 dir = "{{cwd}}"
+env = { TOOLCHAIN_GOOS = "{{vars.goos}}" }
 run = "{{config_root}}/.mise/archetypes/go/scripts/test.sh"
 
 # Version metadata stamped into the binary via -ldflags (see scripts/build.sh).
