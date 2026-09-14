@@ -144,8 +144,12 @@ precedes `lint` inside `pr`.
 | _common_  | prose, license                                    | license, containers, shell, workflows, prose                                      | —                                  | —                            | `commit`, `actionlint`, `zizmor`                             |
 
 - **go** — `go` and `govulncheck` are pinned by the repo (govulncheck must be `go install`ed by the same Go that builds
-  the module). Structural knobs `app`, `app_pkg`, `build_tags`, `version_pkg` come from `[vars]`. `docs` is left to the
-  repo (a CLI reference is app-specific) with `docs-build`/`serve`/`sync` (zensical via uv) ready to wire in.
+  the module). Structural knobs `app`, `app_pkg`, `build_tags`, `version_pkg`, `goos` come from `[vars]`. `goos` is a
+  space-separated GOOS list (`goos = "linux darwin windows"`; empty = the host's GOOS only): `lint` runs golangci-lint
+  and govulncheck once per entry, and `test` runs the full suite on the host's GOOS plus a compile-only `go test -c`
+  pass for every other entry, since cross-compiled test binaries cannot execute. `GOOS` in the environment overrides the
+  list per invocation (`make test GOOS=windows`). `docs` is left to the repo (a CLI reference is app-specific) with
+  `docs-build`/`serve`/`sync` (zensical via uv) ready to wire in.
 - **node** — one archetype for libraries and GitHub Actions, on the npm-script contract `check`, `check:fix`, `format`,
   `typecheck`, `build`, `test:coverage`; `typecheck` and `build` are required, the rest optional (`--if-present`).
   `npm ci` runs with `npm_ci_flags` (`--ignore-scripts --no-fund` by default); an action repo that runs lifecycle
@@ -213,10 +217,10 @@ submodule working tree.
 
 Two tiers, replacing the old before-the-include make variables:
 
-| tier                           | where                   | examples                                                                                                                                                          |
-| ------------------------------ | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| structural (set once per repo) | root `mise.toml [vars]` | `app`, `app_pkg`, `build_tags`, `version_pkg`, `license_holder`, `npm_ci_flags`, `terraform_binary`, `grype_fail_on`, `kubescape_severity`, `zizmor_min_severity` |
-| per-invocation (runtime)       | environment variables   | `VERSION`, `COMMIT`, `DATE`, `LDFLAGS`, `MODULE`, `FUZZ`, `FUZZTIME`, `FUZZ_PKG`, `NPM_CI_FLAGS`                                                                  |
+| tier                           | where                   | examples                                                                                                                                                                  |
+| ------------------------------ | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| structural (set once per repo) | root `mise.toml [vars]` | `app`, `app_pkg`, `build_tags`, `version_pkg`, `goos`, `license_holder`, `npm_ci_flags`, `terraform_binary`, `grype_fail_on`, `kubescape_severity`, `zizmor_min_severity` |
+| per-invocation (runtime)       | environment variables   | `VERSION`, `COMMIT`, `DATE`, `LDFLAGS`, `MODULE`, `GOOS`, `FUZZ`, `FUZZTIME`, `FUZZ_PKG`, `NPM_CI_FLAGS`                                                                  |
 
 `make build VERSION=1.2.3` still works — make exports command-line variables to the forwarded `mise run`, and the go
 scripts also accept the old spellings (`APP`, `APP_PKG`, …) from the environment.
