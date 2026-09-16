@@ -1,5 +1,27 @@
 # Changelog
 
+## [3.1.0](https://github.com/bitwise-media-group/toolchain/compare/v3.0.0...v3.1.0) (2026-09-16)
+
+
+### Features
+
+* **go:** add a goos knob so lint and test cover a list of GOOS ([58b1387](https://github.com/bitwise-media-group/toolchain/commit/58b1387e6361c032640df1424a5c5fa97051b017))
+
+
+### Bug Fixes
+
+* **common:** do not run commit scripts in pr task ([8247ae5](https://github.com/bitwise-media-group/toolchain/commit/8247ae53ab746489ad809411c75a7f20f748fb10))
+* **deps:** lock file maintenance ([#86](https://github.com/bitwise-media-group/toolchain/issues/86)) ([cf73930](https://github.com/bitwise-media-group/toolchain/commit/cf7393095d23a9243a994b425f4a9c39b495a891))
+* **deps:** lock file maintenance ([#87](https://github.com/bitwise-media-group/toolchain/issues/87)) ([f9e8ed9](https://github.com/bitwise-media-group/toolchain/commit/f9e8ed978621ab8cf62bc06cb841d0e14b55c572))
+* **deps:** update dependency aqua:astral-sh/uv to v0.12.11 ([#88](https://github.com/bitwise-media-group/toolchain/issues/88)) ([1fb8c8c](https://github.com/bitwise-media-group/toolchain/commit/1fb8c8c6b583ef600573ef81a5698145f883e50e))
+* **deps:** update dependency aqua:astral-sh/uv to v0.12.12 ([#92](https://github.com/bitwise-media-group/toolchain/issues/92)) ([6de3a1a](https://github.com/bitwise-media-group/toolchain/commit/6de3a1aac0e27b4094305a17885a79a458e22b93))
+* **deps:** update dependency aqua:astral-sh/uv to v0.12.13 ([#94](https://github.com/bitwise-media-group/toolchain/issues/94)) ([61b95da](https://github.com/bitwise-media-group/toolchain/commit/61b95da8958f3a341166feb23c28445a1c7e549f))
+* **deps:** update dependency aqua:goreleaser/goreleaser to v2.18.1 ([#81](https://github.com/bitwise-media-group/toolchain/issues/81)) ([a34d3c6](https://github.com/bitwise-media-group/toolchain/commit/a34d3c6cf6dc2a04bfa6b1fae3a5b7dda5fe9709))
+* **deps:** update dependency aqua:hashicorp/terraform to v1.16.2 ([#90](https://github.com/bitwise-media-group/toolchain/issues/90)) ([1f37131](https://github.com/bitwise-media-group/toolchain/commit/1f3713115ac18bc0cef641b61c5282a40cf2b82d))
+* **deps:** update dependency aqua:helm/helm to v4.3.0 ([#93](https://github.com/bitwise-media-group/toolchain/issues/93)) ([2c38b22](https://github.com/bitwise-media-group/toolchain/commit/2c38b22ce027a98c77d732151b36536565bccdb7))
+* **deps:** update dependency aqua:kubescape/kubescape to v4.0.14 ([#91](https://github.com/bitwise-media-group/toolchain/issues/91)) ([4a75c91](https://github.com/bitwise-media-group/toolchain/commit/4a75c913f526ea9e9e52747b4170c0d8eb4d153f))
+* **deps:** update dependency aqua:zizmorcore/zizmor to v1.30.1 ([#89](https://github.com/bitwise-media-group/toolchain/issues/89)) ([57839d0](https://github.com/bitwise-media-group/toolchain/commit/57839d0bb4bc1068d0dda1d35b5d350bd6529cb2))
+
 ## [3.0.0](https://github.com/bitwise-media-group/toolchain/compare/v2.5.0...v3.0.0) (2026-09-08)
 
 
