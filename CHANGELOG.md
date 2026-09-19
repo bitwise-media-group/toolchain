@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.1.1](https://github.com/bitwise-media-group/toolchain/compare/v3.1.0...v3.1.1) (2026-09-19)
+
+
+### Bug Fixes
+
+* **deps:** update dependency aqua:astral-sh/uv to v0.12.14 ([#95](https://github.com/bitwise-media-group/toolchain/issues/95)) ([a037061](https://github.com/bitwise-media-group/toolchain/commit/a03706133360bfefa2ca05b56771bbf2d082a09c))
+* **deps:** update dependency aqua:astral-sh/uv to v0.12.15 ([#97](https://github.com/bitwise-media-group/toolchain/issues/97)) ([744ac1f](https://github.com/bitwise-media-group/toolchain/commit/744ac1f216935fb2c272f554ec37873acc29bdb9))
+* **deps:** update dependency npm:prettier to v3.9.7 ([#98](https://github.com/bitwise-media-group/toolchain/issues/98)) ([51a5d04](https://github.com/bitwise-media-group/toolchain/commit/51a5d04201bd030c04811ec21fee56f1ed85e2eb))
+
 ## [3.1.0](https://github.com/bitwise-media-group/toolchain/compare/v3.0.0...v3.1.0) (2026-09-16)
 
 
