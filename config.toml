@@ -114,7 +114,7 @@ node = "lts"
 "aqua:zizmorcore/zizmor" = "1.30.1"
 "github:google/addlicense" = "1.2.0"
 "npm:markdownlint-cli2" = "0.23.2"
-"npm:prettier" = "3.9.7"
+"npm:prettier" = "3.9.8"
 
 # Structural per-repo knobs, referenced as {{vars.name}} in the task files.
 # Consumers override them in their root mise.toml [vars] (higher precedence).
