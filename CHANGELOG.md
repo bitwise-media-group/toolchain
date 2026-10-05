@@ -1,5 +1,37 @@
 # Changelog
 
+## [3.1.1](https://github.com/bitwise-media-group/toolchain/compare/v3.1.0...v3.1.1) (2026-10-05)
+
+
+### Bug Fixes
+
+* **deps:** lock file maintenance ([#106](https://github.com/bitwise-media-group/toolchain/issues/106)) ([5b7cd99](https://github.com/bitwise-media-group/toolchain/commit/5b7cd9902816ab76be50dc946e4eaa37d270a184))
+* **deps:** lock file maintenance ([#107](https://github.com/bitwise-media-group/toolchain/issues/107)) ([d9e95fd](https://github.com/bitwise-media-group/toolchain/commit/d9e95fdf6372f08b55b9c9f45a5fa995b16211fd))
+* **deps:** lock file maintenance ([#115](https://github.com/bitwise-media-group/toolchain/issues/115)) ([f3811fd](https://github.com/bitwise-media-group/toolchain/commit/f3811fd46bb4d316d8111bd4f593f7e7b0373a74))
+* **deps:** update dependency aqua:anchore/grype to v0.119.0 ([#102](https://github.com/bitwise-media-group/toolchain/issues/102)) ([96b2d2a](https://github.com/bitwise-media-group/toolchain/commit/96b2d2a279f1203034eb7add603ff385fd82b36f))
+* **deps:** update dependency aqua:anchore/grype to v0.120.0 ([#121](https://github.com/bitwise-media-group/toolchain/issues/121)) ([638adc3](https://github.com/bitwise-media-group/toolchain/commit/638adc3f8b546d317a9926aefab380d1dc665518))
+* **deps:** update dependency aqua:anchore/syft to v1.52.0 ([#101](https://github.com/bitwise-media-group/toolchain/issues/101)) ([13e1d20](https://github.com/bitwise-media-group/toolchain/commit/13e1d20e6a80a2d2c09beb81c288212962af7bd7))
+* **deps:** update dependency aqua:anchore/syft to v1.54.0 ([#118](https://github.com/bitwise-media-group/toolchain/issues/118)) ([5f85642](https://github.com/bitwise-media-group/toolchain/commit/5f856427b64a9a3e5d84808ee69b88492a7f4f12))
+* **deps:** update dependency aqua:astral-sh/uv to v0.12.14 ([#95](https://github.com/bitwise-media-group/toolchain/issues/95)) ([a037061](https://github.com/bitwise-media-group/toolchain/commit/a03706133360bfefa2ca05b56771bbf2d082a09c))
+* **deps:** update dependency aqua:astral-sh/uv to v0.12.15 ([#97](https://github.com/bitwise-media-group/toolchain/issues/97)) ([744ac1f](https://github.com/bitwise-media-group/toolchain/commit/744ac1f216935fb2c272f554ec37873acc29bdb9))
+* **deps:** update dependency aqua:astral-sh/uv to v0.12.16 ([#104](https://github.com/bitwise-media-group/toolchain/issues/104)) ([90e32b9](https://github.com/bitwise-media-group/toolchain/commit/90e32b932a57d99672b410ccdf241075fa4c7331))
+* **deps:** update dependency aqua:astral-sh/uv to v0.12.17 ([#105](https://github.com/bitwise-media-group/toolchain/issues/105)) ([4f4d4d4](https://github.com/bitwise-media-group/toolchain/commit/4f4d4d4874a83b706f99bd7478588557a9cd5a48))
+* **deps:** update dependency aqua:astral-sh/uv to v0.12.18 ([#109](https://github.com/bitwise-media-group/toolchain/issues/109)) ([38e7988](https://github.com/bitwise-media-group/toolchain/commit/38e798820b991ed915f3c39e75283478e02399c5))
+* **deps:** update dependency aqua:astral-sh/uv to v0.12.19 ([#113](https://github.com/bitwise-media-group/toolchain/issues/113)) ([02338af](https://github.com/bitwise-media-group/toolchain/commit/02338affca2760221aa89ac4223266f7b753dfe9))
+* **deps:** update dependency aqua:astral-sh/uv to v0.12.20 ([#114](https://github.com/bitwise-media-group/toolchain/issues/114)) ([814ada4](https://github.com/bitwise-media-group/toolchain/commit/814ada481822b85ac34ca03b6810e5d4b177b523))
+* **deps:** update dependency aqua:astral-sh/uv to v0.12.21 ([#117](https://github.com/bitwise-media-group/toolchain/issues/117)) ([82b864f](https://github.com/bitwise-media-group/toolchain/commit/82b864fb82ff9257dcf374eb9d98f121056584e7))
+* **deps:** update dependency aqua:astral-sh/uv to v0.12.22 ([#119](https://github.com/bitwise-media-group/toolchain/issues/119)) ([38d8aad](https://github.com/bitwise-media-group/toolchain/commit/38d8aad664d57c28e89b5dd7b3f4f90c147d342d))
+* **deps:** update dependency aqua:golangci/golangci-lint to v2.14.0 ([#112](https://github.com/bitwise-media-group/toolchain/issues/112)) ([126848e](https://github.com/bitwise-media-group/toolchain/commit/126848ec0fb81e13426def70b0ac4eb3be338292))
+* **deps:** update dependency aqua:goreleaser/goreleaser to v2.18.2 ([#100](https://github.com/bitwise-media-group/toolchain/issues/100)) ([22e5b3c](https://github.com/bitwise-media-group/toolchain/commit/22e5b3c3171135ba25406bd736baf959a0b66ff5))
+* **deps:** update dependency aqua:hashicorp/terraform to v1.16.3 ([#99](https://github.com/bitwise-media-group/toolchain/issues/99)) ([8dbba1e](https://github.com/bitwise-media-group/toolchain/commit/8dbba1e47da0cbca281fd9b47ace9737517f473b))
+* **deps:** update dependency aqua:hashicorp/terraform to v1.16.4 ([#111](https://github.com/bitwise-media-group/toolchain/issues/111)) ([394f5fa](https://github.com/bitwise-media-group/toolchain/commit/394f5fa690f49421045db10e799c2245950bad5d))
+* **deps:** update dependency aqua:hashicorp/terraform to v1.16.5 ([#120](https://github.com/bitwise-media-group/toolchain/issues/120)) ([f1fcd46](https://github.com/bitwise-media-group/toolchain/commit/f1fcd46d7a7b2598dd6f8ae8a0a1a3077652f255))
+* **deps:** update dependency aqua:kubescape/kubescape to v4.0.15 ([#116](https://github.com/bitwise-media-group/toolchain/issues/116)) ([d2a94b6](https://github.com/bitwise-media-group/toolchain/commit/d2a94b69fcc94474ad950997e88bd8928af059f2))
+* **deps:** update dependency npm:markdownlint-cli2 to v0.23.3 ([#108](https://github.com/bitwise-media-group/toolchain/issues/108)) ([e5b60f0](https://github.com/bitwise-media-group/toolchain/commit/e5b60f0459e6a640aba17b2acd071fc84cb54a57))
+* **deps:** update dependency npm:prettier to v3.9.7 ([#98](https://github.com/bitwise-media-group/toolchain/issues/98)) ([51a5d04](https://github.com/bitwise-media-group/toolchain/commit/51a5d04201bd030c04811ec21fee56f1ed85e2eb))
+* **deps:** update dependency npm:prettier to v3.9.8 ([#103](https://github.com/bitwise-media-group/toolchain/issues/103)) ([a38e4bb](https://github.com/bitwise-media-group/toolchain/commit/a38e4bbf34410b02e924faff9a3bc857153a4f4d))
+* **deps:** update dependency npm:prettier to v3.9.9 ([#110](https://github.com/bitwise-media-group/toolchain/issues/110)) ([96817d7](https://github.com/bitwise-media-group/toolchain/commit/96817d7da5f2207ffb2d3f42faa80ffda3e783f3))
+
 ## [3.1.0](https://github.com/bitwise-media-group/toolchain/compare/v3.0.0...v3.1.0) (2026-09-16)
 
 
