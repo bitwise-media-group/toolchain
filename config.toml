@@ -53,10 +53,10 @@
 # pinned (prettier has none; markdownlint-cli2's tree is small). mise forwards
 # minimum_release_age into transitive resolution (npm >= 11.10
 # --min-release-age), so even transitives can't pull a release younger than
-# the cooldown. npm.package_manager is pinned to npm because the "auto"
-# default silently prefers aube wherever it happens to be installed — same
-# resolution on every machine matters more than install speed for two
-# packages.
+# the cooldown. npm.package_manager is left at its "auto" default: aube is
+# embedded in mise, so "auto" resolves to it on every machine and in CI alike,
+# and a global config on "auto" agrees with the fleet instead of tripping over
+# aube-locked global tools when installing inside a repo.
 #
 # grype and kubescape pull external data at runtime rather than at install:
 # grype fetches its vulnerability database on first use (~200 MB, cached in
@@ -91,7 +91,6 @@
 lockfile = true
 locked = false
 minimum_release_age = "3d"
-npm.package_manager = "npm"
 
 [tools]
 # runtime for the npm-backed prose tools only; a Node repo's root pin wins
