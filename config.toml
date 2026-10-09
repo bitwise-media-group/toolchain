@@ -91,6 +91,19 @@
 lockfile = true
 locked = false
 minimum_release_age = "3d"
+# Exempt from the cooldown: our own first-party CLIs (a release we cut should
+# roll out immediately, not sit out a supply-chain delay meant for third
+# parties) and core:go (consumer repos pin it themselves and track toolchain
+# security releases promptly). mise has no org-level wildcard —
+# "github:bitwise-media-group/*" silently matches nothing — so each
+# first-party tool is listed by its full backend ID; add new ones here.
+# Consumer repos can append further entries (lists merge across configs).
+minimum_release_age_excludes = [
+  "core:go",
+  "github:bitwise-media-group/dotty",
+  "github:bitwise-media-group/evolve",
+  "github:bitwise-media-group/patchy",
+]
 
 [tools]
 "core:go" = { version = "1.17.2", lazy = true }
