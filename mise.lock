@@ -824,24 +824,31 @@ backend = "core:go"
 specifiers = ["1.27.2"]
 
 [tools.go."platforms.linux-arm64"]
+checksum = "sha256:94f3e30b8e374bc285e7dadc11e0865726b9bc6e85b841ccceaabc0214c6b7c8"
 url = "https://dl.google.com/go/go1.27.2.linux-arm64.tar.gz"
 
 [tools.go."platforms.linux-arm64-musl"]
+checksum = "sha256:94f3e30b8e374bc285e7dadc11e0865726b9bc6e85b841ccceaabc0214c6b7c8"
 url = "https://dl.google.com/go/go1.27.2.linux-arm64.tar.gz"
 
 [tools.go."platforms.linux-x64"]
+checksum = "sha256:ecbadb99091a3f46e31f5f934b068b1864eafa7995211b39eaddf76996045fe5"
 url = "https://dl.google.com/go/go1.27.2.linux-amd64.tar.gz"
 
 [tools.go."platforms.linux-x64-musl"]
+checksum = "sha256:ecbadb99091a3f46e31f5f934b068b1864eafa7995211b39eaddf76996045fe5"
 url = "https://dl.google.com/go/go1.27.2.linux-amd64.tar.gz"
 
 [tools.go."platforms.macos-arm64"]
+checksum = "sha256:76812b213b1b2302c978d28fa52fa92d541704b9e7d9d5db8002c50e4018c4c5"
 url = "https://dl.google.com/go/go1.27.2.darwin-arm64.tar.gz"
 
 [tools.go."platforms.macos-x64"]
+checksum = "sha256:587b59182488b23aa6e5fc25110405a3e0e5b38ed2f5b2f46ed13c32aee356fe"
 url = "https://dl.google.com/go/go1.27.2.darwin-amd64.tar.gz"
 
 [tools.go."platforms.windows-x64"]
+checksum = "sha256:1314008898bd40df77af4b014f777f08873dbdfbcd3d92308728ee03304fe04f"
 url = "https://dl.google.com/go/go1.27.2.windows-amd64.zip"
 
 [[tools.node]]
@@ -879,13 +886,13 @@ url = "https://nodejs.org/dist/v24.21.0/node-v24.21.0-win-x64.zip"
 
 [[tools."npm:markdownlint-cli2"]]
 version = "0.23.3"
-aube = { path = "locks/npm-markdownlint-cli2/0.23.3", digest = "sha256:39523bb981360d43f75c10a114ee091e42ff45a76d3c2c666a283ff017bd4926" }
+aube = { path = ".mise/locks/npm-markdownlint-cli2/0.23.3", digest = "sha256:39523bb981360d43f75c10a114ee091e42ff45a76d3c2c666a283ff017bd4926" }
 backend = "npm:markdownlint-cli2"
 specifiers = ["0.23.3"]
 
 [[tools."npm:prettier"]]
 version = "3.9.9"
-aube = { path = "locks/npm-prettier/3.9.9", digest = "sha256:815f6667505e41ac2d03ecbac86b79f1beb78d45783879428193c9adc80760a3" }
+aube = { path = ".mise/locks/npm-prettier/3.9.9", digest = "sha256:815f6667505e41ac2d03ecbac86b79f1beb78d45783879428193c9adc80760a3" }
 backend = "npm:prettier"
 specifiers = ["3.9.9"]
 

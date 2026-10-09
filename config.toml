@@ -106,7 +106,7 @@ minimum_release_age_excludes = [
 ]
 
 [tools]
-"core:go" = { version = "1.17.2", lazy = true }
+"core:go" = { version = "1.27.2", lazy = true }
 "core:node" = "lts"
 "core:python" = { version = "3.14.8", lazy = true }
 
