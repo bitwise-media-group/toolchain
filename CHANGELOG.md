@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.3.0](https://github.com/bitwise-media-group/toolchain/compare/v3.2.0...v3.3.0) (2026-10-09)
+
+
+### Features
+
+* **node:** support pnpm and bun as package managers ([191aba1](https://github.com/bitwise-media-group/toolchain/commit/191aba1b17e35343f03a859f76b2ad04b659707c))
+
+
+### Bug Fixes
+
+* **tools:** pin core:go to 1.27.2 and repair mise.lock entries ([0e29fd1](https://github.com/bitwise-media-group/toolchain/commit/0e29fd1e5a47dc2ea7c5699193c4297870c6b84c))
+
 ## [3.2.0](https://github.com/bitwise-media-group/toolchain/compare/v3.1.1...v3.2.0) (2026-10-09)
 
 
