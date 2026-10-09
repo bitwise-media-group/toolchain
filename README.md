@@ -25,7 +25,7 @@ toolchain/                    # this repo == the consumer's .mise/ directory
 │   └── scripts/              #   the shell behind the tasks (shellcheck-clean)
 └── archetypes/               # exactly ONE per repo, included after common
     ├── go/                   #   build/test/lint/fuzz/release + zensical docs
-    ├── node/                 #   npm-script contract: check/typecheck/build/test
+    ├── node/                 #   package.json-script contract (npm/pnpm/bun)
     ├── python/               #   uv-native: ruff + pytest + uv build + zensical
     └── terraform/            #   init/plan/apply + tf fmt/lint/docs
         ├── tasks.toml        #   each archetype: its tasks + fmt/lint/ci/pr rollups
@@ -111,7 +111,7 @@ The reusable CI workflow (`bitwise-media-group/github-workflows`) runs a matrix 
 `mise tasks ls --name-only` and skipping the rest; release drives GoReleaser / Zensical directly. There are therefore
 **no no-op stubs anywhere**: an archetype defines only real work (a common-only repo has no `build`/`test` at all), and
 a repo that grows tests or an e2e suite just defines that task in its root `mise.toml [tasks]`. The one tolerated
-exception is the node archetype, whose optional npm scripts run through `npm run --if-present` — a library with no
+exception is the node archetype, whose optional package.json scripts run only when defined — a library with no
 `test:coverage` script gets a trivially passing `test`. Every archetype also provides **`fmt`**, **`ci`**, and **`pr`**
 for local use.
 
@@ -138,7 +138,7 @@ precedes `lint` inside `pr`.
 | archetype | `fmt`                                             | `lint`                                                                            | `build`                            | `test`                       | extras                                                       |
 | --------- | ------------------------------------------------- | --------------------------------------------------------------------------------- | ---------------------------------- | ---------------------------- | ------------------------------------------------------------ |
 | go        | `go fmt`, `golangci-lint --fix`, prose, license   | golangci-lint, govulncheck, license, containers, shell, workflows, prose          | `go build` with version ldflags    | gotestsum, `-race`, coverage | `tidy`, `fuzz`, `snapshot`, `release`, `docs-build`, `serve` |
-| node      | `npm run check:fix` / `format`, prose, license    | `npm run check` / `typecheck`, license, containers, shell, workflows, prose       | `npm run build`                    | `npm run test:coverage`      | —                                                            |
+| node      | `check:fix` / `format` scripts, prose, license    | `check` / `typecheck` scripts, license, containers, shell, workflows, prose       | `build` script                     | `test:coverage` script       | —                                                            |
 | python    | license, `ruff format`, `ruff check --fix`, prose | `ruff check`, `ruff format --check`, license, containers, shell, workflows, prose | `uv build` and/or `zensical build` | pytest (+ pytest-cov)        | `docs-build`, `serve`                                        |
 | terraform | `terraform fmt -recursive`, prose                 | validate, tflint, containers, shell, workflows, prose                             | —                                  | —                            | `init`, `plan`, `apply`, `docs`                              |
 | _common_  | prose, license                                    | license, containers, shell, workflows, prose                                      | —                                  | —                            | `commit`, `actionlint`, `zizmor`                             |
@@ -150,10 +150,13 @@ precedes `lint` inside `pr`.
   pass for every other entry, since cross-compiled test binaries cannot execute. `GOOS` in the environment overrides the
   list per invocation (`make test GOOS=windows`). `docs` is left to the repo (a CLI reference is app-specific) with
   `docs-build`/`serve`/`sync` (zensical via uv) ready to wire in.
-- **node** — one archetype for libraries and GitHub Actions, on the npm-script contract `check`, `check:fix`, `format`,
-  `typecheck`, `build`, `test:coverage`; `typecheck` and `build` are required, the rest optional (`--if-present`).
-  `npm ci` runs with `npm_ci_flags` (`--ignore-scripts --no-fund` by default); an action repo that runs lifecycle
-  scripts sets `npm_ci_flags = ""`. biome owns the code, prettier + markdownlint own the markdown.
+- **node** — one archetype for libraries and GitHub Actions, on the package.json-script contract `check`, `check:fix`,
+  `format`, `typecheck`, `build`, `test:coverage`; `typecheck` and `build` are required, the rest optional (run only
+  when defined). Works with npm, pnpm or bun (see [pnpm / bun](#pnpm--bun)). The locked install (`npm ci`,
+  `pnpm install --frozen-lockfile`, `bun install --frozen-lockfile`) runs with `node_install_flags` (`--ignore-scripts`
+  by default, plus `--no-fund` for npm); an action repo that runs lifecycle scripts sets `node_install_flags = ""`. The
+  older npm-only `npm_ci_flags` still works for npm repos but is deprecated. biome owns the code, prettier +
+  markdownlint own the markdown.
 - **python** — uv-native: `uv` (a shared pin) provisions Python from `.python-version`/`requires-python` and the project
   environment from `pyproject.toml`/`uv.lock`; ruff, pytest and pytest-cov come from the project's dev dependencies. A
   project without ruff or pytest (a docs-only site) skips those passes with a message. `build` runs `uv build` when
@@ -161,6 +164,26 @@ precedes `lint` inside `pr`.
 - **terraform** — every task runs in the invoking directory (`environments/<name>/`); `tf-run.sh` injects secrets via
   `dotty` only when the module carries a `.env.dotty`. `terraform_binary = "tofu"` switches to OpenTofu. No license
   tasks (addlicense would stamp `.tf` files).
+
+### pnpm / bun
+
+The node archetype drives whichever package manager the repo uses. Every node task goes through
+`archetypes/node/scripts/pm.sh`, which picks the package manager in this order:
+
+1. `NODE_PACKAGE_MANAGER` in the environment, else the `node_package_manager` var (`npm`, `pnpm` or `bun`; empty, the
+   default, means auto-detect). Any other value fails.
+2. The name in `package.json` `"packageManager"` (`"pnpm@12.10.0"` → pnpm).
+3. The lockfile: `package-lock.json` / `npm-shrinkwrap.json` → npm, `pnpm-lock.yaml` → pnpm, `bun.lock` / `bun.lockb` →
+   bun. Lockfiles from more than one manager fail with an error naming them, so set `node_package_manager` (or
+   `"packageManager"`) to pick one.
+4. npm.
+
+pnpm and bun come from the shared `[tools]` pins (checksum-locked, installed lazily the first time a task needs them),
+so CI needs no setup step. A repo may pin its own version in its root `[tools]` (`"aqua:pnpm/pnpm" = "…"`), and its root
+pin wins. pnpm is stopped from switching to the version `"packageManager"` names; a mismatch is only reported as a
+warning. The install is skipped while `node_modules/.toolchain-install` is newer than `package.json`, every manager's
+lockfile and `pnpm-workspace.yaml`. A repo needs no `.gitignore` or `.licenseignore` change: `node_modules/` is already
+ignored, and the license tasks skip `pnpm-lock.yaml` by default (addlicense doesn't stamp the other lockfiles' formats).
 
 ## Developer tools
 
@@ -183,7 +206,8 @@ reuses it across every repo.
 - **Node repos** pin `node` in their root `[tools]`. The library _also_ pins `node`, purely as the runtime for the
   npm-backed prettier and markdownlint-cli2 (mise's npm backend does not provision node, and repos must be able to lint
   prose without a `package.json`); the repo's root pin takes precedence, so the shared one never dictates a Node repo's
-  runtime.
+  runtime. pnpm and bun are shared lazy pins (installed on first use); a repo may pin its own version in its root
+  `[tools]`.
 - **Python repos** pin nothing: `uv` provisions the interpreter. A repo that wants a mise-managed Python adds `python`
   to its root `[tools]`.
 
@@ -217,10 +241,10 @@ submodule working tree.
 
 Two tiers, replacing the old before-the-include make variables:
 
-| tier                           | where                   | examples                                                                                                                                                                  |
-| ------------------------------ | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| structural (set once per repo) | root `mise.toml [vars]` | `app`, `app_pkg`, `build_tags`, `version_pkg`, `goos`, `license_holder`, `npm_ci_flags`, `terraform_binary`, `grype_fail_on`, `kubescape_severity`, `zizmor_min_severity` |
-| per-invocation (runtime)       | environment variables   | `VERSION`, `COMMIT`, `DATE`, `LDFLAGS`, `MODULE`, `GOOS`, `FUZZ`, `FUZZTIME`, `FUZZ_PKG`, `NPM_CI_FLAGS`                                                                  |
+| tier                           | where                   | examples                                                                                                                                                                                                                             |
+| ------------------------------ | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| structural (set once per repo) | root `mise.toml [vars]` | `app`, `app_pkg`, `build_tags`, `version_pkg`, `goos`, `license_holder`, `node_package_manager`, `node_install_flags`, `npm_ci_flags` (deprecated), `terraform_binary`, `grype_fail_on`, `kubescape_severity`, `zizmor_min_severity` |
+| per-invocation (runtime)       | environment variables   | `VERSION`, `COMMIT`, `DATE`, `LDFLAGS`, `MODULE`, `GOOS`, `FUZZ`, `FUZZTIME`, `FUZZ_PKG`, `NODE_PACKAGE_MANAGER`, `NODE_INSTALL_FLAGS`, `NPM_CI_FLAGS` (deprecated)                                                                  |
 
 `make build VERSION=1.2.3` still works — make exports command-line variables to the forwarded `mise run`, and the go
 scripts also accept the old spellings (`APP`, `APP_PKG`, …) from the environment.
@@ -228,10 +252,10 @@ scripts also accept the old spellings (`APP`, `APP_PKG`, …) from the environme
 ## Other conventions the library assumes
 
 - **License holder** is `BitWise Media Group Ltd` (override `license_holder` in `[vars]`). The license tasks ignore
-  generated/vendored trees (`node_modules/`, `.mise/`, `.claude/`, `.venv/`, `coverage/`) and an agent-prepared
-  `commit.sh` by default; a repo's `.licenseignore` adds to that. Every archetype but terraform runs them — a node
-  action repo whose committed `dist/` bundle must stay byte-identical to the build output lists `dist/**` in its
-  `.licenseignore`.
+  generated/vendored trees (`node_modules/`, `.mise/`, `.claude/`, `.venv/`, `coverage/`, `pnpm-lock.yaml`) and an
+  agent-prepared `commit.sh` by default; a repo's `.licenseignore` adds to that. Every archetype but terraform runs them
+  — a node action repo whose committed `dist/` bundle must stay byte-identical to the build output lists `dist/**` in
+  its `.licenseignore`.
 - **Prose is linted in every archetype, with zero per-repo config**: `fmt`/`lint` always run the pinned prettier +
   markdownlint-cli2 over all `*.md` from the repo root, excluding generated and vendored content (`CHANGELOG.md`,
   `node_modules/`, `.mise/`, `.venv/`, `.claude/`). The house defaults are this library's own `.prettierrc.yaml` /
@@ -267,8 +291,8 @@ scripts also accept the old spellings (`APP`, `APP_PKG`, …) from the environme
    Go repo, `node` for a Node repo (Python repos pin nothing).
 2. Replace `includes = [".mise/tasks/<archetype>.toml"]` with
    `includes = [".mise/common/tasks.toml", ".mise/archetypes/<lang>/tasks.toml"]` — `go-cli` → `go`, `node-lib` /
-   `node-action` → `node` (an action repo adds `npm_ci_flags = ""` to `[vars]`), `docs-site` → `python`, `markdown-lib`
-   → common only.
+   `node-action` → `node` (an action repo adds `node_install_flags = ""` to `[vars]`), `docs-site` → `python`,
+   `markdown-lib` → common only.
 3. Replace `include .mise/mise.mk` with `include .mise/archetypes/<lang>/include.mk` (or
    `include .mise/common/include.mk`).
 4. Node repos: the license tasks now run — add `dist/**` (and anything else generated) to `.licenseignore`; make sure a

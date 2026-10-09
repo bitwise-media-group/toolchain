@@ -34,9 +34,9 @@ dir = "{{cwd}}"
 run = "if [ -x ./commit.sh ]; then ./commit.sh; fi"
 
 # addlicense with the house default ignores (generated/vendored trees, incl.
-# the .mise/ submodule, and the agent-prepared commit.sh handoff every repo
-# may transiently carry) plus one -ignore per non-empty line of the repo's
-# .licenseignore. See scripts/license.sh.
+# the .mise/ submodule and pnpm-lock.yaml, and the agent-prepared commit.sh
+# handoff every repo may transiently carry) plus one -ignore per non-empty
+# line of the repo's .licenseignore. See scripts/license.sh.
 [license]
 description = "inject SPDX license headers (addlicense)"
 dir = "{{cwd}}"

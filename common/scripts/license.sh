@@ -3,8 +3,10 @@
 # SPDX-License-Identifier: MIT
 #
 # addlicense over the current directory with the house default ignores
-# (generated/vendored trees, incl. the .mise/ submodule, and the agent-prepared
-# commit.sh handoff every repo may transiently carry) plus one -ignore per
+# (generated/vendored trees, incl. the .mise/ submodule, pnpm's generated
+# lockfile — the only package-manager lockfile addlicense would otherwise
+# stamp — and the agent-prepared commit.sh handoff every repo may transiently
+# carry) plus one -ignore per
 # non-empty line of the repo's .licenseignore. Patterns never contain
 # whitespace and must reach addlicense unexpanded (set -f stops the shell
 # globbing them). A repo with no .licenseignore simply gets the defaults.
@@ -19,7 +21,8 @@ set -euf
 mode="${1-}"
 
 set -- -ignore 'node_modules/**' -ignore '.mise/**' -ignore '.claude/**' \
-  -ignore '.venv/**' -ignore 'coverage/**' -ignore 'commit.sh'
+  -ignore '.venv/**' -ignore 'coverage/**' -ignore '**/pnpm-lock.yaml' \
+  -ignore 'commit.sh'
 if [ -f .licenseignore ]; then
   while IFS= read -r pattern || [ -n "$pattern" ]; do
     [ -n "$pattern" ] || continue

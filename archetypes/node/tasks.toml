@@ -12,42 +12,68 @@
 #   [task_config]
 #   includes = [".mise/common/tasks.toml", ".mise/archetypes/node/tasks.toml"]
 #
-# The contract is the repo's npm scripts, by ecosystem convention:
+# The contract is the repo's package.json scripts, by ecosystem convention:
 #   check / check:fix   biome (lint + format check / auto-fix)      optional
 #   format              a formatter pass beyond biome --write        optional
 #   typecheck           tsc --noEmit                                 required
 #   build               tsup / tsc / rollup                          required
 #   test:coverage       vitest with coverage → coverage/            optional
-# Optional scripts run through `npm run --if-present`, so a library with no
-# tests still has a (trivially passing) `test` task — the one place the
+# Optional scripts run only when package.json defines them, so a library with
+# no tests still has a (trivially passing) `test` task — the one place the
 # library tolerates a task that may do nothing, since the script set is the
 # repo's declaration of what applies. biome owns the code; prettier +
 # markdownlint (common) own the markdown.
 #
-# `npm ci` runs with the npm_ci_flags var (--ignore-scripts --no-fund by
-# default, the safe choice for a library). A GitHub Action repo that runs
-# lifecycle scripts on install sets npm_ci_flags = "" in its root [vars];
-# NPM_CI_FLAGS in the environment overrides per invocation (unset-only, so
-# NPM_CI_FLAGS= forces a plain npm ci). No `e2e`: running an action for real
-# would mutate refs; covered by unit tests.
+# npm, pnpm and bun are all supported; every task goes through
+# scripts/pm.sh, which picks the package manager in this order:
+#   1. NODE_PACKAGE_MANAGER in the environment, else the node_package_manager
+#      var (npm|pnpm|bun; empty = auto-detect)
+#   2. the name in package.json "packageManager" (e.g. "pnpm@12.10.0")
+#   3. the lockfile: package-lock.json / npm-shrinkwrap.json → npm,
+#      pnpm-lock.yaml → pnpm, bun.lock / bun.lockb → bun (lockfiles from more
+#      than one manager fail — set node_package_manager to pick)
+#   4. npm
+# pnpm and bun come from the shared lazy pins (checksum-locked, installed on
+# first use); a repo may pin its own version in its root [tools]. pnpm never
+# self-switches to the version "packageManager" names.
+#
+# The install runs with the node_install_flags var (--ignore-scripts by
+# default, the safe choice for a library; npm also gets --no-fund). A GitHub
+# Action repo that runs lifecycle scripts on install sets
+# node_install_flags = "" in its root [vars]; NODE_INSTALL_FLAGS in the
+# environment overrides per invocation (unset-only, so NODE_INSTALL_FLAGS=
+# forces a bare install). For npm repos the older npm_ci_flags var and
+# NPM_CI_FLAGS env still win over node_install_flags (deprecated; prefer the
+# neutral knobs). No `e2e`: running an action for real would mutate refs;
+# covered by unit tests.
 
-# Install exactly as locked in package-lock.json, and run everything straight
-# from node_modules (never npx or a global). sources/outputs replace the old
-# touch-sentinel: the install is skipped while the lockfile copy npm leaves in
-# node_modules is newer than the manifests.
+# Install exactly as locked, and run everything straight from node_modules
+# (never npx or a global). The install is skipped while the sentinel pm.sh
+# touches after a successful install is newer than the manifests and every
+# manager's lockfile (sources missing from disk are ignored).
 [node-install]
 hide = true
 dir = "{{cwd}}"
-sources = ["package.json", "package-lock.json"]
-outputs = ["node_modules/.package-lock.json"]
-run = "npm ci ${NPM_CI_FLAGS-{{vars.npm_ci_flags}}}"
+sources = [
+  "package.json",
+  "package-lock.json",
+  "npm-shrinkwrap.json",
+  "pnpm-lock.yaml",
+  "pnpm-workspace.yaml",
+  "bun.lock",
+  "bun.lockb",
+]
+outputs = ["node_modules/.toolchain-install"]
+env = { TOOLCHAIN_NODE_PM = "{{vars.node_package_manager}}", TOOLCHAIN_NODE_INSTALL_FLAGS = "{{vars.node_install_flags}}", TOOLCHAIN_NPM_CI_FLAGS = "{{ vars.npm_ci_flags | default(value='') }}", TOOLCHAIN_NPM_CI_FLAGS_SET = "{% if vars.npm_ci_flags is defined %}1{% endif %}" }
+run = "{{config_root}}/.mise/archetypes/node/scripts/pm.sh install"
 
 # Auto-fix pass wired into `fmt`.
 [node-fmt]
 hide = true
 dir = "{{cwd}}"
 depends = ["node-install"]
-run = ["npm run --if-present check:fix", "npm run --if-present format"]
+env = { TOOLCHAIN_NODE_PM = "{{vars.node_package_manager}}" }
+run = "{{config_root}}/.mise/archetypes/node/scripts/pm.sh run-if-present check:fix format"
 
 # Check-mode static analysis wired into `lint`: biome (when present) then the
 # TypeScript type-check.
@@ -55,7 +81,11 @@ run = ["npm run --if-present check:fix", "npm run --if-present format"]
 hide = true
 dir = "{{cwd}}"
 depends = ["node-install"]
-run = ["npm run --if-present check", "npm run typecheck"]
+env = { TOOLCHAIN_NODE_PM = "{{vars.node_package_manager}}" }
+run = [
+  "{{config_root}}/.mise/archetypes/node/scripts/pm.sh run-if-present check",
+  "{{config_root}}/.mise/archetypes/node/scripts/pm.sh run typecheck",
+]
 
 # The reusable CI fails an action PR if the committed dist/ then differs from
 # source, so the build must be reproducible.
@@ -63,21 +93,23 @@ run = ["npm run --if-present check", "npm run typecheck"]
 hide = true
 dir = "{{cwd}}"
 depends = ["node-install"]
-run = "npm run build"
+env = { TOOLCHAIN_NODE_PM = "{{vars.node_package_manager}}" }
+run = "{{config_root}}/.mise/archetypes/node/scripts/pm.sh run build"
 
 # vitest with coverage — emits coverage/cobertura-coverage.xml + coverage/junit.xml.
 [node-test]
 hide = true
 dir = "{{cwd}}"
 depends = ["node-install"]
-run = "npm run --if-present test:coverage"
+env = { TOOLCHAIN_NODE_PM = "{{vars.node_package_manager}}" }
+run = "{{config_root}}/.mise/archetypes/node/scripts/pm.sh run-if-present test:coverage"
 
 [fmt]
-description = "npm run check:fix / format + prose format, inject license headers"
+description = "package.json check:fix / format + prose format, inject license headers"
 run = [{ task = "node-fmt" }, { task = "fmt-prose" }, { task = "license" }]
 
 [lint]
-description = "npm run check + typecheck + prose, license, container, shell and workflow checks"
+description = "package.json check + typecheck + prose, license, container, shell and workflow checks"
 run = [
   { task = "license-check" },
   { task = "node-lint" },
@@ -88,11 +120,11 @@ run = [
 ]
 
 [build]
-description = "npm run build"
+description = "package.json build"
 run = [{ task = "node-build" }]
 
 [test]
-description = "npm run test:coverage (if the repo defines it)"
+description = "package.json test:coverage (if the repo defines it)"
 run = [{ task = "node-test" }]
 
 [ci]
