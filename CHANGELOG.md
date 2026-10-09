@@ -1,5 +1,19 @@
 # Changelog
 
+## [3.2.0](https://github.com/bitwise-media-group/toolchain/compare/v3.1.1...v3.2.0) (2026-10-09)
+
+
+### Features
+
+* **tools:** exempt first-party tools and core:go from minimum_release_age ([e4e4a66](https://github.com/bitwise-media-group/toolchain/commit/e4e4a663ec19f207390deeb09203bbf9cc65e76b))
+* **tools:** install heavyweight tools lazily on first use ([be18e94](https://github.com/bitwise-media-group/toolchain/commit/be18e946c31420f59d88a1cb2505e28d6bdf858e))
+
+
+### Bug Fixes
+
+* **deps:** update dependency aqua:astral-sh/uv to v0.12.23 ([#122](https://github.com/bitwise-media-group/toolchain/issues/122)) ([3b94669](https://github.com/bitwise-media-group/toolchain/commit/3b94669f8af8aa86bcdb203b5251077e02afc84d))
+* **tools:** let npm tools use mise's auto package manager ([7c592a5](https://github.com/bitwise-media-group/toolchain/commit/7c592a5ba6469a2c8180ae369b558fac55624b2d))
+
 ## [3.1.1](https://github.com/bitwise-media-group/toolchain/compare/v3.1.0...v3.1.1) (2026-10-05)
 
 
