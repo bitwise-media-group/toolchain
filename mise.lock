@@ -43,44 +43,51 @@ url = "https://github.com/anchore/grype/releases/download/v0.120.0/grype_0.120.0
 url_api = "https://api.github.com/repos/anchore/grype/releases/assets/605770237"
 
 [[tools."aqua:anchore/syft"]]
-version = "1.54.0"
+version = "1.54.1"
 backend = "aqua:anchore/syft"
-specifiers = ["1.54.0"]
+specifiers = ["1.54.1"]
 
 [tools."aqua:anchore/syft"."platforms.linux-arm64"]
-checksum = "sha256:ee6d4566373a05b344bc6b5f1706f14419bf9338ba39ff686e247deefe9b8818"
-url = "https://github.com/anchore/syft/releases/download/v1.54.0/syft_1.54.0_linux_arm64.tar.gz"
-url_api = "https://api.github.com/repos/anchore/syft/releases/assets/604117598"
+checksum = "sha256:dfdf0537610113edbefe1f1fc6548bc957b2d77439636ec824fcf0e10d46d054"
+url = "https://github.com/anchore/syft/releases/download/v1.54.1/syft_1.54.1_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/anchore/syft/releases/assets/615916319"
+provenance = "cosign"
 
 [tools."aqua:anchore/syft"."platforms.linux-arm64-musl"]
-checksum = "sha256:ee6d4566373a05b344bc6b5f1706f14419bf9338ba39ff686e247deefe9b8818"
-url = "https://github.com/anchore/syft/releases/download/v1.54.0/syft_1.54.0_linux_arm64.tar.gz"
-url_api = "https://api.github.com/repos/anchore/syft/releases/assets/604117598"
+checksum = "sha256:dfdf0537610113edbefe1f1fc6548bc957b2d77439636ec824fcf0e10d46d054"
+url = "https://github.com/anchore/syft/releases/download/v1.54.1/syft_1.54.1_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/anchore/syft/releases/assets/615916319"
+provenance = "cosign"
 
 [tools."aqua:anchore/syft"."platforms.linux-x64"]
-checksum = "sha256:54a87372498168b2d033e876fd41fa4e8035b872699e525a57046e1f2f09c860"
-url = "https://github.com/anchore/syft/releases/download/v1.54.0/syft_1.54.0_linux_amd64.tar.gz"
-url_api = "https://api.github.com/repos/anchore/syft/releases/assets/604117627"
+checksum = "sha256:c069905b391cc4c20a5ba65ad5c10be2a7ba074f8ea6ad203e24d14e303dad47"
+url = "https://github.com/anchore/syft/releases/download/v1.54.1/syft_1.54.1_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/anchore/syft/releases/assets/615916330"
+provenance = "cosign"
 
 [tools."aqua:anchore/syft"."platforms.linux-x64-musl"]
-checksum = "sha256:54a87372498168b2d033e876fd41fa4e8035b872699e525a57046e1f2f09c860"
-url = "https://github.com/anchore/syft/releases/download/v1.54.0/syft_1.54.0_linux_amd64.tar.gz"
-url_api = "https://api.github.com/repos/anchore/syft/releases/assets/604117627"
+checksum = "sha256:c069905b391cc4c20a5ba65ad5c10be2a7ba074f8ea6ad203e24d14e303dad47"
+url = "https://github.com/anchore/syft/releases/download/v1.54.1/syft_1.54.1_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/anchore/syft/releases/assets/615916330"
+provenance = "cosign"
 
 [tools."aqua:anchore/syft"."platforms.macos-arm64"]
-checksum = "sha256:7e0bdad94c569fc6d5785c9a657bbae3d4c4e140ccb5eace3d0b5b6bc2b6dbcf"
-url = "https://github.com/anchore/syft/releases/download/v1.54.0/syft_1.54.0_darwin_arm64.tar.gz"
-url_api = "https://api.github.com/repos/anchore/syft/releases/assets/604117599"
+checksum = "sha256:b4319c3abaa87a0170ab76ee83ea2260ca34b53aecfa3ab0dd5428d2319d744f"
+url = "https://github.com/anchore/syft/releases/download/v1.54.1/syft_1.54.1_darwin_arm64.tar.gz"
+url_api = "https://api.github.com/repos/anchore/syft/releases/assets/615916332"
+provenance = "cosign"
 
 [tools."aqua:anchore/syft"."platforms.macos-x64"]
-checksum = "sha256:22b71725e388a4c0de385249c4bc1044f78a870f2894f34b43ba957e792145d7"
-url = "https://github.com/anchore/syft/releases/download/v1.54.0/syft_1.54.0_darwin_amd64.tar.gz"
-url_api = "https://api.github.com/repos/anchore/syft/releases/assets/604117610"
+checksum = "sha256:2956322838b2f64e470eea474495f0cd96be4f222b1ac037258cdc47d965064e"
+url = "https://github.com/anchore/syft/releases/download/v1.54.1/syft_1.54.1_darwin_amd64.tar.gz"
+url_api = "https://api.github.com/repos/anchore/syft/releases/assets/615916329"
+provenance = "cosign"
 
 [tools."aqua:anchore/syft"."platforms.windows-x64"]
-checksum = "sha256:77f4b472779058e819eec9a054753a5071a996aaa40db31a290f8b256748593f"
-url = "https://github.com/anchore/syft/releases/download/v1.54.0/syft_1.54.0_windows_amd64.zip"
-url_api = "https://api.github.com/repos/anchore/syft/releases/assets/604117608"
+checksum = "sha256:8b56e8285e295e0bbed26eeea9b16ed51c493be97ccdf42dae6326c84fe8e19f"
+url = "https://github.com/anchore/syft/releases/download/v1.54.1/syft_1.54.1_windows_amd64.zip"
+url_api = "https://api.github.com/repos/anchore/syft/releases/assets/615916316"
+provenance = "cosign"
 
 [[tools."aqua:astral-sh/uv"]]
 version = "0.12.23"
