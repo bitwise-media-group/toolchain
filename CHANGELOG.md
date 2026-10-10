@@ -1,5 +1,15 @@
 # Changelog
 
+## [3.3.1](https://github.com/bitwise-media-group/toolchain/compare/v3.3.0...v3.3.1) (2026-10-10)
+
+
+### Bug Fixes
+
+* **deps:** lock file maintenance ([#134](https://github.com/bitwise-media-group/toolchain/issues/134)) ([d2ad2ab](https://github.com/bitwise-media-group/toolchain/commit/d2ad2ab7d03e8911aab0d76a1805cf7a3aea1394))
+* **deps:** update dependency aqua:anchore/grype to v0.120.1 ([#135](https://github.com/bitwise-media-group/toolchain/issues/135)) ([37a7b32](https://github.com/bitwise-media-group/toolchain/commit/37a7b32b31b01a2b00f968f2cf5ecd9f8ef75c39))
+* **deps:** update dependency aqua:anchore/syft to v1.54.1 ([#131](https://github.com/bitwise-media-group/toolchain/issues/131)) ([82b84f3](https://github.com/bitwise-media-group/toolchain/commit/82b84f34a7ffb70b83c19ac573edfdaa72f1a25f))
+* **deps:** update dependency aqua:pnpm/pnpm to v12.10.1 ([#132](https://github.com/bitwise-media-group/toolchain/issues/132)) ([81c2687](https://github.com/bitwise-media-group/toolchain/commit/81c268790946d649c5643989c54467df1fd6eb70))
+
 ## [3.3.0](https://github.com/bitwise-media-group/toolchain/compare/v3.2.0...v3.3.0) (2026-10-09)
 
 
