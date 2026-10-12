@@ -121,7 +121,7 @@ minimum_release_age_excludes = [
 "aqua:anchore/syft" = { version = "1.54.1", lazy = true, lazy_bins = "syft" }
 "aqua:astral-sh/uv" = { version = "0.12.24", lazy = true, lazy_bins = "uv" }
 "aqua:golangci/golangci-lint" = { version = "2.14.0", lazy = true, lazy_bins = "golangci-lint" }
-"aqua:goreleaser/goreleaser" = { version = "2.18.2", lazy = true, lazy_bins = "goreleaser" }
+"aqua:goreleaser/goreleaser" = { version = "2.18.3", lazy = true, lazy_bins = "goreleaser" }
 "aqua:gotestyourself/gotestsum" = { version = "1.13.0", lazy = true, lazy_bins = "gotestsum" }
 "aqua:hadolint/hadolint" = { version = "2.15.1", lazy = true, lazy_bins = "hadolint" }
 "aqua:hashicorp/terraform" = { version = "1.16.5", lazy = true, lazy_bins = "terraform" }
