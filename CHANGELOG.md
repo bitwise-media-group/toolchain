@@ -1,5 +1,31 @@
 # Changelog
 
+## [3.3.1](https://github.com/bitwise-media-group/toolchain/compare/v3.3.0...v3.3.1) (2026-10-17)
+
+
+### Bug Fixes
+
+* **deps:** lock file maintenance ([#134](https://github.com/bitwise-media-group/toolchain/issues/134)) ([d2ad2ab](https://github.com/bitwise-media-group/toolchain/commit/d2ad2ab7d03e8911aab0d76a1805cf7a3aea1394))
+* **deps:** lock file maintenance ([#145](https://github.com/bitwise-media-group/toolchain/issues/145)) ([b64f56f](https://github.com/bitwise-media-group/toolchain/commit/b64f56ffcf681419e839f80c00ba13bd67c7b347))
+* **deps:** lock file maintenance ([#146](https://github.com/bitwise-media-group/toolchain/issues/146)) ([71d3f94](https://github.com/bitwise-media-group/toolchain/commit/71d3f946f3e8c333e3abba0a0cc2485a66033d88))
+* **deps:** lock file maintenance ([#150](https://github.com/bitwise-media-group/toolchain/issues/150)) ([8b5053a](https://github.com/bitwise-media-group/toolchain/commit/8b5053adb3038402c3c67c33d3232cf7554c419b))
+* **deps:** update dependency aqua:anchore/grype to v0.120.1 ([#135](https://github.com/bitwise-media-group/toolchain/issues/135)) ([37a7b32](https://github.com/bitwise-media-group/toolchain/commit/37a7b32b31b01a2b00f968f2cf5ecd9f8ef75c39))
+* **deps:** update dependency aqua:anchore/syft to v1.54.1 ([#131](https://github.com/bitwise-media-group/toolchain/issues/131)) ([82b84f3](https://github.com/bitwise-media-group/toolchain/commit/82b84f34a7ffb70b83c19ac573edfdaa72f1a25f))
+* **deps:** update dependency aqua:astral-sh/uv to v0.12.24 ([#137](https://github.com/bitwise-media-group/toolchain/issues/137)) ([58e5a21](https://github.com/bitwise-media-group/toolchain/commit/58e5a211101bdf878251f295a53ad9bd8e059798))
+* **deps:** update dependency aqua:astral-sh/uv to v0.13.0 ([#141](https://github.com/bitwise-media-group/toolchain/issues/141)) ([cf86e92](https://github.com/bitwise-media-group/toolchain/commit/cf86e922bd9efc317c88715b1f1d5b0546498e00))
+* **deps:** update dependency aqua:astral-sh/uv to v0.13.1 ([#151](https://github.com/bitwise-media-group/toolchain/issues/151)) ([c22af06](https://github.com/bitwise-media-group/toolchain/commit/c22af0655dbf87d8715f472c4d6e9c2f20aa488f))
+* **deps:** update dependency aqua:goreleaser/goreleaser to v2.18.3 ([#138](https://github.com/bitwise-media-group/toolchain/issues/138)) ([8539747](https://github.com/bitwise-media-group/toolchain/commit/8539747ed18a3114411de60d05a4720e52611f40))
+* **deps:** update dependency aqua:hashicorp/terraform to v1.16.6 ([#152](https://github.com/bitwise-media-group/toolchain/issues/152)) ([c257ba8](https://github.com/bitwise-media-group/toolchain/commit/c257ba8415a0693f4f67cb8a6dd3b276e729d5de))
+* **deps:** update dependency aqua:kubescape/kubescape to v4.0.16 ([#153](https://github.com/bitwise-media-group/toolchain/issues/153)) ([3bfde22](https://github.com/bitwise-media-group/toolchain/commit/3bfde2213770729f566f3c6e87e6bc82155e0bdf))
+* **deps:** update dependency aqua:pnpm/pnpm to v12.10.1 ([#132](https://github.com/bitwise-media-group/toolchain/issues/132)) ([81c2687](https://github.com/bitwise-media-group/toolchain/commit/81c268790946d649c5643989c54467df1fd6eb70))
+* **deps:** update dependency aqua:pnpm/pnpm to v12.11.2 ([#139](https://github.com/bitwise-media-group/toolchain/issues/139)) ([61d161f](https://github.com/bitwise-media-group/toolchain/commit/61d161f488de48696d4fcc6c7bc1fad35817e01c))
+* **deps:** update dependency aqua:pnpm/pnpm to v12.12.0 ([#143](https://github.com/bitwise-media-group/toolchain/issues/143)) ([10eb428](https://github.com/bitwise-media-group/toolchain/commit/10eb428932e1736846203a07c2257b51702e0d64))
+* **deps:** update dependency aqua:pnpm/pnpm to v12.12.1 ([#144](https://github.com/bitwise-media-group/toolchain/issues/144)) ([146c97d](https://github.com/bitwise-media-group/toolchain/commit/146c97d4126d0da749461cf8afedbda79d8e36a4))
+* **deps:** update dependency aqua:pnpm/pnpm to v12.13.0 ([#148](https://github.com/bitwise-media-group/toolchain/issues/148)) ([fd4c26e](https://github.com/bitwise-media-group/toolchain/commit/fd4c26e6897822119213b27f5b26a9e5c0fa5321))
+* **deps:** update dependency core:python to v3.15.0 ([#140](https://github.com/bitwise-media-group/toolchain/issues/140)) ([3eb123a](https://github.com/bitwise-media-group/toolchain/commit/3eb123a22629b8a105e91f6f7b6a6ce0403a1d59))
+* **deps:** update dependency npm:prettier to v3.9.10 ([#142](https://github.com/bitwise-media-group/toolchain/issues/142)) ([a94ff55](https://github.com/bitwise-media-group/toolchain/commit/a94ff55e6e71b0e2876e41965a1f935bd8e82d28))
+* **deps:** update node.js to lts ([#149](https://github.com/bitwise-media-group/toolchain/issues/149)) ([cfb8636](https://github.com/bitwise-media-group/toolchain/commit/cfb863677398853a127a19bb740908d6d62e75eb))
+
 ## [3.3.0](https://github.com/bitwise-media-group/toolchain/compare/v3.2.0...v3.3.0) (2026-10-09)
 
 
