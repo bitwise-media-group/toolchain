@@ -136,6 +136,50 @@ url = "https://github.com/astral-sh/uv/releases/download/0.13.2/uv-x86_64-pc-win
 url_api = "https://api.github.com/repos/astral-sh/uv/releases/assets/657430310"
 provenance = "github-attestations"
 
+[[tools."aqua:docker/buildx"]]
+version = "0.38.0"
+backend = "aqua:docker/buildx"
+specifiers = ["0.38.0"]
+
+[tools."aqua:docker/buildx"."platforms.linux-arm64"]
+checksum = "sha256:38e890e1a162bfdbf32fbe91404991dc4fc28e55b0de901b34374a061bab4d2c"
+url = "https://github.com/docker/buildx/releases/download/v0.38.0/buildx-v0.38.0.linux-arm64"
+url_api = "https://api.github.com/repos/docker/buildx/releases/assets/619849315"
+provenance = "cosign"
+
+[tools."aqua:docker/buildx"."platforms.linux-arm64-musl"]
+checksum = "sha256:38e890e1a162bfdbf32fbe91404991dc4fc28e55b0de901b34374a061bab4d2c"
+url = "https://github.com/docker/buildx/releases/download/v0.38.0/buildx-v0.38.0.linux-arm64"
+url_api = "https://api.github.com/repos/docker/buildx/releases/assets/619849315"
+provenance = "cosign"
+
+[tools."aqua:docker/buildx"."platforms.linux-x64"]
+checksum = "sha256:4fe4cc38adf48169132749b6ca22a990928db0118e3407584ee553723115d287"
+url = "https://github.com/docker/buildx/releases/download/v0.38.0/buildx-v0.38.0.linux-amd64"
+url_api = "https://api.github.com/repos/docker/buildx/releases/assets/619849327"
+provenance = "cosign"
+
+[tools."aqua:docker/buildx"."platforms.linux-x64-musl"]
+checksum = "sha256:4fe4cc38adf48169132749b6ca22a990928db0118e3407584ee553723115d287"
+url = "https://github.com/docker/buildx/releases/download/v0.38.0/buildx-v0.38.0.linux-amd64"
+url_api = "https://api.github.com/repos/docker/buildx/releases/assets/619849327"
+provenance = "cosign"
+
+[tools."aqua:docker/buildx"."platforms.macos-arm64"]
+checksum = "sha256:85989b895add5f119c1ccf8eada2f6892fc33ccf16bd8917638eae404ef26344"
+url = "https://github.com/docker/buildx/releases/download/v0.38.0/buildx-v0.38.0.darwin-arm64"
+url_api = "https://api.github.com/repos/docker/buildx/releases/assets/620148395"
+
+[tools."aqua:docker/buildx"."platforms.macos-x64"]
+checksum = "sha256:b123dc6fb51f88e47d37223938e2acd66edec73105459f65f19f15cc912ee559"
+url = "https://github.com/docker/buildx/releases/download/v0.38.0/buildx-v0.38.0.darwin-amd64"
+url_api = "https://api.github.com/repos/docker/buildx/releases/assets/620148407"
+
+[tools."aqua:docker/buildx"."platforms.windows-x64"]
+checksum = "sha256:b39784aed5b3f9b24d1971bbcbad8c8206033fa63ed4fea82c9141728fe0ea26"
+url = "https://github.com/docker/buildx/releases/download/v0.38.0/buildx-v0.38.0.windows-amd64.exe"
+url_api = "https://api.github.com/repos/docker/buildx/releases/assets/620148408"
+
 [[tools."aqua:golangci/golangci-lint"]]
 version = "2.15.0"
 backend = "aqua:golangci/golangci-lint"
@@ -471,44 +515,44 @@ url_api = "https://api.github.com/repos/kubescape/kubescape/releases/assets/6403
 provenance = "github-attestations"
 
 [[tools."aqua:oven-sh/bun"]]
-version = "1.4.2"
+version = "1.4.3"
 backend = "aqua:oven-sh/bun"
-specifiers = ["1.4.2"]
+specifiers = ["1.4.3"]
 
 [tools."aqua:oven-sh/bun"."platforms.linux-arm64"]
-checksum = "sha256:54328bbc2d9c8e0c9f892c544d66c57a83b84139e34909e5ee81758f1ac8fda7"
-url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.2/bun-linux-aarch64.zip"
-url_api = "https://api.github.com/repos/oven-sh/bun/releases/assets/545308380"
+checksum = "sha256:efa9813da5ed72423bf847f916e8d2c47c0d776add972354026a75e10da9aa21"
+url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.3/bun-linux-aarch64.zip"
+url_api = "https://api.github.com/repos/oven-sh/bun/releases/assets/626788529"
 
 [tools."aqua:oven-sh/bun"."platforms.linux-arm64-musl"]
-checksum = "sha256:54328bbc2d9c8e0c9f892c544d66c57a83b84139e34909e5ee81758f1ac8fda7"
-url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.2/bun-linux-aarch64.zip"
-url_api = "https://api.github.com/repos/oven-sh/bun/releases/assets/545308380"
+checksum = "sha256:efa9813da5ed72423bf847f916e8d2c47c0d776add972354026a75e10da9aa21"
+url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.3/bun-linux-aarch64.zip"
+url_api = "https://api.github.com/repos/oven-sh/bun/releases/assets/626788529"
 
 [tools."aqua:oven-sh/bun"."platforms.linux-x64"]
-checksum = "sha256:36368faef7527875d5ffa52e53cd48021741f2a83eb6208a8dd64068d422a913"
-url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.2/bun-linux-x64.zip"
-url_api = "https://api.github.com/repos/oven-sh/bun/releases/assets/545310218"
+checksum = "sha256:3e730528d89775f03f87f05c06787c4df4099d0a37f3f252e7b829cb23816e18"
+url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.3/bun-linux-x64.zip"
+url_api = "https://api.github.com/repos/oven-sh/bun/releases/assets/626788717"
 
 [tools."aqua:oven-sh/bun"."platforms.linux-x64-musl"]
-checksum = "sha256:36368faef7527875d5ffa52e53cd48021741f2a83eb6208a8dd64068d422a913"
-url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.2/bun-linux-x64.zip"
-url_api = "https://api.github.com/repos/oven-sh/bun/releases/assets/545310218"
+checksum = "sha256:3e730528d89775f03f87f05c06787c4df4099d0a37f3f252e7b829cb23816e18"
+url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.3/bun-linux-x64.zip"
+url_api = "https://api.github.com/repos/oven-sh/bun/releases/assets/626788717"
 
 [tools."aqua:oven-sh/bun"."platforms.macos-arm64"]
-checksum = "sha256:90987a3a16d7db556d886ac3d551e7b6d3edf0a1cf43acaed622e8676be1d12f"
-url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.2/bun-darwin-aarch64.zip"
-url_api = "https://api.github.com/repos/oven-sh/bun/releases/assets/545329049"
+checksum = "sha256:80afd4c069b46a6fa8f3ec520bebc750a7843e4a8d5b9583d29ad436c00a3403"
+url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.3/bun-darwin-aarch64.zip"
+url_api = "https://api.github.com/repos/oven-sh/bun/releases/assets/626788936"
 
 [tools."aqua:oven-sh/bun"."platforms.macos-x64"]
-checksum = "sha256:80520d7e17526308c9185d261679ac6d27798d3803a0e9f7ff9121ab8affb012"
-url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.2/bun-darwin-x64.zip"
-url_api = "https://api.github.com/repos/oven-sh/bun/releases/assets/545329047"
+checksum = "sha256:62660e6438eb872278877acca77e1152d5d031324df368d4a81b428211489d2d"
+url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.3/bun-darwin-x64.zip"
+url_api = "https://api.github.com/repos/oven-sh/bun/releases/assets/626789149"
 
 [tools."aqua:oven-sh/bun"."platforms.windows-x64"]
-checksum = "sha256:ce4c17497b2f29712a99d3d53f028de28cd42e3bacb8589599e7f000e49b6405"
-url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.2/bun-windows-x64.zip"
-url_api = "https://api.github.com/repos/oven-sh/bun/releases/assets/545310603"
+checksum = "sha256:0bf84e808552beea67bf1202a287a35c6c825d837b287b3f8e9dd513dba35d3d"
+url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.3/bun-windows-x64.zip"
+url_api = "https://api.github.com/repos/oven-sh/bun/releases/assets/626789809"
 
 [[tools."aqua:pnpm/pnpm"]]
 version = "12.14.0"
@@ -859,37 +903,37 @@ checksum = "sha256:1314008898bd40df77af4b014f777f08873dbdfbcd3d92308728ee03304fe
 url = "https://dl.google.com/go/go1.27.2.windows-amd64.zip"
 
 [[tools.node]]
-version = "24.22.0"
+version = "24.22.1"
 backend = "core:node"
 specifiers = ["lts"]
 
 [tools.node."platforms.linux-arm64"]
-checksum = "sha256:b7e7991d5407815adfa74a2a9cd4db683552c8ce32ff4a295c22e972849c3f5d"
-url = "https://nodejs.org/dist/v24.22.0/node-v24.22.0-linux-arm64.tar.gz"
+checksum = "sha256:33c37be234ba8bee041961047b19160f4d7d0f164e8e246f78bdd10feff148b3"
+url = "https://nodejs.org/dist/v24.22.1/node-v24.22.1-linux-arm64.tar.gz"
 
 [tools.node."platforms.linux-arm64-musl"]
-checksum = "sha256:6812a53e5b37fbc32476d6c3511038d2bc3bbd1b3bb348d6c04dd2c70a1c8f4a"
-url = "https://unofficial-builds.nodejs.org/download/release/v24.22.0/node-v24.22.0-linux-arm64-musl.tar.gz"
+checksum = "sha256:8254125825a3e5e834bd8a260dab4c8303f720464a741506ec27989b9ba1769b"
+url = "https://unofficial-builds.nodejs.org/download/release/v24.22.1/node-v24.22.1-linux-arm64-musl.tar.gz"
 
 [tools.node."platforms.linux-x64"]
-checksum = "sha256:28ea0a438de9a13bd7891fd758eee6c7819ee8af5442dfd8d45bd65e56d4228c"
-url = "https://nodejs.org/dist/v24.22.0/node-v24.22.0-linux-x64.tar.gz"
+checksum = "sha256:eb6728e77c576a35162c122c45ccadf224d89ff00abc8dae46cc2897c6002d7c"
+url = "https://nodejs.org/dist/v24.22.1/node-v24.22.1-linux-x64.tar.gz"
 
 [tools.node."platforms.linux-x64-musl"]
-checksum = "sha256:72cd253fbe0c2539d52208ed098d47b78ff2c32ba76295d8e6b5b0ce067dcba5"
-url = "https://unofficial-builds.nodejs.org/download/release/v24.22.0/node-v24.22.0-linux-x64-musl.tar.gz"
+checksum = "sha256:0a9eddce2d2e8f3addbe94fa46d751325b2d74f7fd1ce63296164d36b6dfc6e5"
+url = "https://unofficial-builds.nodejs.org/download/release/v24.22.1/node-v24.22.1-linux-x64-musl.tar.gz"
 
 [tools.node."platforms.macos-arm64"]
-checksum = "sha256:6a9724d9b50a5f22b4816cded441b5a8d9ddae546191a5e5b7efa5a5e2ee26d5"
-url = "https://nodejs.org/dist/v24.22.0/node-v24.22.0-darwin-arm64.tar.gz"
+checksum = "sha256:89c682593d76cd44233fa53b1563264e7de9cbb189cad169135c5b4fadfbc0a7"
+url = "https://nodejs.org/dist/v24.22.1/node-v24.22.1-darwin-arm64.tar.gz"
 
 [tools.node."platforms.macos-x64"]
-checksum = "sha256:495e3f273c645f3c4677d438304cdfc701729ea5dec5728f5c8e76a2dece4b91"
-url = "https://nodejs.org/dist/v24.22.0/node-v24.22.0-darwin-x64.tar.gz"
+checksum = "sha256:d132557e7ee2b85af08b0c8c34338e65c6430f2238d01f727728ef42dc83b035"
+url = "https://nodejs.org/dist/v24.22.1/node-v24.22.1-darwin-x64.tar.gz"
 
 [tools.node."platforms.windows-x64"]
-checksum = "sha256:f9683a19877e12a9b167305c8db71040d812876359de21f0d2e97c3f321f80c3"
-url = "https://nodejs.org/dist/v24.22.0/node-v24.22.0-win-x64.zip"
+checksum = "sha256:d2046d28c2c3dcd211ac5145c0bf30e2047ef9dfb306693c8c6e2eccd8b95fa5"
+url = "https://nodejs.org/dist/v24.22.1/node-v24.22.1-win-x64.zip"
 
 [[tools."npm:markdownlint-cli2"]]
 version = "0.23.3"
