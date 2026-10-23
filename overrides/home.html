@@ -1,0 +1,428 @@
+<!--
+ Copyright 2026 BitWise Media Group Ltd
+ SPDX-License-Identifier: MIT
+-->
+
+{#- overrides/home.html — custom landing for the toolchain docs. The dotty landing's layout (hero, terminal showcase,
+marquee, connected feature grid, steps) rendered in the parent BitWise Media Group palette — terracotta on cream, warm
+charcoal in dark mode — via the scheme-scoped --bw-* tokens in docs/stylesheets/extra.css. Injected full-bleed between
+the header and the page body via the `tabs` block; the article `content` block is emptied, index.md sets
+`hide: [navigation, toc]`, and extra.css drops the empty .md-content on this page. -#}
+{% extends "main.html" %}
+{% block tabs %}
+{{ super() }}
+<div class="tc">
+    <!-- HERO -->
+    <header class="tc-hero">
+        <div class="tc-hero__grid"></div>
+        <div class="tc-hero__glow"></div>
+        <img class="tc-hero__mark" src="{{ 'assets/logo-mark.svg' | url }}" alt="" aria-hidden="true" />
+        <div class="tc-hero__inner">
+            <div class="tc-kicker"><span class="tc-dot"></span>// Shared build tasks for the fleet</div>
+            <h1 class="tc-title">One toolchain.<br /><em>Every repo.</em></h1>
+            <p class="tc-lede">
+                Pinned, checksum-locked developer tools, mise task archetypes for Go, Node, Python and Terraform, and
+                the house lint and license policy — mounted in every repo as a <code>.mise/</code> submodule, with a
+                one-line Makefile on top.
+            </p>
+            <div class="tc-term">
+                <div class="tc-term__bar">
+                    <span class="tc-dots"><i></i><i></i><i></i></span><span>zsh — adopt</span>
+                </div>
+                <div class="tc-copy">
+                    <span class="tc-p">$</span>
+                    <code>git submodule add https://github.com/bitwise-media-group/toolchain.git .mise</code>
+                    <div class="md-code__nav">
+                        <button class="md-code__button" type="button" data-md-type="copy" title="Copy to clipboard"
+                            aria-label="Copy to clipboard"></button>
+                    </div>
+                </div>
+                <div class="tc-copy">
+                    <span class="tc-p">$</span>
+                    <code>mise trust --all</code>
+                    <div class="md-code__nav">
+                        <button class="md-code__button" type="button" data-md-type="copy" title="Copy to clipboard"
+                            aria-label="Copy to clipboard"></button>
+                    </div>
+                </div>
+                <div class="tc-copy">
+                    <span class="tc-p">$</span>
+                    <code>make pr</code>
+                    <div class="md-code__nav">
+                        <button class="md-code__button" type="button" data-md-type="copy" title="Copy to clipboard"
+                            aria-label="Copy to clipboard"></button>
+                    </div>
+                </div>
+            </div>
+            <div class="tc-cta">
+                <a class="tc-btn tc-btn--primary" href="{{ 'getting-started/' | url }}">
+                    Get started
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M5 12h14" />
+                        <path d="m12 5 7 7-7 7" />
+                    </svg>
+                </a>
+                <a class="tc-btn tc-btn--secondary" href="{{ 'concepts/architecture/' | url }}">How it works</a>
+                <a class="tc-btn tc-btn--ghost" href="{{ config.repo_url }}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+                        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path
+                            d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 4 5 4 5 4c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 11c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
+                        <path d="M9 18c-4.51 2-5-2-7-2" />
+                    </svg>
+                    Browse the code
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- TERMINAL SHOWCASE -->
+    <section class="tc-shot">
+        <div class="tc-shot__frame">
+            <div class="tc-shot__bar">
+                <span class="tc-dots"><i></i><i></i><i></i></span>
+                <span class="tc-title-sm">dotty · make pr</span>
+                <span class="tc-live">● go archetype</span>
+            </div>
+            <div class="tc-panes">
+                <div class="tc-pane">
+                    <div class="tc-pane__head"><b>1</b><span>mise.toml</span></div>
+                    <div class="tc-pane__body tc-toml">
+                        <div><span class="s">[tools]</span></div>
+                        <div><span class="k">go</span> = <span class="v">"1.27.2"</span></div>
+                        <div>
+                            <span class="v">"go:golang.org/x/vuln/cmd/govulncheck"</span> = <span class="v">"1.8.0"</span>
+                        </div>
+                        <div>&nbsp;</div>
+                        <div><span class="s">[vars]</span></div>
+                        <div><span class="k">app</span> = <span class="v">"dotty"</span></div>
+                        <div><span class="k">app_pkg</span> = <span class="v">"./cmd"</span></div>
+                        <div>&nbsp;</div>
+                        <div><span class="s">[task_config]</span></div>
+                        <div><span class="k">includes</span> = [</div>
+                        <div>&nbsp;&nbsp;<span class="v">".mise/common/tasks.toml"</span>,</div>
+                        <div>&nbsp;&nbsp;<span class="v">".mise/archetypes/go/tasks.toml"</span>,</div>
+                        <div>]</div>
+                        <div class="tc-pane__sep"><span class="c"># Makefile</span></div>
+                        <div><span class="k">include</span> .mise/archetypes/go/include.mk</div>
+                    </div>
+                </div>
+                <div class="tc-pane">
+                    <div class="tc-pane__head"><b>2</b><span>make pr</span></div>
+                    <div class="tc-pane__body">
+                        <div class="tc-dim">$ make pr <span class="tc-blink"></span></div>
+                        <div class="tc-run"><span class="t">tidy</span><span class="d">go mod tidy</span><span class="ok">✓</span></div>
+                        <div class="tc-run"><span class="t">fmt</span><span class="d">go fmt · golangci-lint --fix</span><span class="ok">✓</span></div>
+                        <div class="tc-run"><span class="t"></span><span class="d">prettier · markdownlint · addlicense</span><span class="ok">✓</span></div>
+                        <div class="tc-run"><span class="t">lint</span><span class="d">golangci-lint · govulncheck</span><span class="ok">✓</span></div>
+                        <div class="tc-run"><span class="t"></span><span class="d">hadolint · grype · kubescape · shellcheck</span><span class="ok">✓</span></div>
+                        <div class="tc-run"><span class="t"></span><span class="d">actionlint · zizmor · prose · license</span><span class="ok">✓</span></div>
+                        <div class="tc-run"><span class="t">test</span><span class="d">gotestsum -race → coverage/</span><span class="ok">✓</span></div>
+                        <div class="tc-run"><span class="t">build</span><span class="d">go build -trimpath → ./dotty</span><span class="ok">✓</span></div>
+                        <div class="tc-run"><span class="t">commit</span><span class="d">./commit.sh (if present)</span><span class="ok">✓</span></div>
+                        <div class="tc-pane__sep tc-ok">→ every tool pinned · sha256-verified · on PATH</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p class="tc-shot__cap">
+            The repo pins its runtime and picks an archetype — <b>every other tool, task and gate</b> comes from
+            <code>.mise/</code>.
+        </p>
+    </section>
+
+    <!-- MARQUEE -->
+    {#- The pinned CLIs the toolchain puts on PATH. Rendered twice so the translateX(-50%) scroll loops seamlessly;
+    aria-hidden because it is decorative and would otherwise be announced twice. -#}
+    {% set tc_marquee = ["mise", "mise.lock", "addlicense", "prettier", "markdownlint-cli2", "actionlint", "zizmor",
+    "shellcheck", "hadolint", "grype", "syft", "cosign", "helm", "kubescape", "golangci-lint", "gotestsum",
+    "goreleaser", "uv", "pnpm", "bun", "terraform", "tflint", "terraform-docs"] %}
+    <div class="tc-marquee" aria-hidden="true">
+        <div class="tc-marquee__track">
+            {% for i in [1, 2] %}{% for m in tc_marquee %}<span>{{ m }}</span>{% endfor %}{% endfor %}
+        </div>
+    </div>
+
+    <!-- STATS -->
+    <section class="tc-stats-wrap">
+        <div class="tc-stats">
+            <div class="tc-stat"><b>4</b><small>language archetypes</small></div>
+            <div class="tc-stat"><b>20+</b><small>pinned CLIs</small></div>
+            <div class="tc-stat"><b class="tc-ink">1 line</b><small>Makefile</small></div>
+            <div class="tc-stat"><b class="tc-ink">0</b><small>no-op stubs</small></div>
+        </div>
+    </section>
+
+    <!-- WHAT YOU GET -->
+    <section class="tc-section">
+        <h2 class="tc-eyebrow">// WHAT EVERY REPO GETS</h2>
+        <p class="tc-lead">Pinned tools, shared tasks and house policy — mounted once, kept current by Renovate.</p>
+        <div class="tc-conn tc-grid-3">
+            <div class="tc-feat">
+                <div class="tc-glyph" style="background: var(--bw-orange)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                    </svg>
+                </div>
+                <h3>Checksum-locked tools</h3>
+                <p>
+                    Every CLI is an exact pin in <code>config.toml</code> with per-platform sha256 (and provenance where
+                    published) in <code>mise.lock</code>. No <code>tools/go.mod</code>, no linter
+                    <code>package.json</code>.
+                </p>
+            </div>
+            <div class="tc-feat">
+                <div class="tc-glyph" style="background: var(--bw-orange-2)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path
+                            d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z" />
+                        <path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65" />
+                        <path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65" />
+                    </svg>
+                </div>
+                <h3>Archetype tasks</h3>
+                <p>
+                    <code>common</code> plus exactly one of <code>go</code>, <code>node</code>, <code>python</code> or
+                    <code>terraform</code> — each with real <code>fmt</code>, <code>lint</code>, <code>build</code>,
+                    <code>test</code>, <code>ci</code> and <code>pr</code> rollups.
+                </p>
+            </div>
+            <div class="tc-feat">
+                <div class="tc-glyph" style="background: var(--bw-amber)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <polyline points="4 17 10 11 4 5" />
+                        <line x1="12" x2="20" y1="19" y2="19" />
+                    </svg>
+                </div>
+                <h3>A one-line Makefile</h3>
+                <p>
+                    <code>include .mise/archetypes/go/include.mk</code> forwards every target to
+                    <code>mise run</code>, so <code>make &lt;task&gt;</code> and <code>mise run &lt;task&gt;</code> are
+                    interchangeable.
+                </p>
+            </div>
+            <div class="tc-feat">
+                <div class="tc-glyph" style="background: var(--bw-green)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
+                        <path d="M14 2v5h5" />
+                        <path d="m9 15 2 2 4-4" />
+                    </svg>
+                </div>
+                <h3>Zero-config house policy</h3>
+                <p>
+                    SPDX headers via addlicense, prose via prettier + markdownlint, and workflows via actionlint +
+                    zizmor — in every archetype, with house defaults read from <code>.mise/</code>.
+                </p>
+            </div>
+            <div class="tc-feat">
+                <div class="tc-glyph" style="background: var(--bw-orange)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path
+                            d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
+                        <path d="m9 12 2 2 4-4" />
+                    </svg>
+                </div>
+                <h3>Runtime-detected scans</h3>
+                <p>
+                    Dockerfiles get hadolint + grype, helm charts and kustomizations get kubescape, scripts get
+                    shellcheck — each pass no-ops silently when a repo has none of the files.
+                </p>
+            </div>
+            <div class="tc-feat">
+                <div class="tc-glyph" style="background: var(--bw-orange-2)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                        <path d="M3 3v5h5" />
+                        <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" />
+                        <path d="M16 16h5v5" />
+                    </svg>
+                </div>
+                <h3>Fleet-wide updates</h3>
+                <p>
+                    Renovate bumps one pin here and re-locks; release-please cuts a tag; every consumer gets a
+                    submodule-bump PR. One commit updates the whole fleet.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ARCHETYPES -->
+    <section class="tc-section">
+        <h2 class="tc-eyebrow">// PICK ONE ARCHETYPE</h2>
+        <p class="tc-lead">Common first, then exactly one language archetype. They never stack.</p>
+        <div class="tc-arch-grid">
+            <a class="tc-arch" href="{{ 'archetypes/go/' | url }}">
+                <span class="tc-arch__name">go</span>
+                <p>CLI applications: golangci-lint, govulncheck, gotestsum, GoReleaser and a zensical docs site.</p>
+                <code>archetypes/go</code>
+            </a>
+            <a class="tc-arch" href="{{ 'archetypes/node/' | url }}">
+                <span class="tc-arch__name">node</span>
+                <p>Libraries and GitHub Actions on the package.json-script contract — npm, pnpm or bun.</p>
+                <code>archetypes/node</code>
+            </a>
+            <a class="tc-arch" href="{{ 'archetypes/python/' | url }}">
+                <span class="tc-arch__name">python</span>
+                <p>uv-native packages and Zensical docs sites: ruff, pytest, <code>uv build</code>.</p>
+                <code>archetypes/python</code>
+            </a>
+            <a class="tc-arch" href="{{ 'archetypes/terraform/' | url }}">
+                <span class="tc-arch__name">terraform</span>
+                <p>Modules and environments: init, plan, apply, validate, tflint and terraform-docs.</p>
+                <code>archetypes/terraform</code>
+            </a>
+            <a class="tc-arch tc-arch--common" href="{{ 'archetypes/common/' | url }}">
+                <span class="tc-arch__name">common only</span>
+                <p>Markdown and YAML repos with nothing to build or test: prose, license and workflow lint.</p>
+                <code>common</code>
+            </a>
+        </div>
+    </section>
+
+    <!-- THE CONTRACT -->
+    <section class="tc-section">
+        <h2 class="tc-eyebrow">// ONE CONTRACT, EVERY REPO</h2>
+        <p class="tc-lead--sm">CI runs <code>make lint</code>, <code>make build</code> and <code>make test</code> —
+            whichever a repo defines.</p>
+        <div class="tc-cmdcard">
+            <div class="tc-cmdcard__bar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="4 17 10 11 4 5" />
+                    <line x1="12" x2="20" y1="19" y2="19" />
+                </svg>
+                <span>make help</span>
+            </div>
+            <div class="tc-cmdcard__list">
+                <div class="tc-cmdrow">
+                    <code><span class="p">$</span> make fmt</code><span class="cmt"># auto-fix code + prose, inject license headers</span>
+                </div>
+                <div class="tc-cmdrow">
+                    <code><span class="p">$</span> make lint</code><span class="cmt"># every check-mode pass — the CI gate</span>
+                </div>
+                <div class="tc-cmdrow">
+                    <code><span class="p">$</span> make test</code><span class="cmt"># unit tests with coverage → coverage/</span>
+                </div>
+                <div class="tc-cmdrow">
+                    <code><span class="p">$</span> make build</code><span class="cmt"># the binary, bundle, package or site</span>
+                </div>
+                <div class="tc-cmdrow">
+                    <code><span class="p">$</span> make ci</code><span class="cmt"># exactly what the reusable CI workflow runs</span>
+                </div>
+                <div class="tc-cmdrow">
+                    <code><span class="p">$</span> make pr</code><span class="cmt"># full local gate, then ./commit.sh if present</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- THREE STEPS -->
+    <section class="tc-section tc-section--last">
+        <h2 class="tc-eyebrow">// THREE STEPS TO ADOPT</h2>
+        <div class="tc-conn tc-steps">
+            <div class="tc-step">
+                <div class="tc-step__body">
+                    <div class="tc-step__num">01</div>
+                    <h3>Mount</h3>
+                    <p>Add the library as a submodule at <code>.mise/</code>. mise loads its config natively.</p>
+                    <a class="tc-step__alt" href="{{ 'getting-started/adopt/' | url }}">Full guide
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M5 12h14" />
+                            <path d="m12 5 7 7-7 7" />
+                        </svg>
+                    </a>
+                </div>
+                <div class="tc-cmd">
+                    <span class="tc-p">$</span>
+                    <code>git submodule add https://github.com/bitwise-media-group/toolchain.git .mise</code>
+                    <div class="md-code__nav">
+                        <button class="md-code__button" type="button" data-md-type="copy" title="Copy to clipboard"
+                            aria-label="Copy to clipboard"></button>
+                    </div>
+                </div>
+            </div>
+            <div class="tc-step">
+                <div class="tc-step__body">
+                    <div class="tc-step__num">02</div>
+                    <h3>Wire</h3>
+                    <p>
+                        Pin the runtime and include <code>common</code> plus one archetype in the root
+                        <code>mise.toml</code>; reduce the Makefile to one include.
+                    </p>
+                    <a class="tc-step__alt" href="{{ 'archetypes/' | url }}">Choose an archetype
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M5 12h14" />
+                            <path d="m12 5 7 7-7 7" />
+                        </svg>
+                    </a>
+                </div>
+                <div class="tc-cmd">
+                    <span class="tc-p">$</span>
+                    <code>mise trust --all &amp;&amp; make help</code>
+                    <div class="md-code__nav">
+                        <button class="md-code__button" type="button" data-md-type="copy" title="Copy to clipboard"
+                            aria-label="Copy to clipboard"></button>
+                    </div>
+                </div>
+            </div>
+            <div class="tc-step">
+                <div class="tc-step__body">
+                    <div class="tc-step__num">03</div>
+                    <h3>Run</h3>
+                    <p>Format, lint, test and build in one go — the full local gate before every pull request.</p>
+                    <a class="tc-step__alt" href="{{ 'getting-started/daily-workflow/' | url }}">Daily workflow
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M5 12h14" />
+                            <path d="m12 5 7 7-7 7" />
+                        </svg>
+                    </a>
+                </div>
+                <div class="tc-cmd">
+                    <span class="tc-p">$</span>
+                    <code>make pr</code>
+                    <div class="md-code__nav">
+                        <button class="md-code__button" type="button" data-md-type="copy" title="Copy to clipboard"
+                            aria-label="Copy to clipboard"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<script>
+    // Wire the landing-page copy buttons. Delegated on document so it survives instant navigation; scoped to
+    // .tc-copy / .tc-cmd so it never touches zensical's own code-block copy buttons. Strips the leading "$ " prompt,
+    // then reuses zensical's own snackbar element so the feedback matches the native code-block copy button exactly.
+    document.addEventListener("click", function (e) {
+        var btn = e.target.closest(".tc-copy .md-code__button, .tc-cmd .md-code__button");
+        if (!btn) return;
+        var row = btn.closest(".tc-copy, .tc-cmd");
+        var code = row && row.querySelector("code");
+        if (!code) return;
+        navigator.clipboard.writeText(code.textContent.replace(/^\s*\$\s+/, "")).then(function () {
+            btn.focus();
+            var dialog = document.querySelector("[data-md-component=dialog]");
+            if (!dialog) return;
+            (dialog.querySelector(".md-dialog__inner") || dialog).textContent = "Copied to clipboard";
+            dialog.classList.add("md-dialog--active");
+            window.clearTimeout(dialog.tcResetTimer);
+            dialog.tcResetTimer = window.setTimeout(function () {
+                dialog.classList.remove("md-dialog--active");
+            }, 2000);
+        });
+    });
+</script>
+{% endblock %}
+{% block content %}{% endblock %}

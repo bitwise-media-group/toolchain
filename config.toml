@@ -105,6 +105,9 @@ minimum_release_age_excludes = [
   "github:bitwise-media-group/patchy",
 ]
 
+# The `--8<--` start/end markers around [tools] and [vars] delimit the
+# sections the docs site embeds (docs/reference/); keep new pins inside them.
+# --8<-- [start:tools]
 [tools]
 "core:go" = { version = "1.27.2", lazy = true }
 "core:node" = "lts"
@@ -140,6 +143,7 @@ minimum_release_age_excludes = [
 # Per-invocation values (VERSION, FUZZ, FUZZTIME, NODE_PACKAGE_MANAGER,
 # NODE_INSTALL_FLAGS, ...) are plain environment variables read inside the task
 # scripts instead.
+# --8<-- [start:vars]
 [vars]
 # Canonical copyright holder for the whole ecosystem. Do not vary the spelling
 # per repo — a single value here is the point. Override only if a repo genuinely
@@ -190,3 +194,4 @@ kubescape_severity = "high"
 # (unknown|informational|low|medium|high). Repos silence accepted findings
 # with a zizmor.yml (auto-loaded from the repo root or .github/).
 zizmor_min_severity = "low"
+# --8<-- [end:vars]

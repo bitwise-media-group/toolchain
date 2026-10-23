@@ -1,3 +1,7 @@
 # Node deps and test/coverage output.
 coverage/
 node_modules/
+# Docs site (zensical via uv): build output, cache, virtualenv.
+/site/
+/.cache/
+/.venv/

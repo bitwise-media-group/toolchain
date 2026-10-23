@@ -6,6 +6,9 @@ lint/license policy — with a thin Makefile shim on top. Each repo consumes thi
 root `mise.toml`, and reduces its `Makefile` to one include. (Formerly named `make`, from its Makefile-fragment era;
 GitHub redirects the old URL.)
 
+Full documentation — how the layers fit together, every archetype, task and knob — lives at
+<https://oss.bitwisemedia.uk/toolchain/>, built from `docs/` in this repo (`make serve` previews it locally).
+
 ## Layout
 
 ```text
@@ -19,19 +22,23 @@ toolchain/                    # this repo == the consumer's .mise/ directory
 ├── .markdownlint-cli2.yaml   #   (see "Other conventions")
 ├── common/                   # what every repo gets, whatever its language
 │   ├── tasks.toml            #   commit, license, prose fmt/lint, actionlint + zizmor,
-│   │                         #   container/helm/kustomize/shell lint, and the
-│   │                         #   fmt/lint/ci/pr rollups for a common-only repo
+│   │                         #   container/helm/kustomize/shell lint, zensical
+│   │                         #   docs-build/serve, and the fmt/lint/ci/pr rollups
+│   │                         #   for a common-only repo
 │   ├── include.mk            #   the whole make surface: thin forwarders to mise
 │   └── scripts/              #   the shell behind the tasks (shellcheck-clean)
 └── archetypes/               # exactly ONE per repo, included after common
-    ├── go/                   #   build/test/lint/fuzz/release + zensical docs
+    ├── go/                   #   build/test/lint/fuzz/release
     ├── node/                 #   package.json-script contract (npm/pnpm/bun)
-    ├── python/               #   uv-native: ruff + pytest + uv build + zensical
+    ├── python/               #   uv-native: ruff + pytest + uv build (+ docs site)
     └── terraform/            #   init/plan/apply + tf fmt/lint/docs
         ├── tasks.toml        #   each archetype: its tasks + fmt/lint/ci/pr rollups
         ├── include.mk        #   its make shim (pulls in common/include.mk)
         └── scripts/          #   its task scripts
 ```
+
+The repo also carries its documentation site (`zensical.toml`, `pyproject.toml`, `uv.lock`, `docs/`, `overrides/`).
+Those files ship inside every consumer's `.mise/` too, where nothing reads them.
 
 ## Usage
 
@@ -95,9 +102,10 @@ include .mise/common/include.mk
 
 **Archetypes do not stack**: mise merges included task files whole-task with the later include winning, so a second
 archetype would silently replace the first's `fmt`/`lint`/`build`/`test`/`ci`/`pr` rollups. Cross-language needs are
-carried _inside_ an archetype instead — the go archetype ships the zensical docs tasks (`docs-build`, `serve`, `sync`),
-so a Go repo with a docs site includes only `archetypes/go` and wires `docs-build` into a repo-local `docs` task. The
-python archetype is for repos whose primary language is Python (including docs-only zensical sites).
+carried _inside_ an archetype instead. A docs site needs none: common ships the zensical tasks (`docs-build`, `serve`),
+so every repo has them whatever its archetype, and a Go repo with a CLI reference wires `docs-build` into a repo-local
+`docs` task. The python archetype is for repos whose primary language is Python (including docs-only zensical sites,
+whose `build` — and so CI — then builds the site).
 
 Run `mise trust --all` once per clone (CI trusts the workspace automatically), and `make help` (or `mise tasks`) to list
 what the repo exposes. Because the Makefile only forwards, `make <anything>` and `mise run <anything>` are
@@ -135,13 +143,13 @@ precedes `lint` inside `pr`.
 
 ### Archetypes
 
-| archetype | `fmt`                                             | `lint`                                                                            | `build`                            | `test`                       | extras                                                       |
-| --------- | ------------------------------------------------- | --------------------------------------------------------------------------------- | ---------------------------------- | ---------------------------- | ------------------------------------------------------------ |
-| go        | `go fmt`, `golangci-lint --fix`, prose, license   | golangci-lint, govulncheck, license, containers, shell, workflows, prose          | `go build` with version ldflags    | gotestsum, `-race`, coverage | `tidy`, `fuzz`, `snapshot`, `release`, `docs-build`, `serve` |
-| node      | `check:fix` / `format` scripts, prose, license    | `check` / `typecheck` scripts, license, containers, shell, workflows, prose       | `build` script                     | `test:coverage` script       | —                                                            |
-| python    | license, `ruff format`, `ruff check --fix`, prose | `ruff check`, `ruff format --check`, license, containers, shell, workflows, prose | `uv build` and/or `zensical build` | pytest (+ pytest-cov)        | `docs-build`, `serve`                                        |
-| terraform | `terraform fmt -recursive`, prose                 | validate, tflint, containers, shell, workflows, prose                             | —                                  | —                            | `init`, `plan`, `apply`, `docs`                              |
-| _common_  | prose, license                                    | license, containers, shell, workflows, prose                                      | —                                  | —                            | `commit`, `actionlint`, `zizmor`                             |
+| archetype | `fmt`                                             | `lint`                                                                            | `build`                            | `test`                       | extras                                                  |
+| --------- | ------------------------------------------------- | --------------------------------------------------------------------------------- | ---------------------------------- | ---------------------------- | ------------------------------------------------------- |
+| go        | `go fmt`, `golangci-lint --fix`, prose, license   | golangci-lint, govulncheck, license, containers, shell, workflows, prose          | `go build` with version ldflags    | gotestsum, `-race`, coverage | `tidy`, `fuzz`, `snapshot`, `release`                   |
+| node      | `check:fix` / `format` scripts, prose, license    | `check` / `typecheck` scripts, license, containers, shell, workflows, prose       | `build` script                     | `test:coverage` script       | —                                                       |
+| python    | license, `ruff format`, `ruff check --fix`, prose | `ruff check`, `ruff format --check`, license, containers, shell, workflows, prose | `uv build` and/or `zensical build` | pytest (+ pytest-cov)        | —                                                       |
+| terraform | `terraform fmt -recursive`, prose                 | validate, tflint, containers, shell, workflows, prose                             | —                                  | —                            | `init`, `plan`, `apply`, `docs`                         |
+| _common_  | prose, license                                    | license, containers, shell, workflows, prose                                      | —                                  | —                            | `commit`, `actionlint`, `zizmor`, `docs-build`, `serve` |
 
 - **go** — `go` and `govulncheck` are pinned by the repo (govulncheck must be `go install`ed by the same Go that builds
   the module). Structural knobs `app`, `app_pkg`, `build_tags`, `version_pkg`, `goos` come from `[vars]`. `goos` is a
@@ -149,7 +157,7 @@ precedes `lint` inside `pr`.
   and govulncheck once per entry, and `test` runs the full suite on the host's GOOS plus a compile-only `go test -c`
   pass for every other entry, since cross-compiled test binaries cannot execute. `GOOS` in the environment overrides the
   list per invocation (`make test GOOS=windows`). `docs` is left to the repo (a CLI reference is app-specific) with
-  `docs-build`/`serve`/`sync` (zensical via uv) ready to wire in.
+  common's `docs-build`/`serve` (zensical via uv) ready to wire in.
 - **node** — one archetype for libraries and GitHub Actions, on the package.json-script contract `check`, `check:fix`,
   `format`, `typecheck`, `build`, `test:coverage`; `typecheck` and `build` are required, the rest optional (run only
   when defined). Works with npm, pnpm or bun (see [pnpm / bun](#pnpm--bun)). The locked install (`npm ci`,
@@ -283,7 +291,8 @@ scripts also accept the old spellings (`APP`, `APP_PKG`, …) from the environme
   scans never contact a Kubernetes cluster (`KUBECONFIG` is pointed at nothing).
 - **This repo's own layout is inverted**: `config.toml`, `common/` and `archetypes/` sit at the root (it _is_ the
   consumer's `.mise/`), the dogfood include lives in the root `mise.toml`, and `.mise/` here contains symlinks back to
-  the root entries so mise resolves tools and scripts the same way it does in a consumer.
+  the root entries so mise resolves tools and scripts the same way it does in a consumer. The dogfood includes `common`
+  plus the python archetype, whose `build` renders the docs site.
 
 ## Migrating from v2 (`tasks/<archetype>.toml` + `mise.mk`)
 

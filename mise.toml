@@ -1,15 +1,19 @@
 # Copyright 2026 BitWise Media Group Ltd
 # SPDX-License-Identifier: MIT
 #
-# This repo dogfoods its own common-only contract, with the layout INVERTED
-# relative to consumers: in a consumer, config.toml is the submodule mounted
-# at .mise/ (loaded natively as .mise/config.toml) and the includes live in a
-# real root mise.toml like this one; here config.toml, common/ and archetypes/
-# sit at the repo root, so the .mise/ entries are symlinks back to them (see
-# .mise/) and only the include path differs (common/… instead of
-# .mise/common/…).
+# This repo dogfoods its own tasks, with the layout INVERTED relative to
+# consumers: in a consumer, config.toml is the submodule mounted at .mise/
+# (loaded natively as .mise/config.toml) and the includes live in a real root
+# mise.toml like this one; here config.toml, common/ and archetypes/ sit at the
+# repo root, so the .mise/ entries are symlinks back to them (see .mise/) and
+# only the include path differs (common/… instead of .mise/common/…).
+#
+# The python archetype rides on top of common because this repo also carries
+# its documentation site (zensical.toml + docs/, built with Zensical via uv):
+# `build` renders the site, so CI catches a broken page, and `serve` previews
+# it. ruff and pytest aren't project dependencies, so those passes skip.
 [task_config]
-includes = ["common/tasks.toml"]
+includes = ["common/tasks.toml", "archetypes/python/tasks.toml"]
 
 # The consumer-facing lint-shell pass only sweeps a repo's root scripts/ and
 # hack/, so the library's own task scripts need their own shellcheck sweep;

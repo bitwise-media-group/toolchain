@@ -4,11 +4,12 @@
 # Release pipeline — thin caller for the org's reusable release workflow.
 # release-please watches main and keeps a release PR current from the Conventional
 # Commit history; when that PR merges the workflow cuts the vX.Y.Z tag + GitHub
-# release. This repo ships no binaries (no .goreleaser.yaml) and no docs site (no
-# zensical.toml), so the goreleaser and docs jobs are skipped — release-please is
-# the whole pipeline. The product is the mise task library; consumers track the
-# `release` branch of this repo as a submodule, which is fast-forwarded to each
-# tagged release.
+# release. This repo ships no binaries (no .goreleaser.yaml), so the goreleaser
+# job is skipped; because a zensical.toml lives at the repo root, the docs job
+# rebuilds the documentation site from the tag and publishes it to GitHub Pages
+# (needs Settings → Pages → Source → GitHub Actions). The product is the mise
+# task library; consumers track the `release` branch of this repo as a
+# submodule, which is fast-forwarded to each tagged release.
 #
 # vanity-tags is left at its default (false): consumers track the `release`
 # branch rather than a floating vN tag, so a vanity tag would have no consumer.
@@ -34,8 +35,8 @@ jobs:
     uses: bitwise-media-group/github-workflows/.github/workflows/release.yaml@2d3b2608662b272b8e5036236e82144507d8bb67 # v7.0.1
     # Ceiling for the reusable workflow's jobs. GitHub resolves a reusable
     # workflow's permissions as the union of every job and ignores `if:`, so the
-    # caller must grant the (here-skipped) goreleaser and docs jobs' scopes too —
-    # a missing scope startup-fails the whole run.
+    # caller must grant the (here-skipped) goreleaser job's scopes too — a
+    # missing scope startup-fails the whole run.
     permissions:
       # create the release/tag and upload assets
       contents: write

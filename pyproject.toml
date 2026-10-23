@@ -1,0 +1,17 @@
+# Copyright 2026 BitWise Media Group Ltd
+# SPDX-License-Identifier: MIT
+
+# The toolchain documentation site (Zensical via uv), built and served by
+# common's docs-build / serve tasks. Not a Python package: no [build-system].
+[project]
+name = "toolchain-docs"
+version = "0.1.0"
+description = "Documentation site for the BitWise Media Group toolchain, built with Zensical."
+readme = "README.md"
+requires-python = ">=3.13"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "BitWise Media Group Ltd.", email = "oss@bitwisemedia.uk" }]
+dependencies = [
+  "zensical>=0.0.53",
+]
