@@ -27,9 +27,8 @@
 # `docs` is intentionally left to the repo — regenerating a CLI reference is
 # app-specific (`./<app> docs …`). A repo defines a `docs` task in its root
 # mise.toml [tasks] and appends it to the gate (`pr: docs` in its Makefile, or
-# a redefined `pr` task). `serve`, `docs-build`, and `sync` (zensical via the
-# shared uv pin) come ready-made, so a Go repo with a docs site includes only
-# this archetype. No `e2e` here: the reusable CI's e2e job is opt-in and no Go
+# a redefined `pr` task); common's `docs-build` and `serve` (zensical via the
+# shared uv pin) are there to call. No `e2e` here: the reusable CI's e2e job is opt-in and no Go
 # repo opts in; a repo that does defines its own e2e task.
 
 [tidy]
@@ -92,25 +91,6 @@ run = "goreleaser release --clean"
 description = "fuzz one target (FUZZ=FuzzName FUZZTIME=20s FUZZ_PKG=./pkg)"
 dir = "{{cwd}}"
 run = "{{config_root}}/.mise/archetypes/go/scripts/fuzz.sh"
-
-# Zensical documentation site (Python via uv). `uv sync` provisions Python +
-# zensical from pyproject.toml; the built site/ is git-ignored.
-[sync]
-hide = true
-dir = "{{cwd}}"
-run = "uv sync"
-
-[docs-build]
-description = "build the documentation site (zensical)"
-dir = "{{cwd}}"
-depends = ["sync"]
-run = "uv run zensical build"
-
-[serve]
-description = "serve the docs site locally (zensical)"
-dir = "{{cwd}}"
-depends = ["sync"]
-run = "uv run zensical serve"
 
 # Canonical contract: sequential composites preserve the old serial-make
 # ordering (fmt before lint; mutating passes never race).

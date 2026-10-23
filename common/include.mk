@@ -43,7 +43,7 @@ endef
 # `+=` so an archetype include.mk can add its own names before including this
 # file; the rule below is expanded at this point, so names appended AFTER the
 # include still forward, but only via the .DEFAULT catch-all.
-MISE_TASKS += lint build test e2e fmt ci pr commit license docs serve \
+MISE_TASKS += lint build test e2e fmt ci pr commit license docs docs-build serve \
 	actionlint zizmor
 
 .PHONY: $(MISE_TASKS) help

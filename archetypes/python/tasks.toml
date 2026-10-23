@@ -17,7 +17,8 @@
 # project without them (a docs-only site) skips those passes with a message
 # rather than failing — see scripts/. The house prose format/lint runs
 # alongside ruff: ruff owns the code, prettier + markdownlint own the
-# markdown.
+# markdown. `docs-build` and `serve` come from common; what this archetype
+# adds for a docs site is that `build` (and so CI) builds it too.
 
 # Provision the project environment (Python + locked dependencies).
 [sync]
@@ -53,19 +54,6 @@ hide = true
 dir = "{{cwd}}"
 depends = ["sync"]
 run = "{{config_root}}/.mise/archetypes/python/scripts/build.sh"
-
-# Zensical documentation site; the built site/ is git-ignored.
-[docs-build]
-description = "build the documentation site (zensical)"
-dir = "{{cwd}}"
-depends = ["sync"]
-run = "uv run zensical build"
-
-[serve]
-description = "serve the docs site locally (zensical)"
-dir = "{{cwd}}"
-depends = ["sync"]
-run = "uv run zensical serve"
 
 # license runs FIRST here (the other archetypes run it last): addlicense
 # inserts the header with one blank line after it, and ruff format wants two

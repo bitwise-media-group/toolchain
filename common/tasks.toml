@@ -126,6 +126,22 @@ run = [
   { task = "lint-kustomize" }
 ]
 
+# Zensical documentation site (Python via the shared uv pin), available
+# whatever the repo's language: a docs site is common across archetypes. Not
+# wired into any rollup — a repo with a generated reference (a Go CLI's
+# `./<app> docs …`) defines a repo-local `docs` task that regenerates it and
+# then calls docs-build. Runs in the invoker's directory and fails with a
+# pointer when there is no zensical.toml there. See scripts/docs.sh.
+[docs-build]
+description = "build the documentation site (zensical)"
+dir = "{{cwd}}"
+run = "{{config_root}}/.mise/common/scripts/docs.sh build"
+
+[serve]
+description = "serve the docs site locally (zensical)"
+dir = "{{cwd}}"
+run = "{{config_root}}/.mise/common/scripts/docs.sh serve"
+
 # Canonical contract for a common-only repo. Rollups are sequential
 # composites — the mutating fmt passes must not race, and fmt always precedes
 # lint inside pr. An archetype include replaces these whole-task.
