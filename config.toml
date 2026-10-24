@@ -113,7 +113,7 @@ minimum_release_age_excludes = [
 "core:node" = "lts"
 "core:python" = { version = "3.15.1", lazy = true }
 
-"npm:markdownlint-cli2" = "0.23.3"
+"npm:markdownlint-cli2" = "0.24.0"
 "npm:prettier" = "3.9.10"
 
 "github:google/addlicense" = "1.2.0"
