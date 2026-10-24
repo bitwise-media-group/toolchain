@@ -1,5 +1,59 @@
 # Changelog
 
+## [3.4.0](https://github.com/bitwise-media-group/toolchain/compare/v3.3.0...v3.4.0) (2026-10-24)
+
+
+### Features
+
+* **docs:** add the Zensical documentation site ([e90858d](https://github.com/bitwise-media-group/toolchain/commit/e90858daa25bf51b7fa56ebff5c4901c2e214e49))
+* **tasks:** move the zensical docs-build and serve tasks into common ([6ac555b](https://github.com/bitwise-media-group/toolchain/commit/6ac555bf77a12bc7b81e683c0367c1d51b1a535a))
+
+
+### Bug Fixes
+
+* **deps:** lock file maintenance ([#134](https://github.com/bitwise-media-group/toolchain/issues/134)) ([d2ad2ab](https://github.com/bitwise-media-group/toolchain/commit/d2ad2ab7d03e8911aab0d76a1805cf7a3aea1394))
+* **deps:** lock file maintenance ([#145](https://github.com/bitwise-media-group/toolchain/issues/145)) ([b64f56f](https://github.com/bitwise-media-group/toolchain/commit/b64f56ffcf681419e839f80c00ba13bd67c7b347))
+* **deps:** lock file maintenance ([#146](https://github.com/bitwise-media-group/toolchain/issues/146)) ([71d3f94](https://github.com/bitwise-media-group/toolchain/commit/71d3f946f3e8c333e3abba0a0cc2485a66033d88))
+* **deps:** lock file maintenance ([#150](https://github.com/bitwise-media-group/toolchain/issues/150)) ([8b5053a](https://github.com/bitwise-media-group/toolchain/commit/8b5053adb3038402c3c67c33d3232cf7554c419b))
+* **deps:** lock file maintenance ([#157](https://github.com/bitwise-media-group/toolchain/issues/157)) ([79a5191](https://github.com/bitwise-media-group/toolchain/commit/79a519115f75d2b912f816e01c7026f353e579ce))
+* **deps:** lock file maintenance ([#159](https://github.com/bitwise-media-group/toolchain/issues/159)) ([854b3c8](https://github.com/bitwise-media-group/toolchain/commit/854b3c8d660ddf197bd8a279a0ace3bcc4e3eafd))
+* **deps:** lock file maintenance ([#160](https://github.com/bitwise-media-group/toolchain/issues/160)) ([ab5da0d](https://github.com/bitwise-media-group/toolchain/commit/ab5da0d5ad7d8d50df13fc70b5b6b1f8433938ab))
+* **deps:** lock file maintenance ([#167](https://github.com/bitwise-media-group/toolchain/issues/167)) ([f18442a](https://github.com/bitwise-media-group/toolchain/commit/f18442a7794cb2155fe2bc9d950f39767e3e1e60))
+* **deps:** lock file maintenance ([#169](https://github.com/bitwise-media-group/toolchain/issues/169)) ([2528270](https://github.com/bitwise-media-group/toolchain/commit/2528270f286fa06721d28d1e947cad17b99de84c))
+* **deps:** lock file maintenance ([#171](https://github.com/bitwise-media-group/toolchain/issues/171)) ([d50d9b0](https://github.com/bitwise-media-group/toolchain/commit/d50d9b07c30c38824f0dd1fabf29d25f0753ff12))
+* **deps:** update dependency aqua:anchore/grype to v0.120.1 ([#135](https://github.com/bitwise-media-group/toolchain/issues/135)) ([37a7b32](https://github.com/bitwise-media-group/toolchain/commit/37a7b32b31b01a2b00f968f2cf5ecd9f8ef75c39))
+* **deps:** update dependency aqua:anchore/grype to v0.121.0 ([#162](https://github.com/bitwise-media-group/toolchain/issues/162)) ([2961245](https://github.com/bitwise-media-group/toolchain/commit/29612454c617a8294324b106fe8906eb791e7650))
+* **deps:** update dependency aqua:anchore/syft to v1.54.1 ([#131](https://github.com/bitwise-media-group/toolchain/issues/131)) ([82b84f3](https://github.com/bitwise-media-group/toolchain/commit/82b84f34a7ffb70b83c19ac573edfdaa72f1a25f))
+* **deps:** update dependency aqua:anchore/syft to v1.55.0 ([#163](https://github.com/bitwise-media-group/toolchain/issues/163)) ([14024e7](https://github.com/bitwise-media-group/toolchain/commit/14024e780935c0b2a8486a7bd7f838dba02bb3c9))
+* **deps:** update dependency aqua:astral-sh/uv to v0.12.24 ([#137](https://github.com/bitwise-media-group/toolchain/issues/137)) ([58e5a21](https://github.com/bitwise-media-group/toolchain/commit/58e5a211101bdf878251f295a53ad9bd8e059798))
+* **deps:** update dependency aqua:astral-sh/uv to v0.13.0 ([#141](https://github.com/bitwise-media-group/toolchain/issues/141)) ([cf86e92](https://github.com/bitwise-media-group/toolchain/commit/cf86e922bd9efc317c88715b1f1d5b0546498e00))
+* **deps:** update dependency aqua:astral-sh/uv to v0.13.1 ([#151](https://github.com/bitwise-media-group/toolchain/issues/151)) ([c22af06](https://github.com/bitwise-media-group/toolchain/commit/c22af0655dbf87d8715f472c4d6e9c2f20aa488f))
+* **deps:** update dependency aqua:astral-sh/uv to v0.13.2 ([#161](https://github.com/bitwise-media-group/toolchain/issues/161)) ([aa0d929](https://github.com/bitwise-media-group/toolchain/commit/aa0d92954454a12eca65d3d00f8dab3316fbcddb))
+* **deps:** update dependency aqua:astral-sh/uv to v0.13.3 ([#165](https://github.com/bitwise-media-group/toolchain/issues/165)) ([375da9f](https://github.com/bitwise-media-group/toolchain/commit/375da9f41baa65702fb74f0d4f684bf3606328bf))
+* **deps:** update dependency aqua:astral-sh/uv to v0.13.4 ([#170](https://github.com/bitwise-media-group/toolchain/issues/170)) ([7020a56](https://github.com/bitwise-media-group/toolchain/commit/7020a567b1013e8da9e36775a9e120e90945483b))
+* **deps:** update dependency aqua:docker/buildx to v0.38.1 ([#173](https://github.com/bitwise-media-group/toolchain/issues/173)) ([aafdddf](https://github.com/bitwise-media-group/toolchain/commit/aafdddfadca081e46603cd01ad181ae6ea532eef))
+* **deps:** update dependency aqua:golangci/golangci-lint to v2.15.0 ([#158](https://github.com/bitwise-media-group/toolchain/issues/158)) ([2f64efc](https://github.com/bitwise-media-group/toolchain/commit/2f64efcb3ab898c9614305a6e5ce54eacfd63499))
+* **deps:** update dependency aqua:goreleaser/goreleaser to v2.18.3 ([#138](https://github.com/bitwise-media-group/toolchain/issues/138)) ([8539747](https://github.com/bitwise-media-group/toolchain/commit/8539747ed18a3114411de60d05a4720e52611f40))
+* **deps:** update dependency aqua:hashicorp/terraform to v1.16.6 ([#152](https://github.com/bitwise-media-group/toolchain/issues/152)) ([c257ba8](https://github.com/bitwise-media-group/toolchain/commit/c257ba8415a0693f4f67cb8a6dd3b276e729d5de))
+* **deps:** update dependency aqua:helm/helm to v4.3.1 ([#154](https://github.com/bitwise-media-group/toolchain/issues/154)) ([4d29449](https://github.com/bitwise-media-group/toolchain/commit/4d29449b8381268821f09a4ff935ab642d09d7f9))
+* **deps:** update dependency aqua:kubescape/kubescape to v4.0.16 ([#153](https://github.com/bitwise-media-group/toolchain/issues/153)) ([3bfde22](https://github.com/bitwise-media-group/toolchain/commit/3bfde2213770729f566f3c6e87e6bc82155e0bdf))
+* **deps:** update dependency aqua:pnpm/pnpm to v12.10.1 ([#132](https://github.com/bitwise-media-group/toolchain/issues/132)) ([81c2687](https://github.com/bitwise-media-group/toolchain/commit/81c268790946d649c5643989c54467df1fd6eb70))
+* **deps:** update dependency aqua:pnpm/pnpm to v12.11.2 ([#139](https://github.com/bitwise-media-group/toolchain/issues/139)) ([61d161f](https://github.com/bitwise-media-group/toolchain/commit/61d161f488de48696d4fcc6c7bc1fad35817e01c))
+* **deps:** update dependency aqua:pnpm/pnpm to v12.12.0 ([#143](https://github.com/bitwise-media-group/toolchain/issues/143)) ([10eb428](https://github.com/bitwise-media-group/toolchain/commit/10eb428932e1736846203a07c2257b51702e0d64))
+* **deps:** update dependency aqua:pnpm/pnpm to v12.12.1 ([#144](https://github.com/bitwise-media-group/toolchain/issues/144)) ([146c97d](https://github.com/bitwise-media-group/toolchain/commit/146c97d4126d0da749461cf8afedbda79d8e36a4))
+* **deps:** update dependency aqua:pnpm/pnpm to v12.13.0 ([#148](https://github.com/bitwise-media-group/toolchain/issues/148)) ([fd4c26e](https://github.com/bitwise-media-group/toolchain/commit/fd4c26e6897822119213b27f5b26a9e5c0fa5321))
+* **deps:** update dependency aqua:pnpm/pnpm to v12.14.0 ([#156](https://github.com/bitwise-media-group/toolchain/issues/156)) ([44b10a1](https://github.com/bitwise-media-group/toolchain/commit/44b10a155024b12c045e172de5b37a12c9df58c6))
+* **deps:** update dependency aqua:pnpm/pnpm to v12.15.0 ([#175](https://github.com/bitwise-media-group/toolchain/issues/175)) ([20c8ca1](https://github.com/bitwise-media-group/toolchain/commit/20c8ca12f4e168f1fe831fdea6ea985f445aae0d))
+* **deps:** update dependency aqua:sigstore/cosign to v3.1.4 ([#172](https://github.com/bitwise-media-group/toolchain/issues/172)) ([cff0f01](https://github.com/bitwise-media-group/toolchain/commit/cff0f01025a8745b079d50e4e40d2f2778bf7fe9))
+* **deps:** update dependency aqua:zizmorcore/zizmor to v1.31.1 ([#155](https://github.com/bitwise-media-group/toolchain/issues/155)) ([4a81017](https://github.com/bitwise-media-group/toolchain/commit/4a81017af7ce72a6b863bf039ecdee873aa5e0c3))
+* **deps:** update dependency core:go to v1.27.3 ([#166](https://github.com/bitwise-media-group/toolchain/issues/166)) ([09a66f1](https://github.com/bitwise-media-group/toolchain/commit/09a66f1b927abf042ce1d331422a0ff5617f2298))
+* **deps:** update dependency core:python to v3.15.0 ([#140](https://github.com/bitwise-media-group/toolchain/issues/140)) ([3eb123a](https://github.com/bitwise-media-group/toolchain/commit/3eb123a22629b8a105e91f6f7b6a6ce0403a1d59))
+* **deps:** update dependency core:python to v3.15.1 ([#174](https://github.com/bitwise-media-group/toolchain/issues/174)) ([822cc1f](https://github.com/bitwise-media-group/toolchain/commit/822cc1f618d91a48d7a0c96a534250ef983f3ae3))
+* **deps:** update dependency npm:prettier to v3.9.10 ([#142](https://github.com/bitwise-media-group/toolchain/issues/142)) ([a94ff55](https://github.com/bitwise-media-group/toolchain/commit/a94ff55e6e71b0e2876e41965a1f935bd8e82d28))
+* **deps:** update node.js to lts ([#149](https://github.com/bitwise-media-group/toolchain/issues/149)) ([cfb8636](https://github.com/bitwise-media-group/toolchain/commit/cfb863677398853a127a19bb740908d6d62e75eb))
+* **deps:** update node.js to lts ([#164](https://github.com/bitwise-media-group/toolchain/issues/164)) ([5cd0062](https://github.com/bitwise-media-group/toolchain/commit/5cd0062f4a67841d70c2a848f56e8d01d2cd1017))
+* **deps:** update pinned tool versions ([1451760](https://github.com/bitwise-media-group/toolchain/commit/1451760f5d357ff72100de9b28fdb696a7bc2ca9))
+
 ## [3.3.0](https://github.com/bitwise-media-group/toolchain/compare/v3.2.0...v3.3.0) (2026-10-09)
 
 
