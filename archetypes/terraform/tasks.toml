@@ -64,11 +64,17 @@ hide = true
 dir = "{{cwd}}"
 run = [{ task = "init-no-backend" }, "{{vars.terraform_binary}} validate .", "tflint"]
 
-# Doc generation wired into `docs`.
+# Doc generation wired into `docs`. terraform-docs is a lazy tool, so a bare
+# `terraform-docs` goes through its bootstrap shim — a symlink to the first
+# `mise` on PATH that dispatches on argv[0]. Under containerbase (the Renovate
+# image, which runs this task as a postUpgradeTask) that `mise` is a bash
+# wrapper that drops argv[0], so the shim runs as `mise .` ("no task . found").
+# `mise x` installs the pinned version up front and puts the real binary on
+# PATH, bypassing the shim; versionless, so config.toml stays the single pin.
 [tf-docs]
 hide = true
 dir = "{{cwd}}"
-run = "terraform-docs ."
+run = "mise x aqua:terraform-docs/terraform-docs -- terraform-docs ."
 
 [fmt]
 description = "terraform fmt -recursive + prose format"

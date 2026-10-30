@@ -84,15 +84,15 @@ Defined in `archetypes/python/tasks.toml`. Every task runs in the invoking direc
 
 Defined in `archetypes/terraform/tasks.toml`. Every task runs in the invoking directory.
 
-| Task              | Hidden | Runs                                                   |
-| ----------------- | ------ | ------------------------------------------------------ |
-| `init`            |        | `tf-run.sh <binary> init`.                             |
-| `init-no-backend` | yes    | `tf-run.sh <binary> init -backend=false -input=false`. |
-| `plan`            |        | `tf-run.sh <binary> plan -out=plan.tfplan`.            |
-| `apply`           |        | `plan`, then `tf-run.sh <binary> apply plan.tfplan`.   |
-| `tf-fmt`          | yes    | `<binary> fmt -recursive`.                             |
-| `tf-lint`         | yes    | `init-no-backend`, `<binary> validate .`, `tflint`.    |
-| `tf-docs`         | yes    | `terraform-docs .`.                                    |
+| Task              | Hidden | Runs                                                      |
+| ----------------- | ------ | --------------------------------------------------------- |
+| `init`            |        | `tf-run.sh <binary> init`.                                |
+| `init-no-backend` | yes    | `tf-run.sh <binary> init -backend=false -input=false`.    |
+| `plan`            |        | `tf-run.sh <binary> plan -out=plan.tfplan`.               |
+| `apply`           |        | `plan`, then `tf-run.sh <binary> apply plan.tfplan`.      |
+| `tf-fmt`          | yes    | `<binary> fmt -recursive`.                                |
+| `tf-lint`         | yes    | `init-no-backend`, `<binary> validate .`, `tflint`.       |
+| `tf-docs`         | yes    | `terraform-docs .`, through `mise x` (installs it first). |
 
 `<binary>` is the `terraform_binary` knob: `terraform` by default, or `tofu`.
 
