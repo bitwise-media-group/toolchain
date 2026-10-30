@@ -8,6 +8,14 @@
 # repo root, so the .mise/ entries are symlinks back to them (see .mise/) and
 # only the include path differs (common/… instead of .mise/common/…).
 #
+# mise.lock is the one entry inverted the other way: the real file (and its
+# locks/ dependency sidecars) lives in .mise/, and the root mise.lock is a
+# symlink to it. mise places sidecars by the lockfile's physical directory --
+# locks/ beside a lockfile in a dir named .mise, .mise/locks/ beside any other
+# -- and records their path relative to it, so only a real .mise/mise.lock
+# gives this repo and every consumer the same `path = "locks/…"` entries and
+# the same tracked sidecars.
+#
 # The python archetype rides on top of common because this repo also carries
 # its documentation site (zensical.toml + docs/, built with Zensical via uv):
 # `build` renders the site, so CI catches a broken page, and `serve` previews

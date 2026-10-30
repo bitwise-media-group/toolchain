@@ -146,8 +146,14 @@ match, `.mise/` here holds symlinks back to the root entries:
 ├── archetypes -> ../archetypes
 ├── common     -> ../common
 ├── config.toml -> ../config.toml
-└── mise.lock  -> ../mise.lock
+├── mise.lock              (real file; the root mise.lock -> .mise/mise.lock)
+└── locks/                 (real: the npm tools' dependency sidecars)
 ```
+
+The lockfile is the one entry inverted the other way. mise keeps the npm tools' dependency locks (sidecars) beside the
+lockfile's physical directory — `locks/` when that directory is named `.mise`, `.mise/locks/` otherwise — and records
+their path relative to it. Keeping the real file in `.mise/` means this repo and every consumer record the same
+`locks/…` paths and read the same tracked sidecars.
 
 The root `mise.toml` includes `common/tasks.toml` and `archetypes/python/tasks.toml` (it builds this docs site), and the
 `{{config_root}}/.mise/…` paths inside the tasks resolve through the symlinks exactly as they would in a consumer. See

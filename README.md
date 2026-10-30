@@ -17,6 +17,7 @@ toolchain/                    # this repo == the consumer's .mise/ directory
 │                             #   defaults — NO tasks; consumers load it natively as
 │                             #   .mise/config.toml
 ├── mise.lock                 # per-platform sha256 + provenance for every pin
+│                             #   (a symlink to the real .mise/mise.lock)
 ├── .prettierrc.yaml          # house prose defaults, read from .mise/ by every
 ├── .prettierignore           #   consumer that does not commit its own copy
 ├── .markdownlint-cli2.yaml   #   (see "Other conventions")
@@ -249,7 +250,9 @@ entry in `config.toml` is an exact pin, and the bot opens one PR per tool that b
 (`mise lock`) in the same commit, under the org's 3-day release cooldown (`minimumReleaseAge`, surfaced as the
 `renovate/stability-days` check). Stable minor/patch bumps automerge; majors and 0.x wait for review. The repo-local
 `.github/renovate.json5` teaches the mise manager about the root `config.toml` (the dogfood inversion hides it from the
-default file patterns) and lands tool bumps as `fix(deps):` so release-please cuts a patch for consumers.
+default file patterns), lands tool bumps as `fix(deps):` so release-please cuts a patch for consumers, and adds a
+post-upgrade task that commits `.mise/mise.lock` (the mise manager rewrites it through the root symlink but would only
+stage the unchanged link).
 
 To bump by hand: edit the pin in `config.toml` and run `mise lock`. Unauthenticated GitHub API calls can silently drop
 lockfile entries, so set `GITHUB_TOKEN` (e.g. `GITHUB_TOKEN="$(gh auth token)"`) first. **Never run `mise lock` or
@@ -303,7 +306,9 @@ scripts also accept the old spellings (`APP`, `APP_PKG`, …) from the environme
 - **This repo's own layout is inverted**: `config.toml`, `common/` and `archetypes/` sit at the root (it _is_ the
   consumer's `.mise/`), the dogfood include lives in the root `mise.toml`, and `.mise/` here contains symlinks back to
   the root entries so mise resolves tools and scripts the same way it does in a consumer. The dogfood includes `common`
-  plus the python archetype, whose `build` renders the docs site.
+  plus the python archetype, whose `build` renders the docs site. `mise.lock` is inverted the other way: the real file
+  and its `locks/` dependency sidecars live in `.mise/`, and the root `mise.lock` links to it. mise places sidecars by
+  the lockfile's physical directory, so this is what makes the recorded sidecar paths match in consumers.
 
 ## Migrating from v2 (`tasks/<archetype>.toml` + `mise.mk`)
 

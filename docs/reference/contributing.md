@@ -31,7 +31,8 @@ toolchain/                    # this repo == the consumer's .mise/ directory
 ├── docs/, overrides/         # this documentation site (Zensical)
 ├── zensical.toml, pyproject.toml, uv.lock
 ├── mise.toml, Makefile       # the dogfood wiring (see below)
-└── .mise/                    # symlinks back to the root entries
+└── .mise/                    # symlinks back to the root entries, plus the real
+                              #   mise.lock and its locks/ sidecars
 ```
 
 ## The inverted dogfood layout
@@ -39,8 +40,12 @@ toolchain/                    # this repo == the consumer's .mise/ directory
 This repo uses its own tasks, but it _is_ the library, so its layout is the inverse of a consumer's:
 
 - `config.toml`, `common/` and `archetypes/` sit at the root.
-- `.mise/` contains symlinks back to them (`archetypes`, `common`, `config.toml`, `mise.lock`), so mise loads
-  `.mise/config.toml` and the tasks' `{{config_root}}/.mise/…` script paths resolve exactly as they do in a consumer.
+- `.mise/` contains symlinks back to them (`archetypes`, `common`, `config.toml`), so mise loads `.mise/config.toml` and
+  the tasks' `{{config_root}}/.mise/…` script paths resolve exactly as they do in a consumer.
+- `mise.lock` is inverted the other way: the real file and its `locks/` dependency sidecars live in `.mise/`, and the
+  root `mise.lock` is a symlink to it. mise places sidecars by the lockfile's physical directory, so only this layout
+  records the same `locks/…` paths here and in consumers. Don't replace `.mise/locks/` with a symlink: mise refuses to
+  read or write sidecars through one.
 - The root `mise.toml` includes `common/tasks.toml` and `archetypes/python/tasks.toml` directly, without the `.mise/`
   prefix. The python archetype builds this site, so `make build` is `zensical build` and CI catches a broken page.
 - The Makefile includes `archetypes/python/include.mk` and adds `lint: lint-scripts`, a make-side prerequisite that
@@ -87,13 +92,9 @@ Renovate normally does this. To do it yourself, edit `config.toml`, then re-lock
 GITHUB_TOKEN="$(gh auth token)" mise lock
 ```
 
-Unauthenticated GitHub API calls can silently drop lockfile entries, so set the token first.
-
-!!! warning "Stray `locks/` directory"
-
-    Running `mise lock` from the repo root follows the `config.toml` symlink and can write a root `locks/` directory
-    (the npm tools' dependency locks), duplicating the tracked `.mise/locks/`. Delete the root copy afterwards, or the
-    license check flags it.
+Unauthenticated GitHub API calls can silently drop lockfile entries, so set the token first. mise writes through the
+root `mise.lock` symlink into `.mise/mise.lock` and keeps the npm tools' dependency sidecars in `.mise/locks/`; commit
+both.
 
 ## Commit messages
 

@@ -16,6 +16,18 @@
 //     submodule, so they land as fix(deps) (overriding the preset's
 //     chore(deps) default) and release-please cuts a patch release.
 //
+//   - The real lockfile is .mise/mise.lock; the root mise.lock the manager
+//     targets is a symlink to it (mise places the npm dependency sidecars by
+//     the lockfile's physical directory, so only a real .mise/mise.lock
+//     records sidecar paths that also resolve in consumers). The manager
+//     writes its result through the link and then stages only the unchanged
+//     link, so the lock change would never reach the commit. The post-upgrade
+//     task writes the artifacts to disk again and sweeps the real file into
+//     the commit from git status. Its `true` command does nothing; it exists
+//     because Renovate only runs the sweep when a task has a command (`^true$`
+//     is in allowedCommands in renovate-config's renovate-global.json5). The
+//     sidecars in .mise/locks/ need no help: the manager collects those itself.
+//
 //   - This repo's own workflow callers are CI plumbing, not library content:
 //     actions bumps land as release-please-ignored `ci` (the preset's
 //     org-wide fix(deps) is for github-workflows, where the workflows ARE
@@ -24,7 +36,15 @@
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
   mise: { managerFilePatterns: ["config.toml"] },
   packageRules: [
-    { matchManagers: ["mise"], semanticCommitType: "fix" },
+    {
+      matchManagers: ["mise"],
+      semanticCommitType: "fix",
+      postUpgradeTasks: {
+        commands: ["true"],
+        fileFilters: [".mise/mise.lock"],
+        executionMode: "branch",
+      },
+    },
     { matchManagers: ["github-actions"], semanticCommitType: "ci" },
   ],
 }

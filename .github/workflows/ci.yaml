@@ -10,9 +10,9 @@
 # skipped, it isn't a project dependency), `build` (zensical renders the docs
 # site, so a broken page fails the PR) and `test` (pytest isn't a project
 # dependency either, so it skips with a message). The pinned tooling installs
-# via mise from the repo-root config.toml/mise.lock (the file consumers load as
-# .mise/config.toml); the reusable workflow's Setup mise step puts a pinned mise
-# on PATH.
+# via mise from the repo-root config.toml (the file consumers load as
+# .mise/config.toml) and .mise/mise.lock; the reusable workflow's Setup mise
+# step puts a pinned mise on PATH.
 #
 # Pinned to a full commit SHA (tag in the comment); Renovate keeps it fresh.
 name: Continuous Integration
