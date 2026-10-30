@@ -21,7 +21,7 @@ built from.
 | syft              | `aqua:anchore/syft`                  | GoReleaser SBOMs (`snapshot`, `release`)   | yes  |
 | uv                | `aqua:astral-sh/uv`                  | python archetype, Zensical tasks           | yes  |
 | golangci-lint     | `aqua:golangci/golangci-lint`        | `go-fmt`, `go-lint`                        | yes  |
-| goreleaser        | `aqua:goreleaser/goreleaser`         | `snapshot`, `release`                      | yes  |
+| goreleaser        | `aqua:goreleaser/goreleaser`         | `snapshot`, `release` (go, swift)          | yes  |
 | gotestsum         | `aqua:gotestyourself/gotestsum`      | `go-test`                                  | yes  |
 | hadolint          | `aqua:hadolint/hadolint`             | `lint-docker`                              | yes  |
 | terraform         | `aqua:hashicorp/terraform`           | terraform archetype                        | yes  |

@@ -17,10 +17,11 @@
 # selection always lives in the consumer's root mise.toml (this repo's own
 # root mise.toml dogfoods the same way).
 #
-# Language runtimes are NOT pinned here. go, python and node are per-repo
-# concerns so each repo can track its own version at its own cadence: a Go
-# repo pins `go` (and govulncheck, below) in its root [tools], a Node repo pins
-# `node`, and a Python repo lets uv provision Python from .python-version /
+# Language runtimes are NOT pinned here. go, python, node and swift are
+# per-repo concerns so each repo can track its own version at its own cadence:
+# a Go repo pins `go` (and govulncheck, below) in its root [tools], a Node repo
+# pins `node`, a Swift repo pins `swift` (swift format and llvm-cov ship in that
+# toolchain), and a Python repo lets uv provision Python from .python-version /
 # requires-python (or pins `python` itself). Each repo's own Renovate bumps
 # those pins.
 #
@@ -93,13 +94,14 @@ locked = false
 minimum_release_age = "3d"
 # Exempt from the cooldown: our own first-party CLIs (a release we cut should
 # roll out immediately, not sit out a supply-chain delay meant for third
-# parties) and core:go (consumer repos pin it themselves and track toolchain
-# security releases promptly). mise has no org-level wildcard —
+# parties) and core:go / core:swift (consumer repos pin them themselves and
+# track toolchain security releases promptly). mise has no org-level wildcard —
 # "github:bitwise-media-group/*" silently matches nothing — so each
 # first-party tool is listed by its full backend ID; add new ones here.
 # Consumer repos can append further entries (lists merge across configs).
 minimum_release_age_excludes = [
   "core:go",
+  "core:swift",
   "github:bitwise-media-group/dotty",
   "github:bitwise-media-group/evolve",
   "github:bitwise-media-group/patchy",
@@ -179,6 +181,10 @@ node_install_flags = "--ignore-scripts"
 # and deliberately has no default here. A repo that still sets it (e.g.
 # npm_ci_flags = "") gets exactly those flags for `npm ci`, as does
 # NPM_CI_FLAGS in the environment; both are ignored for pnpm and bun.
+# swift: product to build (empty = every product); the snapshot/release shim
+# also falls back to it when a GoReleaser build names no SWIFT_PRODUCT.
+# SWIFT_PRODUCT in the environment overrides per invocation.
+swift_product = ""
 # terraform: which binary the terraform archetype drives — set to "tofu" in
 # an OpenTofu repo (and add the opentofu pin to that repo's root [tools]; the
 # shared [tools] only pins terraform). Secrets/env injection is not a knob:

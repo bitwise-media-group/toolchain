@@ -9,6 +9,8 @@ CHANGELOG.md
 node_modules/
 .mise/
 .venv/
+.build/
+.swiftpm/
 
 # agent cruft
 .claude/

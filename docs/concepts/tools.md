@@ -82,6 +82,10 @@ bun are shared lazy pins, and a repo can pin its own.
 **Python repos** pin nothing: `uv` provisions the interpreter from `.python-version` or `requires-python`. A repo that
 wants a mise-managed Python adds `python` to its root `[tools]`.
 
+**Swift repos** pin `swift` in their root `[tools]` (mise's `core:swift` backend installs the swift.org release).
+`swift format`, `llvm-cov` and `llvm-profdata` ship inside that toolchain, so formatting and coverage follow the repo's
+pin with nothing shared to override.
+
 The library also carries lazy `core:go` and `core:python` pins as fallbacks. A repo's own root pin always takes
 precedence over them.
 

@@ -8,15 +8,15 @@ Every task the library defines, by archetype. Hidden tasks don't appear in `make
 Each archetype redefines the rollups, replacing common's versions. Each step runs in sequence and stops at the first
 failure.
 
-| Rollup  | common                                                                 | go                                                                              | node                                                                              | python                                                                          | terraform                                                        |
-| ------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| `fmt`   | fmt-prose, license                                                     | go-fmt, fmt-prose, license                                                      | node-fmt, fmt-prose, license                                                      | license, py-fmt, fmt-prose                                                      | tf-fmt, fmt-prose                                                |
-| `lint`  | license-check, lint-containers, lint-shell, lint-workflows, lint-prose | license-check, go-lint, lint-containers, lint-shell, lint-workflows, lint-prose | license-check, node-lint, lint-containers, lint-shell, lint-workflows, lint-prose | license-check, py-lint, lint-containers, lint-shell, lint-workflows, lint-prose | tf-lint, lint-containers, lint-shell, lint-workflows, lint-prose |
-| `build` | —                                                                      | go-build                                                                        | node-build                                                                        | py-build                                                                        | —                                                                |
-| `test`  | —                                                                      | go-test                                                                         | node-test                                                                         | py-test                                                                         | —                                                                |
-| `docs`  | —                                                                      | — (repo-local)                                                                  | —                                                                                 | —                                                                               | tf-docs                                                          |
-| `ci`    | lint                                                                   | lint, test, build                                                               | lint, build, test                                                                 | lint, test, build                                                               | lint, docs                                                       |
-| `pr`    | fmt, lint                                                              | tidy, fmt, lint, test, build, commit                                            | fmt, lint, build, test, commit                                                    | fmt, lint, test, build, commit                                                  | fmt, lint, docs                                                  |
+| Rollup  | common                                                                 | go                                                                              | node                                                                              | python                                                                          | swift                                                                              | terraform                                                        |
+| ------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| `fmt`   | fmt-prose, license                                                     | go-fmt, fmt-prose, license                                                      | node-fmt, fmt-prose, license                                                      | license, py-fmt, fmt-prose                                                      | swift-fmt, fmt-prose, license                                                      | tf-fmt, fmt-prose                                                |
+| `lint`  | license-check, lint-containers, lint-shell, lint-workflows, lint-prose | license-check, go-lint, lint-containers, lint-shell, lint-workflows, lint-prose | license-check, node-lint, lint-containers, lint-shell, lint-workflows, lint-prose | license-check, py-lint, lint-containers, lint-shell, lint-workflows, lint-prose | license-check, swift-lint, lint-containers, lint-shell, lint-workflows, lint-prose | tf-lint, lint-containers, lint-shell, lint-workflows, lint-prose |
+| `build` | —                                                                      | go-build                                                                        | node-build                                                                        | py-build                                                                        | swift-build                                                                        | —                                                                |
+| `test`  | —                                                                      | go-test                                                                         | node-test                                                                         | py-test                                                                         | swift-test                                                                         | —                                                                |
+| `docs`  | —                                                                      | — (repo-local)                                                                  | —                                                                                 | —                                                                               | —                                                                                  | tf-docs                                                          |
+| `ci`    | lint                                                                   | lint, test, build                                                               | lint, build, test                                                                 | lint, test, build                                                               | lint, test, build                                                                  | lint, docs                                                       |
+| `pr`    | fmt, lint                                                              | tidy, fmt, lint, test, build, commit                                            | fmt, lint, build, test, commit                                                    | fmt, lint, test, build, commit                                                  | fmt, lint, test, build, commit                                                     | fmt, lint, docs                                                  |
 
 ## common
 
@@ -80,6 +80,22 @@ Defined in `archetypes/python/tasks.toml`. Every task runs in the invoking direc
 | `py-test`  | yes    | `scripts/test.sh`: pytest with JUnit and optional Cobertura coverage. |
 | `py-build` | yes    | `scripts/build.sh`: `uv build` and/or `zensical build`.               |
 
+## swift
+
+Defined in `archetypes/swift/tasks.toml`. Every task runs in the invoking directory, and `swift-test` and `swift-build`
+depend on `resolve`.
+
+| Task          | Hidden | Runs                                                                                            |
+| ------------- | ------ | ----------------------------------------------------------------------------------------------- |
+| `resolve`     | yes    | `swift package resolve`, with `--force-resolved-versions` when `Package.resolved` is committed. |
+| `update`      |        | `swift package update` (rewrites `Package.resolved`).                                           |
+| `swift-fmt`   | yes    | `scripts/format.sh fmt`: `swift format format --in-place` over git's Swift files.               |
+| `swift-lint`  | yes    | `scripts/format.sh check`: `swift format lint --strict`.                                        |
+| `swift-test`  | yes    | `scripts/test.sh`: `swift test --enable-code-coverage`, JUnit, LCOV via `llvm-cov export`.      |
+| `swift-build` | yes    | `scripts/build.sh`: `swift build -c release`, one product or all.                               |
+| `snapshot`    |        | `goreleaser release --snapshot --clean --skip=sign,notarize`, building through the `tool` shim. |
+| `release`     |        | `goreleaser release --clean`.                                                                   |
+
 ## terraform
 
 Defined in `archetypes/terraform/tasks.toml`. Every task runs in the invoking directory.
@@ -106,6 +122,7 @@ them:
 | `common/include.mk` | `lint build test e2e fmt ci pr commit license docs docs-build serve actionlint zizmor`, and `help` |
 | go                  | adds `tidy snapshot release fuzz`                                                                  |
 | python              | adds `sync`                                                                                        |
+| swift               | adds `resolve update snapshot release`                                                             |
 | terraform           | adds `init plan apply`                                                                             |
 | node                | adds nothing                                                                                       |
 

@@ -1,0 +1,133 @@
+# Copyright 2026 BitWise Media Group Ltd
+# SPDX-License-Identifier: MIT
+#
+# swift — archetype for a SwiftPM package or CLI (a Package.swift at the repo
+# root). Xcode projects (xcodebuild) are out of scope.
+#
+# Include AFTER common/tasks.toml in the consumer's root mise.toml:
+#   [task_config]
+#   includes = [".mise/common/tasks.toml", ".mise/archetypes/swift/tasks.toml"]
+#
+# Required root [tools] pin — the library does not pin Swift, so each repo
+# tracks its own toolchain at its own cadence (mise's core:swift backend
+# installs the swift.org release):
+#   swift = "6.4.1"
+# `swift format`, llvm-cov and llvm-profdata ship inside that toolchain, so
+# formatting and coverage follow the repo's pin with no shared pins of their
+# own. goreleaser comes from the shared pins. On macOS the swift.org toolchain
+# still takes the SDK (and XCTest) from Xcode or the Command Line Tools, so
+# one of those must be installed; Swift Testing ships with the toolchain.
+#
+# The only structural knob is swift_product (empty = every product); the
+# per-invocation values SWIFT_PRODUCT and SWIFT_TEST_FLAGS are environment
+# variables read inside the scripts — `make build SWIFT_PRODUCT=x` works
+# because make exports command-line variables to recipe subshells.
+#
+# A repo's .swift-format configuration is picked up automatically. There is no
+# version stamping: Swift has no -X/-ldflags equivalent, so a repo that wants
+# its version in the binary generates a source file in a repo-local task.
+
+# Resolve dependencies, honouring a committed Package.resolved (resolution
+# fails rather than silently drifting when it is out of date). A package
+# without one — a library that leaves it uncommitted — resolves normally.
+[resolve]
+hide = true
+dir = "{{cwd}}"
+run = "if [ -f Package.resolved ]; then swift package resolve --force-resolved-versions; else swift package resolve; fi"
+
+[update]
+description = "update dependencies to the latest allowed versions (rewrites Package.resolved)"
+dir = "{{cwd}}"
+run = "swift package update"
+
+# Auto-fix pass wired into the `fmt` rollup. No resolve dependency: formatting
+# reads the sources only (see scripts/format.sh).
+[swift-fmt]
+hide = true
+dir = "{{cwd}}"
+run = "{{config_root}}/.mise/archetypes/swift/scripts/format.sh fmt"
+
+# Check-mode pass wired into the `lint` rollup: swift format lint --strict.
+[swift-lint]
+hide = true
+dir = "{{cwd}}"
+run = "{{config_root}}/.mise/archetypes/swift/scripts/format.sh check"
+
+# swift test with code coverage → coverage/ (JUnit + LCOV, see scripts/test.sh).
+[swift-test]
+hide = true
+dir = "{{cwd}}"
+depends = ["resolve"]
+run = "{{config_root}}/.mise/archetypes/swift/scripts/test.sh"
+
+# Release build of one product or all of them (see scripts/build.sh). The knob
+# reaches the script as TOOLCHAIN_SWIFT_PRODUCT so the plain SWIFT_PRODUCT
+# spelling stays free for per-invocation env overrides.
+[swift-build]
+hide = true
+dir = "{{cwd}}"
+depends = ["resolve"]
+env = { TOOLCHAIN_SWIFT_PRODUCT = "{{vars.swift_product}}" }
+run = "{{config_root}}/.mise/archetypes/swift/scripts/build.sh"
+
+# GoReleaser has no Swift builder; a repo's .goreleaser.yaml drives
+# `swift build` through the go builder with scripts/goreleaser-build.sh as its
+# `tool` (see that script). The knob rides along so the shim can find the
+# product when the build's env does not name one.
+# --skip=sign: cosign keyless signing needs the GitHub Actions OIDC token, so it
+# only works in the release workflow — locally it would fail or prompt.
+# --skip=notarize: a repo with a notarize.macos block enables it whenever
+# MACOS_SIGN_P12 is exported, so a developer who has the org's signing material
+# in their shell does not Developer ID-sign and notarize a throwaway snapshot by
+# accident (run goreleaser by hand for a deliberate end-to-end test).
+# GoReleaser shells out to syft for SBOMs; syft is on PATH via the pins.
+[snapshot]
+description = "build a local release snapshot (binaries + archives, no publish, signing, or notarization)"
+dir = "{{cwd}}"
+env = { TOOLCHAIN_SWIFT_PRODUCT = "{{vars.swift_product}}" }
+run = "goreleaser release --snapshot --clean --skip=sign,notarize"
+
+[release]
+description = "build and publish a release (needs a vX.Y.Z tag + creds)"
+dir = "{{cwd}}"
+env = { TOOLCHAIN_SWIFT_PRODUCT = "{{vars.swift_product}}" }
+run = "goreleaser release --clean"
+
+# Canonical contract: sequential composites preserve the old serial-make
+# ordering (fmt before lint; mutating passes never race).
+[fmt]
+description = "swift format + prose format, inject license headers"
+run = [{ task = "swift-fmt" }, { task = "fmt-prose" }, { task = "license" }]
+
+[lint]
+description = "all check-mode static analysis"
+run = [
+  { task = "license-check" },
+  { task = "swift-lint" },
+  { task = "lint-containers" },
+  { task = "lint-shell" },
+  { task = "lint-workflows" },
+  { task = "lint-prose" },
+]
+
+[build]
+description = "release build of the package's products"
+run = [{ task = "swift-build" }]
+
+[test]
+description = "run the tests with coverage"
+run = [{ task = "swift-test" }]
+
+[ci]
+description = "the gates the reusable CI workflow runs"
+run = [{ task = "lint" }, { task = "test" }, { task = "build" }]
+
+[pr]
+description = "full local gate before a pull request"
+run = [
+  { task = "fmt" },
+  { task = "lint" },
+  { task = "test" },
+  { task = "build" },
+  { task = "commit" },
+]

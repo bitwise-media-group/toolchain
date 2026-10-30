@@ -24,6 +24,7 @@ them. Task files reference them as `{{vars.name}}` and pass them to scripts as e
 | `node_package_manager` | empty (auto-detect)                 | node              | `npm`, `pnpm` or `bun`.                                                         |
 | `node_install_flags`   | `--ignore-scripts`                  | node              | Flags for the locked install. An action repo sets `""`.                         |
 | `npm_ci_flags`         | unset                               | node              | **Deprecated.** npm-only install flags; win over `node_install_flags` when set. |
+| `swift_product`        | empty (every product)               | swift             | Product `build` builds, and the GoReleaser shim's fallback product.             |
 | `terraform_binary`     | `terraform`                         | terraform         | `tofu` for OpenTofu (pin opentofu in root `[tools]` too).                       |
 | `grype_fail_on`        | `high`                              | all               | Minimum grype severity that fails the Dockerfile base-image scan.               |
 | `kubescape_severity`   | `high`                              | all               | Minimum kubescape severity that fails the helm and kustomize scans.             |
@@ -36,22 +37,24 @@ Severity knobs take `low`, `medium`, `high` or `critical` (zizmor also accepts `
 Make exports command-line variables to the forwarded `mise run`, so `make build VERSION=1.2.3` and
 `VERSION=1.2.3 mise run build` are the same.
 
-| Variable                                      | Archetype | Default                                            | Meaning                                             |
-| --------------------------------------------- | --------- | -------------------------------------------------- | --------------------------------------------------- |
-| `VERSION`                                     | go        | `git describe --tags --always --dirty`             | Version stamped into the binary.                    |
-| `COMMIT`                                      | go        | `git rev-parse --short HEAD`                       | Commit stamped into the binary.                     |
-| `DATE`                                        | go        | current UTC time                                   | Build date stamped into the binary.                 |
-| `LDFLAGS`                                     | go        | `-s -w -X …Version … -X …Commit … -X …BuildDate …` | Replaces the whole ldflags string.                  |
-| `MODULE`                                      | go        | `go list -m`                                       | Module path used to derive `version_pkg`.           |
-| `GOOS`                                        | go        | the `goos` knob                                    | GOOS list for one `lint` or `test` run.             |
-| `FUZZ`                                        | go        | `.*` (the package's only fuzz test)                | Fuzz target name.                                   |
-| `FUZZTIME`                                    | go        | `20s`                                              | Fuzz duration.                                      |
-| `FUZZ_PKG`                                    | go        | `./...`                                            | Package to fuzz. Must name exactly one.             |
-| `APP`, `APP_PKG`, `BUILD_TAGS`, `VERSION_PKG` | go        | the knob                                           | Per-run overrides of the structural knobs.          |
-| `NODE_PACKAGE_MANAGER`                        | node      | the `node_package_manager` knob                    | Force a package manager for one run.                |
-| `NODE_INSTALL_FLAGS`                          | node      | the `node_install_flags` knob                      | Install flags; set-but-empty forces a bare install. |
-| `NPM_CI_FLAGS`                                | node      | —                                                  | **Deprecated.** npm-only install flags.             |
-| `GH_TOKEN`                                    | all       | —                                                  | Enables zizmor's online-only audits when exported.  |
+| Variable                                      | Archetype | Default                                            | Meaning                                                       |
+| --------------------------------------------- | --------- | -------------------------------------------------- | ------------------------------------------------------------- |
+| `VERSION`                                     | go        | `git describe --tags --always --dirty`             | Version stamped into the binary.                              |
+| `COMMIT`                                      | go        | `git rev-parse --short HEAD`                       | Commit stamped into the binary.                               |
+| `DATE`                                        | go        | current UTC time                                   | Build date stamped into the binary.                           |
+| `LDFLAGS`                                     | go        | `-s -w -X …Version … -X …Commit … -X …BuildDate …` | Replaces the whole ldflags string.                            |
+| `MODULE`                                      | go        | `go list -m`                                       | Module path used to derive `version_pkg`.                     |
+| `GOOS`                                        | go        | the `goos` knob                                    | GOOS list for one `lint` or `test` run.                       |
+| `FUZZ`                                        | go        | `.*` (the package's only fuzz test)                | Fuzz target name.                                             |
+| `FUZZTIME`                                    | go        | `20s`                                              | Fuzz duration.                                                |
+| `FUZZ_PKG`                                    | go        | `./...`                                            | Package to fuzz. Must name exactly one.                       |
+| `APP`, `APP_PKG`, `BUILD_TAGS`, `VERSION_PKG` | go        | the knob                                           | Per-run overrides of the structural knobs.                    |
+| `NODE_PACKAGE_MANAGER`                        | node      | the `node_package_manager` knob                    | Force a package manager for one run.                          |
+| `NODE_INSTALL_FLAGS`                          | node      | the `node_install_flags` knob                      | Install flags; set-but-empty forces a bare install.           |
+| `NPM_CI_FLAGS`                                | node      | —                                                  | **Deprecated.** npm-only install flags.                       |
+| `SWIFT_PRODUCT`                               | swift     | the `swift_product` knob                           | Product for one `build` run, or a GoReleaser build's product. |
+| `SWIFT_TEST_FLAGS`                            | swift     | —                                                  | Extra `swift test` flags, for example `--sanitize=thread`.    |
+| `GH_TOKEN`                                    | all       | —                                                  | Enables zizmor's online-only audits when exported.            |
 
 ## The defaults, as shipped
 

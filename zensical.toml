@@ -43,6 +43,7 @@ nav = [
     { "go" = "archetypes/go.md" },
     { "node" = "archetypes/node.md" },
     { "python" = "archetypes/python.md" },
+    { "swift" = "archetypes/swift.md" },
     { "terraform" = "archetypes/terraform.md" },
   ] },
   { "Reference" = [

@@ -67,6 +67,20 @@ The root `mise.toml` does four jobs:
     includes = [".mise/common/tasks.toml", ".mise/archetypes/python/tasks.toml"]
     ```
 
+=== "swift"
+
+    ```toml
+    # mise.toml — a SwiftPM package or CLI
+    [tools]
+    swift = "6.4.1"
+
+    # [vars]
+    # swift_product = "mytool"   # build one product instead of all of them
+
+    [task_config]
+    includes = [".mise/common/tasks.toml", ".mise/archetypes/swift/tasks.toml"]
+    ```
+
 === "terraform"
 
     ```toml
@@ -139,14 +153,17 @@ node_modules/
 # python, and any repo with a zensical docs site
 .venv/
 site/
+# swift
+.build/
+.swiftpm/
 # goreleaser, uv build
 dist/
 ```
 
 **`.licenseignore`.** The [license tasks](../reference/lint.md#license-headers) already skip `node_modules/`, `.mise/`,
-`.claude/`, `.venv/`, `coverage/`, `pnpm-lock.yaml` and `commit.sh`. List anything else that's generated, one pattern
-per line. A node action repo, for example, lists `dist/**` because its committed bundle must stay byte-identical to the
-build output.
+`.claude/`, `.venv/`, `.build/`, `.swiftpm/`, `coverage/`, `pnpm-lock.yaml` and `commit.sh`. List anything else that's
+generated, one pattern per line. A node action repo, for example, lists `dist/**` because its committed bundle must stay
+byte-identical to the build output.
 
 **Prose and workflow config.** You need none. Prettier, markdownlint, actionlint and zizmor read the library's house
 defaults from `.mise/`. Commit your own `.prettierrc.yaml`, `.prettierignore` or `.markdownlint-cli2.yaml` only if you

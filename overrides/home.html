@@ -21,8 +21,8 @@ the header and the page body via the `tabs` block; the article `content` block i
             <div class="tc-kicker"><span class="tc-dot"></span>// Shared build tasks for the fleet</div>
             <h1 class="tc-title">One toolchain.<br /><em>Every repo.</em></h1>
             <p class="tc-lede">
-                Pinned, checksum-locked developer tools, mise task archetypes for Go, Node, Python and Terraform, and
-                the house lint and license policy — mounted in every repo as a <code>.mise/</code> submodule, with a
+                Pinned, checksum-locked developer tools, mise task archetypes for Go, Node, Python, Swift and
+                Terraform, and the house lint and license policy — mounted in every repo as a <code>.mise/</code> submodule, with a
                 one-line Makefile on top.
             </p>
             <div class="tc-term">
@@ -186,8 +186,8 @@ the header and the page body via the `tabs` block; the article `content` block i
                 </div>
                 <h3>Archetype tasks</h3>
                 <p>
-                    <code>common</code> plus exactly one of <code>go</code>, <code>node</code>, <code>python</code> or
-                    <code>terraform</code> — each with real <code>fmt</code>, <code>lint</code>, <code>build</code>,
+                    <code>common</code> plus exactly one of <code>go</code>, <code>node</code>, <code>python</code>,
+                    <code>swift</code> or <code>terraform</code> — each with real <code>fmt</code>, <code>lint</code>, <code>build</code>,
                     <code>test</code>, <code>ci</code> and <code>pr</code> rollups.
                 </p>
             </div>
@@ -274,6 +274,11 @@ the header and the page body via the `tabs` block; the article `content` block i
                 <span class="tc-arch__name">python</span>
                 <p>uv-native packages and Zensical docs sites: ruff, pytest, <code>uv build</code>.</p>
                 <code>archetypes/python</code>
+            </a>
+            <a class="tc-arch" href="{{ 'archetypes/swift/' | url }}">
+                <span class="tc-arch__name">swift</span>
+                <p>SwiftPM packages and CLIs: <code>swift format</code>, <code>swift test</code> with coverage, GoReleaser.</p>
+                <code>archetypes/swift</code>
             </a>
             <a class="tc-arch" href="{{ 'archetypes/terraform/' | url }}">
                 <span class="tc-arch__name">terraform</span>

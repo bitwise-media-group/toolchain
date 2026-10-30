@@ -6,7 +6,7 @@ holding three things:
 - **Pinned developer tools**: every linter, scanner, test runner and release tool the fleet uses, each pinned to an
   exact version with per-platform sha256 checksums in `mise.lock`.
 - **Task archetypes**: [mise](https://mise.jdx.dev) task files that define the `fmt`, `lint`, `build`, `test`, `ci` and
-  `pr` gates for each kind of repo: Go, Node, Python, Terraform, or plain Markdown/YAML.
+  `pr` gates for each kind of repo: Go, Node, Python, Swift, Terraform, or plain Markdown/YAML.
 - **House policy**: the license header, prose formatting and workflow security rules every repo follows, with defaults
   that need no per-repo config.
 
@@ -20,7 +20,7 @@ my-repo/
 │   ├── config.toml   ← pinned tools + knob defaults (loaded by mise automatically)
 │   ├── mise.lock     ← per-platform checksums for every pin
 │   ├── common/       ← tasks every repo gets
-│   └── archetypes/   ← go / node / python / terraform tasks
+│   └── archetypes/   ← go / node / python / swift / terraform tasks
 ├── mise.toml         ← runtime pin + includes + knobs + repo-local tasks
 └── Makefile          ← include .mise/archetypes/<lang>/include.mk
 ```

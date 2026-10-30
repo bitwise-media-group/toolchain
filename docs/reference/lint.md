@@ -24,8 +24,9 @@ headers (`-s=only`):
 # SPDX-License-Identifier: MIT
 ```
 
-The house ignores always apply: `node_modules/**`, `.mise/**`, `.claude/**`, `.venv/**`, `coverage/**`,
-`**/pnpm-lock.yaml` and `commit.sh`. A repo's `.licenseignore` adds to them, one pattern per non-empty line:
+The house ignores always apply: `node_modules/**`, `.mise/**`, `.claude/**`, `.venv/**`, `.build/**`, `.swiftpm/**`,
+`coverage/**`, `**/pnpm-lock.yaml` and `commit.sh`. A repo's `.licenseignore` adds to them, one pattern per non-empty
+line:
 
 ```text
 dist/**
@@ -52,11 +53,11 @@ Prettier honours `.gitignore` as well as the prettier ignore file.
 The library's own config files are the house defaults. A consumer reads them from `.mise/` unless it commits its own
 copy of a file, which then overrides that file **wholesale**:
 
-| File                      | House setting                                                                                                                                                                      |
-| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `.prettierrc.yaml`        | `proseWrap: always`, `printWidth: 120`.                                                                                                                                            |
-| `.prettierignore`         | `CHANGELOG.md`, `node_modules/`, `.mise/`, `.venv/`, `.claude/`.                                                                                                                   |
-| `.markdownlint-cli2.yaml` | All default rules; 120-column lines (tables exempt); sibling-only duplicate headings; fenced code blocks. Ignores `node_modules/`, `.mise/`, `.venv/`, `.claude/`, `CHANGELOG.md`. |
+| File                      | House setting                                                                                                                                                                                              |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `.prettierrc.yaml`        | `proseWrap: always`, `printWidth: 120`.                                                                                                                                                                    |
+| `.prettierignore`         | `CHANGELOG.md`, `node_modules/`, `.mise/`, `.venv/`, `.build/`, `.swiftpm/`, `.claude/`.                                                                                                                   |
+| `.markdownlint-cli2.yaml` | All default rules; 120-column lines (tables exempt); sibling-only duplicate headings; fenced code blocks. Ignores `node_modules/`, `.mise/`, `.venv/`, `.build/`, `.swiftpm/`, `.claude/`, `CHANGELOG.md`. |
 
 Patterns in the house ignore files are deliberately unanchored, because prettier and markdownlint resolve them against
 the invoking repo, not against `.mise/`.

@@ -23,6 +23,7 @@ toolchain/                    # this repo == the consumer's .mise/ directory
 │   ├── go/                   #   build/test/lint/fuzz/release + zensical docs
 │   ├── node/                 #   package.json-script contract (npm/pnpm/bun)
 │   ├── python/               #   uv-native: ruff + pytest + uv build + zensical
+│   ├── swift/                #   SwiftPM: swift format + swift test + GoReleaser
 │   └── terraform/            #   init/plan/apply + tf fmt/lint/docs
 │       ├── tasks.toml        #   each archetype: its tasks + fmt/lint/ci/pr rollups
 │       ├── include.mk        #   its make shim (pulls in common/include.mk)

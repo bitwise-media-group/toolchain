@@ -31,6 +31,7 @@ toolchain/                    # this repo == the consumer's .mise/ directory
     ├── go/                   #   build/test/lint/fuzz/release
     ├── node/                 #   package.json-script contract (npm/pnpm/bun)
     ├── python/               #   uv-native: ruff + pytest + uv build (+ docs site)
+    ├── swift/                #   SwiftPM: swift format + swift test + GoReleaser
     └── terraform/            #   init/plan/apply + tf fmt/lint/docs
         ├── tasks.toml        #   each archetype: its tasks + fmt/lint/ci/pr rollups
         ├── include.mk        #   its make shim (pulls in common/include.mk)
@@ -86,6 +87,7 @@ Per archetype, the root `mise.toml` differs only in what it pins and includes:
 | go            | `go`, `go:…/govulncheck`               | `.mise/archetypes/go/…`                            |
 | node          | `node`                                 | `.mise/archetypes/node/…`                          |
 | python        | nothing (uv provisions Python)         | `.mise/archetypes/python/…`                        |
+| swift         | `swift`                                | `.mise/archetypes/swift/…`                         |
 | terraform     | nothing (`opentofu` for a `tofu` repo) | `.mise/archetypes/terraform/…`                     |
 | _common only_ | nothing                                | no second entry; `include .mise/common/include.mk` |
 
@@ -143,13 +145,14 @@ precedes `lint` inside `pr`.
 
 ### Archetypes
 
-| archetype | `fmt`                                             | `lint`                                                                            | `build`                            | `test`                       | extras                                                  |
-| --------- | ------------------------------------------------- | --------------------------------------------------------------------------------- | ---------------------------------- | ---------------------------- | ------------------------------------------------------- |
-| go        | `go fmt`, `golangci-lint --fix`, prose, license   | golangci-lint, govulncheck, license, containers, shell, workflows, prose          | `go build` with version ldflags    | gotestsum, `-race`, coverage | `tidy`, `fuzz`, `snapshot`, `release`                   |
-| node      | `check:fix` / `format` scripts, prose, license    | `check` / `typecheck` scripts, license, containers, shell, workflows, prose       | `build` script                     | `test:coverage` script       | —                                                       |
-| python    | license, `ruff format`, `ruff check --fix`, prose | `ruff check`, `ruff format --check`, license, containers, shell, workflows, prose | `uv build` and/or `zensical build` | pytest (+ pytest-cov)        | —                                                       |
-| terraform | `terraform fmt -recursive`, prose                 | validate, tflint, containers, shell, workflows, prose                             | —                                  | —                            | `init`, `plan`, `apply`, `docs`                         |
-| _common_  | prose, license                                    | license, containers, shell, workflows, prose                                      | —                                  | —                            | `commit`, `actionlint`, `zizmor`, `docs-build`, `serve` |
+| archetype | `fmt`                                             | `lint`                                                                            | `build`                            | `test`                        | extras                                                  |
+| --------- | ------------------------------------------------- | --------------------------------------------------------------------------------- | ---------------------------------- | ----------------------------- | ------------------------------------------------------- |
+| go        | `go fmt`, `golangci-lint --fix`, prose, license   | golangci-lint, govulncheck, license, containers, shell, workflows, prose          | `go build` with version ldflags    | gotestsum, `-race`, coverage  | `tidy`, `fuzz`, `snapshot`, `release`                   |
+| node      | `check:fix` / `format` scripts, prose, license    | `check` / `typecheck` scripts, license, containers, shell, workflows, prose       | `build` script                     | `test:coverage` script        | —                                                       |
+| python    | license, `ruff format`, `ruff check --fix`, prose | `ruff check`, `ruff format --check`, license, containers, shell, workflows, prose | `uv build` and/or `zensical build` | pytest (+ pytest-cov)         | —                                                       |
+| swift     | `swift format`, prose, license                    | `swift format lint --strict`, license, containers, shell, workflows, prose        | `swift build -c release`           | `swift test`, coverage (LCOV) | `resolve`, `update`, `snapshot`, `release`              |
+| terraform | `terraform fmt -recursive`, prose                 | validate, tflint, containers, shell, workflows, prose                             | —                                  | —                             | `init`, `plan`, `apply`, `docs`                         |
+| _common_  | prose, license                                    | license, containers, shell, workflows, prose                                      | —                                  | —                             | `commit`, `actionlint`, `zizmor`, `docs-build`, `serve` |
 
 - **go** — `go` and `govulncheck` are pinned by the repo (govulncheck must be `go install`ed by the same Go that builds
   the module). Structural knobs `app`, `app_pkg`, `build_tags`, `version_pkg`, `goos` come from `[vars]`. `goos` is a
@@ -169,6 +172,12 @@ precedes `lint` inside `pr`.
   environment from `pyproject.toml`/`uv.lock`; ruff, pytest and pytest-cov come from the project's dev dependencies. A
   project without ruff or pytest (a docs-only site) skips those passes with a message. `build` runs `uv build` when
   `pyproject.toml` has a `[build-system]` and `zensical build` when a `zensical.toml` is present.
+- **swift** — SwiftPM packages and CLIs (no Xcode projects). The repo pins `swift` (mise's `core:swift`);
+  `swift format`, `llvm-cov` and `llvm-profdata` ship in that toolchain, so nothing else is pinned. `fmt`/`lint` run
+  `swift format` (honouring the repo's `.swift-format`), `test` writes JUnit + LCOV under `coverage/`, and `build` is
+  `swift build -c release` for every product or the one `swift_product` names. `resolve` honours a committed
+  `Package.resolved`; `update` rewrites it. GoReleaser has no Swift builder, so `snapshot`/`release` drive `swift build`
+  through the go builder with the archetype's `goreleaser-build.sh` as its `tool`.
 - **terraform** — every task runs in the invoking directory (`environments/<name>/`); `tf-run.sh` injects secrets via
   `dotty` only when the module carries a `.env.dotty`. `terraform_binary = "tofu"` switches to OpenTofu. No license
   tasks (addlicense would stamp `.tf` files).
@@ -218,6 +227,7 @@ reuses it across every repo.
   `[tools]`.
 - **Python repos** pin nothing: `uv` provisions the interpreter. A repo that wants a mise-managed Python adds `python`
   to its root `[tools]`.
+- **Swift repos** pin `swift` in their root `[tools]`; `swift format` and `llvm-cov` ship inside that toolchain.
 
 Each repo's own Renovate bumps its runtime pins in its root `mise.toml` (the org preset already covers root
 `mise.toml`). A repo can override any shared tool version (or add tools) in its root `mise.toml [tools]` — the root
@@ -228,7 +238,8 @@ wrapper invokes it only to inject secrets when a module directory carries a `.en
 that's never present in CI — so the wrapper checks for `dotty` on PATH itself and runs the command uninjected if it's
 missing, rather than having mise provision (and thereby pin/shadow) a CLI most tasks never touch.
 
-Consuming repos should keep `coverage/` (and `node_modules/`, `.venv/`, `site/`, `dist/` as applicable) in `.gitignore`.
+Consuming repos should keep `coverage/` (and `node_modules/`, `.venv/`, `.build/`, `.swiftpm/`, `site/`, `dist/` as
+applicable) in `.gitignore`.
 
 ### Updating the shared pins
 
@@ -249,10 +260,10 @@ submodule working tree.
 
 Two tiers, replacing the old before-the-include make variables:
 
-| tier                           | where                   | examples                                                                                                                                                                                                                             |
-| ------------------------------ | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| structural (set once per repo) | root `mise.toml [vars]` | `app`, `app_pkg`, `build_tags`, `version_pkg`, `goos`, `license_holder`, `node_package_manager`, `node_install_flags`, `npm_ci_flags` (deprecated), `terraform_binary`, `grype_fail_on`, `kubescape_severity`, `zizmor_min_severity` |
-| per-invocation (runtime)       | environment variables   | `VERSION`, `COMMIT`, `DATE`, `LDFLAGS`, `MODULE`, `GOOS`, `FUZZ`, `FUZZTIME`, `FUZZ_PKG`, `NODE_PACKAGE_MANAGER`, `NODE_INSTALL_FLAGS`, `NPM_CI_FLAGS` (deprecated)                                                                  |
+| tier                           | where                   | examples                                                                                                                                                                                                                                              |
+| ------------------------------ | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| structural (set once per repo) | root `mise.toml [vars]` | `app`, `app_pkg`, `build_tags`, `version_pkg`, `goos`, `license_holder`, `node_package_manager`, `node_install_flags`, `npm_ci_flags` (deprecated), `swift_product`, `terraform_binary`, `grype_fail_on`, `kubescape_severity`, `zizmor_min_severity` |
+| per-invocation (runtime)       | environment variables   | `VERSION`, `COMMIT`, `DATE`, `LDFLAGS`, `MODULE`, `GOOS`, `FUZZ`, `FUZZTIME`, `FUZZ_PKG`, `NODE_PACKAGE_MANAGER`, `NODE_INSTALL_FLAGS`, `NPM_CI_FLAGS` (deprecated), `SWIFT_PRODUCT`, `SWIFT_TEST_FLAGS`                                              |
 
 `make build VERSION=1.2.3` still works — make exports command-line variables to the forwarded `mise run`, and the go
 scripts also accept the old spellings (`APP`, `APP_PKG`, …) from the environment.
@@ -260,15 +271,15 @@ scripts also accept the old spellings (`APP`, `APP_PKG`, …) from the environme
 ## Other conventions the library assumes
 
 - **License holder** is `BitWise Media Group Ltd` (override `license_holder` in `[vars]`). The license tasks ignore
-  generated/vendored trees (`node_modules/`, `.mise/`, `.claude/`, `.venv/`, `coverage/`, `pnpm-lock.yaml`) and an
-  agent-prepared `commit.sh` by default; a repo's `.licenseignore` adds to that. Every archetype but terraform runs them
-  — a node action repo whose committed `dist/` bundle must stay byte-identical to the build output lists `dist/**` in
-  its `.licenseignore`.
+  generated/vendored trees (`node_modules/`, `.mise/`, `.claude/`, `.venv/`, `.build/`, `.swiftpm/`, `coverage/`,
+  `pnpm-lock.yaml`) and an agent-prepared `commit.sh` by default; a repo's `.licenseignore` adds to that. Every
+  archetype but terraform runs them — a node action repo whose committed `dist/` bundle must stay byte-identical to the
+  build output lists `dist/**` in its `.licenseignore`.
 - **Prose is linted in every archetype, with zero per-repo config**: `fmt`/`lint` always run the pinned prettier +
   markdownlint-cli2 over all `*.md` from the repo root, excluding generated and vendored content (`CHANGELOG.md`,
-  `node_modules/`, `.mise/`, `.venv/`, `.claude/`). The house defaults are this library's own `.prettierrc.yaml` /
-  `.prettierignore` / `.markdownlint-cli2.yaml`, read from `.mise/` — a repo that commits its own copy of one of those
-  files overrides that file wholesale.
+  `node_modules/`, `.mise/`, `.venv/`, `.build/`, `.swiftpm/`, `.claude/`). The house defaults are this library's own
+  `.prettierrc.yaml` / `.prettierignore` / `.markdownlint-cli2.yaml`, read from `.mise/` — a repo that commits its own
+  copy of one of those files overrides that file wholesale.
 - **GitHub Actions workflows are linted in every archetype, with zero per-repo config**: `lint` runs actionlint (syntax,
   expressions, embedded shell) and zizmor (security: injection, unpinned actions, excessive permissions, dangerous
   triggers) over `.github/workflows`, no-op where there are none. zizmor fails the gate at **low** severity and up by

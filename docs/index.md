@@ -12,5 +12,5 @@ hide:
 -->
 
 Shared build tasks for the BitWise Media Group fleet — pinned, checksum-locked developer tools, mise task archetypes for
-Go, Node, Python and Terraform, and the house lint and license policy, mounted in every repo as the `.mise/` submodule
-with a one-line Makefile on top.
+Go, Node, Python, Swift and Terraform, and the house lint and license policy, mounted in every repo as the `.mise/`
+submodule with a one-line Makefile on top.

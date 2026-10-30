@@ -3,7 +3,8 @@
 # SPDX-License-Identifier: MIT
 #
 # addlicense over the current directory with the house default ignores
-# (generated/vendored trees, incl. the .mise/ submodule, pnpm's generated
+# (generated/vendored trees, incl. the .mise/ submodule and SwiftPM's .build/
+# dependency checkouts, pnpm's generated
 # lockfile — the only package-manager lockfile addlicense would otherwise
 # stamp — and the agent-prepared commit.sh handoff every repo may transiently
 # carry) plus one -ignore per
@@ -21,8 +22,8 @@ set -euf
 mode="${1-}"
 
 set -- -ignore 'node_modules/**' -ignore '.mise/**' -ignore '.claude/**' \
-  -ignore '.venv/**' -ignore 'coverage/**' -ignore '**/pnpm-lock.yaml' \
-  -ignore 'commit.sh'
+  -ignore '.venv/**' -ignore '.build/**' -ignore '.swiftpm/**' \
+  -ignore 'coverage/**' -ignore '**/pnpm-lock.yaml' -ignore 'commit.sh'
 if [ -f .licenseignore ]; then
   while IFS= read -r pattern || [ -n "$pattern" ]; do
     [ -n "$pattern" ] || continue

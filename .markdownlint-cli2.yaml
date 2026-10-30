@@ -26,6 +26,9 @@ ignores:
   - ".mise/**"
   # uv-managed virtualenvs (site-packages ship their own markdown)
   - ".venv/**"
+  # SwiftPM build tree and dependency checkouts (packages ship their own markdown)
+  - ".build/**"
+  - ".swiftpm/**"
   # agent cruft
   - ".claude/**"
   # machine-written by release-please, not house prose
