@@ -23,8 +23,14 @@ mise tasks ls --name-only
 It then **skips the rest**. A common-only Markdown repo has no `build` or `test` task, so CI runs `lint` alone. A Go CLI
 defines all three, so CI runs all three.
 
-Releases go through the reusable release workflow, which drives release-please, GoReleaser (when a `.goreleaser.yaml`
-exists) and Zensical (when a `zensical.toml` exists) directly, not through make.
+Releases go through the reusable release workflow. After release-please cuts the release, it runs two more tasks:
+
+- `mise run release --draft` when a `.goreleaser.yaml` exists. The release stays a draft until the workflow publishes
+  it, last.
+- `mise run docs-build` when a `zensical.toml` exists, then publishes `./site` to GitHub Pages.
+
+A repo customises either step by overriding the task: extra release steps (which must leave the git tree clean), or
+generating uncommitted docs content before the site renders.
 
 ## No no-op stubs
 

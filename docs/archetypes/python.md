@@ -82,8 +82,9 @@ my-site/
 └── Makefile            # include .mise/archetypes/python/include.mk
 ```
 
-Add `site/` and `.venv/` to `.gitignore`, and `site/**` to `.licenseignore`. The reusable release workflow publishes the
-site to GitHub Pages on each release whenever a `zensical.toml` sits at the repo root.
+Add `site/` and `.venv/` to `.gitignore`, and `site/**` to `.licenseignore`. The reusable release workflow runs
+`mise run docs-build` and publishes the site to GitHub Pages on each release whenever a `zensical.toml` sits at the repo
+root.
 
 ## Source
 

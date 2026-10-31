@@ -87,6 +87,11 @@ dir = "{{cwd}}"
 env = { TOOLCHAIN_SWIFT_PRODUCT = "{{vars.swift_product}}" }
 run = "goreleaser release --snapshot --clean --skip=sign,notarize"
 
+# The reusable release workflow runs `mise run release --draft` (the release
+# stays a draft until the workflow publishes it, last), with the org's signing
+# and notarization material in the environment. A repo that needs extra release
+# steps overrides this task; whatever it runs must leave the git tree clean, or
+# GoReleaser refuses to release.
 [release]
 description = "build and publish a release (needs a vX.Y.Z tag + creds)"
 dir = "{{cwd}}"

@@ -132,6 +132,10 @@ run = [
 # `./<app> docs …`) defines a repo-local `docs` task that regenerates it and
 # then calls docs-build. Runs in the invoker's directory and fails with a
 # pointer when there is no zensical.toml there. See scripts/docs.sh.
+# The reusable release workflow's docs job runs `mise run docs-build` and
+# publishes ./site to GitHub Pages, so a repo whose site embeds generated,
+# uncommitted content overrides this task to generate it first; the override
+# must still render into ./site.
 [docs-build]
 description = "build the documentation site (zensical)"
 dir = "{{cwd}}"

@@ -119,12 +119,13 @@ natively without touching this library.
 
 The reusable CI workflow (`bitwise-media-group/github-workflows`) runs a matrix of **`make lint`**, **`make build`**,
 **`make test`** (and opt-in **`make e2e`**), discovering which of those tasks a repo actually defines via
-`mise tasks ls --name-only` and skipping the rest; release drives GoReleaser / Zensical directly. There are therefore
-**no no-op stubs anywhere**: an archetype defines only real work (a common-only repo has no `build`/`test` at all), and
-a repo that grows tests or an e2e suite just defines that task in its root `mise.toml [tasks]`. The one tolerated
-exception is the node archetype, whose optional package.json scripts run only when defined — a library with no
-`test:coverage` script gets a trivially passing `test`. Every archetype also provides **`fmt`**, **`ci`**, and **`pr`**
-for local use.
+`mise tasks ls --name-only` and skipping the rest. The reusable release workflow runs **`mise run release --draft`** in
+a repo with a `.goreleaser.yaml` and **`mise run docs-build`** in a repo with a `zensical.toml`, so a repo customises
+its release or docs build by overriding those tasks rather than the workflow. There are therefore **no no-op stubs
+anywhere**: an archetype defines only real work (a common-only repo has no `build`/`test` at all), and a repo that grows
+tests or an e2e suite just defines that task in its root `mise.toml [tasks]`. The one tolerated exception is the node
+archetype, whose optional package.json scripts run only when defined — a library with no `test:coverage` script gets a
+trivially passing `test`. Every archetype also provides **`fmt`**, **`ci`**, and **`pr`** for local use.
 
 Extension works both ways:
 

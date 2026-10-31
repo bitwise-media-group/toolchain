@@ -134,7 +134,8 @@ other pair fails with an error.
   who has the org's signing material in their shell shouldn't Developer ID-sign and notarize a throwaway snapshot by
   accident.
 
-Real releases run in CI through the reusable release workflow, not through `make release`.
+Real releases run in CI: the reusable release workflow calls `mise run release --draft` and publishes the draft once
+every asset has landed. Override `release` in the repo to add release steps; they must leave the git tree clean.
 
 ## Housekeeping
 
