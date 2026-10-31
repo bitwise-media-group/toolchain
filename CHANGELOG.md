@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.4.1](https://github.com/bitwise-media-group/toolchain/compare/v3.4.0...v3.4.1) (2026-10-31)
+
+
+### Bug Fixes
+
+* **deps:** lock file maintenance ([#178](https://github.com/bitwise-media-group/toolchain/issues/178)) ([18bb936](https://github.com/bitwise-media-group/toolchain/commit/18bb9360184d326b439b7dfcff1aa8cf35a4d8cb))
+* **deps:** lock file maintenance ([#191](https://github.com/bitwise-media-group/toolchain/issues/191)) ([bc264fe](https://github.com/bitwise-media-group/toolchain/commit/bc264fe9936b13636ba292256db0a364f0751835))
+* **deps:** lock file maintenance ([#192](https://github.com/bitwise-media-group/toolchain/issues/192)) ([d630a9f](https://github.com/bitwise-media-group/toolchain/commit/d630a9f8304d35662b3ada1060ac47149df80038))
+* **deps:** lock file maintenance ([#194](https://github.com/bitwise-media-group/toolchain/issues/194)) ([018f1a0](https://github.com/bitwise-media-group/toolchain/commit/018f1a0a3f4c7f7b8e4c2aec13e84e4ef09f8083))
+* **deps:** update dependency aqua:pnpm/pnpm to v12.16.1 ([#186](https://github.com/bitwise-media-group/toolchain/issues/186)) ([1c9b413](https://github.com/bitwise-media-group/toolchain/commit/1c9b41373b8efe92edb0bb2fd571b5abb0e578e0))
+
 ## [3.4.0](https://github.com/bitwise-media-group/toolchain/compare/v3.3.0...v3.4.0) (2026-10-30)
 
 
