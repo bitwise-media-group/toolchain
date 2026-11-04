@@ -35,12 +35,18 @@ check_pm() {
   esac
 }
 
-# node is always on PATH (the repo's node pin, or the shared one), so it reads
-# package.json rather than a JSON-parsing dependency. Prints the field's
-# package-manager name (the part before '@'), or nothing.
+# package.json is read with a JS runtime rather than a JSON-parsing
+# dependency: the repo's node pin when it has one, else the bun the library
+# always installs (`bun -e` runs the same CommonJS snippet).
+js() {
+  if command -v node >/dev/null 2>&1; then node "$@"; else bun "$@"; fi
+}
+
+# Prints the package.json "packageManager" field's package-manager name (the
+# part before '@'), or nothing.
 package_manager_field() {
   [ -f package.json ] || return 0
-  node -e '
+  js -e '
     const pm = JSON.parse(require("fs").readFileSync("package.json", "utf8")).packageManager;
     if (typeof pm === "string") console.log(pm.split("@")[0]);
   '
@@ -105,7 +111,7 @@ install_flags() {
 # package.json scripts are an object of name → command; exit 0 when the named
 # one exists, 1 when it does not, 2 when package.json cannot be read.
 has_script() {
-  node -e '
+  js -e '
     let scripts;
     try {
       scripts = JSON.parse(require("fs").readFileSync("package.json", "utf8")).scripts;

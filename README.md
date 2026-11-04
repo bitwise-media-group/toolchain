@@ -197,22 +197,23 @@ The node archetype drives whichever package manager the repo uses. Every node ta
    `"packageManager"`) to pick one.
 4. npm.
 
-pnpm and bun come from the shared `[tools]` pins (checksum-locked, installed lazily the first time a task needs them),
-so CI needs no setup step. A repo may pin its own version in its root `[tools]` (`"aqua:pnpm/pnpm" = "…"`), and its root
-pin wins. pnpm is stopped from switching to the version `"packageManager"` names; a mismatch is only reported as a
-warning. The install is skipped while `node_modules/.toolchain-install` is newer than `package.json`, every manager's
-lockfile and `pnpm-workspace.yaml`. A repo needs no `.gitignore` or `.licenseignore` change: `node_modules/` is already
-ignored, and the license tasks skip `pnpm-lock.yaml` by default (addlicense doesn't stamp the other lockfiles' formats).
+pnpm and bun come from the shared `[tools]` pins (checksum-locked; pnpm installs lazily the first time a task needs it,
+and bun is always installed as the prose-tool runtime), so CI needs no setup step. A repo may pin its own version in its
+root `[tools]` (`"aqua:pnpm/pnpm" = "…"`), and its root pin wins. pnpm is stopped from switching to the version
+`"packageManager"` names; a mismatch is only reported as a warning. The install is skipped while
+`node_modules/.toolchain-install` is newer than `package.json`, every manager's lockfile and `pnpm-workspace.yaml`. A
+repo needs no `.gitignore` or `.licenseignore` change: `node_modules/` is already ignored, and the license tasks skip
+`pnpm-lock.yaml` by default (addlicense doesn't stamp the other lockfiles' formats).
 
 ## Developer tools
 
 Every developer CLI (`addlicense`, `golangci-lint`, `gotestsum`, `goreleaser`, `syft`, `grype`, `cosign`, `hadolint`,
 `helm`, `kubescape`, `shellcheck`, `terraform`, `tflint`, `terraform-docs`, `actionlint`, `zizmor`, `uv`, `prettier`,
-`markdownlint-cli2`) is pinned in `config.toml [tools]` — exact version plus per-platform sha256 checksums (and, where
-the publisher provides it, cosign/SLSA/GitHub-attestation provenance) — locked in `mise.lock`. Tasks run with the pinned
-tools already on PATH — there is no `tools/go.mod`, no `package.json` for linters, and no tool-path plumbing anywhere.
-mise installs a tool into its shared per-machine store the first time a task needs it (verifying the checksum) and
-reuses it across every repo.
+`markdownlint-cli2`, plus `bun` as the runtime prettier and markdownlint-cli2 run on) is pinned in `config.toml [tools]`
+— exact version plus per-platform sha256 checksums (and, where the publisher provides it, cosign/SLSA/GitHub-attestation
+provenance) — locked in `mise.lock`. Tasks run with the pinned tools already on PATH — there is no `tools/go.mod`, no
+`package.json` for linters, and no tool-path plumbing anywhere. mise installs a tool into its shared per-machine store
+the first time a task needs it (verifying the checksum) and reuses it across every repo.
 
 **Language runtimes are per-repo**, not fleet-wide, so each repo tracks its own version at its own cadence:
 
@@ -222,11 +223,10 @@ reuses it across every repo.
   rebuild it once: `mise install -f "go:golang.org/x/vuln/cmd/govulncheck"` (a fresh CI runner compiles it with the
   pinned Go automatically). golangci-lint, gotestsum and goreleaser stay shared (prebuilt binaries); override
   `golangci-lint` in the root `[tools]` if the repo's Go outpaces the shared pin.
-- **Node repos** pin `node` in their root `[tools]`. The library _also_ pins `node`, purely as the runtime for the
-  npm-backed prettier and markdownlint-cli2 (mise's npm backend does not provision node, and repos must be able to lint
-  prose without a `package.json`); the repo's root pin takes precedence, so the shared one never dictates a Node repo's
-  runtime. pnpm and bun are shared lazy pins (installed on first use); a repo may pin its own version in its root
-  `[tools]`.
+- **Node repos** pin `node` in their root `[tools]`; the library provides none. The npm-backed prettier and
+  markdownlint-cli2 run on the shared, always-installed `bun` instead (`prose.sh` puts a `node` → bun wrapper first on
+  its own PATH only), so repos lint prose without a `package.json` or Node.js. pnpm is a shared lazy pin (installed on
+  first use); a repo may pin its own pnpm or bun version in its root `[tools]`.
 - **Python repos** pin nothing: `uv` provisions the interpreter. A repo that wants a mise-managed Python adds `python`
   to its root `[tools]`.
 - **Swift repos** pin `swift` in their root `[tools]`; `swift format` and `llvm-cov` ship inside that toolchain.

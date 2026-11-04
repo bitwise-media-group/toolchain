@@ -18,8 +18,8 @@ includes = [".mise/common/tasks.toml", ".mise/archetypes/node/tasks.toml"]
 include .mise/archetypes/node/include.mk
 ```
 
-The repo pins its own `node`. The library also pins `node`, but only as the runtime for prettier and markdownlint, and
-the repo's root pin wins.
+The repo pins its own `node`; the library pins none. prettier and markdownlint run on the library's bun, so they never
+touch the repo's runtime.
 
 ## The package.json-script contract
 

@@ -20,16 +20,19 @@
 # Language runtimes are NOT pinned here. go, python, node and swift are
 # per-repo concerns so each repo can track its own version at its own cadence:
 # a Go repo pins `go` (and govulncheck, below) in its root [tools], a Node repo
-# pins `node`, a Swift repo pins `swift` (swift format and llvm-cov ship in that
-# toolchain), and a Python repo lets uv provision Python from .python-version /
-# requires-python (or pins `python` itself). Each repo's own Renovate bumps
-# those pins.
+# pins `node` (the library provides none), a Swift repo pins `swift` (swift
+# format and llvm-cov ship in that toolchain), and a Python repo lets uv
+# provision Python from .python-version / requires-python (or pins `python`
+# itself). Each repo's own Renovate bumps those pins.
 #
-# node IS pinned here, but only as the runtime for the npm-backed prose tools
-# (prettier, markdownlint-cli2): mise's npm backend does not provision node on
-# its own, and repos must be able to lint prose without a package.json. A Node
-# repo's root [tools] pin wins over this one (root config has precedence), so
-# the shared pin never dictates a Node repo's runtime.
+# bun IS always installed here, as the runtime for the npm-backed prose tools
+# (prettier, markdownlint-cli2): aube installs them, but their shims
+# `exec node <entry>`, and repos must be able to lint prose without a
+# package.json or a Node.js install. common/scripts/prose.sh puts
+# common/bin/ first on PATH, whose `node` is a wrapper that execs bun, so the
+# prose tools run on bun. The wrapper is scoped to prose.sh alone: it
+# never shadows a Node repo's own `node` pin anywhere else. The same pin also
+# serves the node archetype's bun repos.
 #
 # govulncheck is deliberately absent: it publishes no binaries and must be
 # `go install`ed by the same Go the repo builds with, so every Go repo pins
@@ -48,9 +51,9 @@
 # default).
 #
 # prettier and markdownlint-cli2 are npm packages with no standalone binaries,
-# so they install from the npm registry (npm: backend) using the Node runtime
-# pinned below. Top-level versions are pinned exactly here (checksums in
-# mise.lock); unlike a package-lock.json, transitive npm dependencies are not
+# so they install from the npm registry (npm: backend) via aube and run on the
+# bun pinned below (see above). Top-level versions are pinned exactly here
+# (checksums in mise.lock); unlike a package-lock.json, transitive npm dependencies are not
 # pinned (prettier has none; markdownlint-cli2's tree is small). mise forwards
 # minimum_release_age into transitive resolution (npm >= 11.10
 # --min-release-age), so even transitives can't pull a release younger than
@@ -112,11 +115,11 @@ minimum_release_age_excludes = [
 # --8<-- [start:tools]
 [tools]
 "core:go" = { version = "1.27.3", lazy = true }
-"core:node" = "lts"
 "core:python" = { version = "3.15.2", lazy = true }
 
 "npm:markdownlint-cli2" = "0.24.0"
 "npm:prettier" = "3.9.10"
+"aqua:oven-sh/bun" = "1.4.3"
 
 "github:google/addlicense" = "1.2.0"
 
@@ -133,7 +136,6 @@ minimum_release_age_excludes = [
 "aqua:hashicorp/terraform" = { version = "1.17.0", lazy = true, lazy_bins = "terraform" }
 "aqua:helm/helm" = { version = "4.3.1", lazy = true, lazy_bins = "helm" }
 "aqua:kubescape/kubescape" = { version = "4.0.16", lazy = true, lazy_bins = "kubescape" }
-"aqua:oven-sh/bun" = { version = "1.4.3", lazy = true, lazy_bins = ["bun"] }
 "aqua:pnpm/pnpm" = { version = "12.16.1", lazy = true, lazy_bins = "pnpm" }
 "aqua:sigstore/cosign" = { version = "3.1.4", lazy = true, lazy_bins = "cosign" }
 "aqua:terraform-docs/terraform-docs" = { version = "0.24.0", lazy = true, lazy_bins = "terraform-docs" }

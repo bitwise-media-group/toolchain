@@ -1,0 +1,9 @@
+#!/bin/sh
+# Copyright 2026 BitWise Media Group Ltd
+# SPDX-License-Identifier: MIT
+#
+# bun as node. aube's npm shims (prettier, markdownlint-cli2) end in
+# `exec node <entry>`; prose.sh puts this directory first on PATH so they run
+# on the pinned bun rather than needing Node.js. Scoped to prose.sh only — it
+# never shadows a Node repo's own node anywhere else.
+exec bun "$@"

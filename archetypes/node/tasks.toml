@@ -5,8 +5,8 @@
 # evolve-design-system) or a GitHub Action (ff-merge, setup-evolve).
 #
 # Include AFTER common/tasks.toml in the consumer's root mise.toml, and pin
-# the runtime in the repo's own root [tools] (the library pins node only as
-# the runtime for the prose tools; the root pin wins):
+# the runtime in the repo's own root [tools] (the library pins no node; the
+# prose tools run on its bun):
 #   [tools]
 #   node = "24.20.0"
 #   [task_config]

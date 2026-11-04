@@ -28,4 +28,4 @@ includes = ["common/tasks.toml", "archetypes/python/tasks.toml"]
 # the Makefile hangs it off `lint` as a make-side prerequisite.
 [tasks.lint-scripts]
 description = "shellcheck the library's own task scripts"
-run = "shellcheck common/scripts/*.sh archetypes/*/scripts/*.sh"
+run = "shellcheck common/bin/node common/scripts/*.sh archetypes/*/scripts/*.sh"

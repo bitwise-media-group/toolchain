@@ -15,14 +15,15 @@ Each entry names the tool by an **explicit backend** and an **exact version**:
 
 - **The backend is spelled out** (`aqua:`, `github:`, `npm:`, `core:`), so the trust path for each tool is pinned and
   can't drift if mise's registry defaults change.
-- **The version is exact.** Renovate bumps it, and nobody edits a range. The one exception is the shared `core:node`,
-  which tracks `lts`; `mise.lock` records the version it resolved.
+- **The version is exact.** Renovate bumps it, and nobody edits a range.
 - **`mise.lock` records per-platform sha256 checksums** for every pin, plus cosign, SLSA or GitHub-attestation
   provenance wherever the publisher provides it. mise verifies them on every install, and all verification is on by
   default.
 
 Every tool is a **prebuilt release binary**, except prettier and markdownlint-cli2. Those are npm packages with no
-standalone binaries, so they install from the npm registry using the Node runtime pinned alongside them.
+standalone binaries, so mise's built-in aube installs them from the npm registry, and they run on the bun pinned
+alongside them. Their shims call `node`, so `prose.sh` puts a `node` wrapper that execs bun first on its own PATH; no
+Node.js is installed.
 
 The full, current list of pins is on the [Tool pins](../reference/tool-pins.md) reference page, generated from
 `config.toml` itself.
@@ -33,7 +34,7 @@ Most pins carry `lazy = true` with `lazy_bins`. mise doesn't install a lazy tool
 something actually runs the named binary. A Python docs repo never downloads golangci-lint or terraform, and a fresh CI
 runner for a Markdown repo only fetches the prose and workflow linters.
 
-The always-installed core is small: node (as the prose runtime), prettier, markdownlint-cli2, addlicense, shellcheck,
+The always-installed core is small: bun (as the prose runtime), prettier, markdownlint-cli2, addlicense, shellcheck,
 actionlint and zizmor.
 
 ## Supply-chain guards
@@ -74,10 +75,9 @@ mise install -f "go:golang.org/x/vuln/cmd/govulncheck"
 golangci-lint, gotestsum and goreleaser stay shared, because they're prebuilt binaries not coupled to the repo's Go. A
 repo whose Go outpaces the shared golangci-lint overrides that one pin.
 
-**Node repos** pin `node` in their root `[tools]`. The library _also_ pins `node`, but only as the runtime for the
-npm-backed prose tools: mise's npm backend doesn't provision node itself, and repos must be able to lint prose without a
-`package.json`. The repo's root pin takes precedence, so the shared one never dictates a Node repo's runtime. pnpm and
-bun are shared lazy pins, and a repo can pin its own.
+**Node repos** pin `node` in their root `[tools]`; the library provides no `node`. The prose tools run on the shared bun
+through a `node` wrapper scoped to `prose.sh`, so it never shadows the repo's own runtime. bun is always installed and
+pnpm is a shared lazy pin; a repo can pin its own version of either.
 
 **Python repos** pin nothing: `uv` provisions the interpreter from `.python-version` or `requires-python`. A repo that
 wants a mise-managed Python adds `python` to its root `[tools]`.
