@@ -46,8 +46,11 @@ This repo uses its own tasks, but it _is_ the library, so its layout is the inve
   root `mise.lock` is a symlink to it. mise places sidecars by the lockfile's physical directory, so only this layout
   records the same `locks/…` paths here and in consumers. Don't replace `.mise/locks/` with a symlink: mise refuses to
   read or write sidecars through one.
-- The root `mise.toml` includes `common/tasks.toml` and `archetypes/python/tasks.toml` directly, without the `.mise/`
-  prefix. The python archetype builds this site, so `make build` is `zensical build` and CI catches a broken page.
+- `.config/mise.toml` includes `common/tasks.toml` and `archetypes/python/tasks.toml` directly, without the `.mise/`
+  prefix (its `config_root` is still the repo root). It must not move to a root `mise.toml`: a root config owns the root
+  `mise.lock` link, so `mise lock` would lock the tool-less dogfood config through it, prune every tool entry in the
+  shared `.mise/mise.lock` and delete the npm sidecars from `.mise/locks/`. The root `mise.lock` link exists only for
+  Renovate. The python archetype builds this site, so `make build` is `zensical build` and CI catches a broken page.
 - The Makefile includes `archetypes/python/include.mk` and adds `lint: lint-scripts`, a make-side prerequisite that
   shellchecks the library's own scripts. (The consumer-facing `lint-shell` pass only sweeps a repo's root `scripts/` and
   `hack/`.)
@@ -92,9 +95,8 @@ Renovate normally does this. To do it yourself, edit `config.toml`, then re-lock
 GITHUB_TOKEN="$(gh auth token)" mise lock
 ```
 
-Unauthenticated GitHub API calls can silently drop lockfile entries, so set the token first. mise writes through the
-root `mise.lock` symlink into `.mise/mise.lock` and keeps the npm tools' dependency sidecars in `.mise/locks/`; commit
-both.
+Unauthenticated GitHub API calls can silently drop lockfile entries, so set the token first. mise writes
+`.mise/mise.lock` and keeps the npm tools' dependency sidecars in `.mise/locks/`; commit both.
 
 ## Commit messages
 

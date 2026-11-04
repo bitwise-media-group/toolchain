@@ -3,10 +3,12 @@
 #
 # This repo dogfoods its own tasks, with the layout INVERTED relative to
 # consumers: in a consumer, config.toml is the submodule mounted at .mise/
-# (loaded natively as .mise/config.toml) and the includes live in a real root
-# mise.toml like this one; here config.toml, common/ and archetypes/ sit at the
-# repo root, so the .mise/ entries are symlinks back to them (see .mise/) and
-# only the include path differs (common/… instead of .mise/common/…).
+# (loaded natively as .mise/config.toml) and the includes live in the repo's
+# root mise.toml; here config.toml, common/ and archetypes/ sit at the repo
+# root, so the .mise/ entries are symlinks back to them (see .mise/) and only
+# the include path differs (common/… instead of .mise/common/…). A
+# .config/mise.toml still has the repo root as its config_root, so the include
+# paths resolve, and the tasks run, from there exactly as from a root file.
 #
 # mise.lock is the one entry inverted the other way: the real file (and its
 # locks/ dependency sidecars) lives in .mise/, and the root mise.lock is a
@@ -14,7 +16,18 @@
 # locks/ beside a lockfile in a dir named .mise, .mise/locks/ beside any other
 # -- and records their path relative to it, so only a real .mise/mise.lock
 # gives this repo and every consumer the same `path = "locks/…"` entries and
-# the same tracked sidecars.
+# the same tracked sidecars. The root mise.lock link exists only for Renovate,
+# whose mise manager maps the root config.toml to it.
+#
+# That link is why this file lives at .config/mise.toml and NOT at the root:
+# a root mise.toml owns the root mise.lock, so `mise lock` would lock this
+# tool-less config through the link into the shared .mise/mise.lock, prune
+# every tool entry .mise/config.toml owns, and delete their npm sidecars from
+# .mise/locks/ (the shared sidecar dir). The .mise/config.toml pass restores
+# the entries but not the sidecars, so every Renovate lock-file-maintenance
+# run deleted or re-added them. From .config/ this file owns
+# .config/mise.lock instead (never written: it pins no tools), and nothing
+# else claims the root link.
 #
 # The python archetype rides on top of common because this repo also carries
 # its documentation site (zensical.toml + docs/, built with Zensical via uv):

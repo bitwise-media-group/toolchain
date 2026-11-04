@@ -15,7 +15,7 @@
 # IMPORTANT: this file must never contain [task_config] — its include paths
 # would resolve against each consumer's repo root and break. Archetype
 # selection always lives in the consumer's root mise.toml (this repo's own
-# root mise.toml dogfoods the same way).
+# .config/mise.toml dogfoods the same way).
 #
 # Language runtimes are NOT pinned here. go, python, node and swift are
 # per-repo concerns so each repo can track its own version at its own cadence:

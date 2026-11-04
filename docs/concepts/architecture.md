@@ -155,6 +155,8 @@ lockfile's physical directory — `locks/` when that directory is named `.mise`,
 their path relative to it. Keeping the real file in `.mise/` means this repo and every consumer record the same
 `locks/…` paths and read the same tracked sidecars.
 
-The root `mise.toml` includes `common/tasks.toml` and `archetypes/python/tasks.toml` (it builds this docs site), and the
-`{{config_root}}/.mise/…` paths inside the tasks resolve through the symlinks exactly as they would in a consumer. See
+`.config/mise.toml` includes `common/tasks.toml` and `archetypes/python/tasks.toml` (it builds this docs site), and the
+`{{config_root}}/.mise/…` paths inside the tasks resolve through the symlinks exactly as they would in a consumer. It
+isn't a root `mise.toml` because that would own the root `mise.lock` link: `mise lock` would lock the tool-less dogfood
+config through it, pruning the shared lockfile's tool entries and deleting their sidecars. See
 [Working on the toolchain](../reference/contributing.md).

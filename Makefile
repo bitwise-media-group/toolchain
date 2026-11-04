@@ -1,5 +1,5 @@
 # The toolchain library dogfoods its own tasks: common plus the python
-# archetype (for the docs site), wired via the root mise.toml (see the comment
+# archetype (for the docs site), wired via .config/mise.toml (see the comment
 # there for why the layout is inverted relative to consumers, whose Makefiles
 # say `include .mise/common/include.mk` or
 # `include .mise/archetypes/<lang>/include.mk`).

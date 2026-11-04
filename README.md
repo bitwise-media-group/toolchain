@@ -305,11 +305,13 @@ scripts also accept the old spellings (`APP`, `APP_PKG`, …) from the environme
   (~200 MB, cached in `~/.cache/grype`) and kubescape's controls artifacts (`~/.kubescape`), so it needs network; the
   scans never contact a Kubernetes cluster (`KUBECONFIG` is pointed at nothing).
 - **This repo's own layout is inverted**: `config.toml`, `common/` and `archetypes/` sit at the root (it _is_ the
-  consumer's `.mise/`), the dogfood include lives in the root `mise.toml`, and `.mise/` here contains symlinks back to
+  consumer's `.mise/`), the dogfood include lives in `.config/mise.toml`, and `.mise/` here contains symlinks back to
   the root entries so mise resolves tools and scripts the same way it does in a consumer. The dogfood includes `common`
   plus the python archetype, whose `build` renders the docs site. `mise.lock` is inverted the other way: the real file
   and its `locks/` dependency sidecars live in `.mise/`, and the root `mise.lock` links to it. mise places sidecars by
-  the lockfile's physical directory, so this is what makes the recorded sidecar paths match in consumers.
+  the lockfile's physical directory, so this is what makes the recorded sidecar paths match in consumers. The dogfood
+  config stays out of the root because a root `mise.toml` would own that link: `mise lock` would prune the shared
+  lockfile's tool entries through it and delete their sidecars.
 
 ## Migrating from v2 (`tasks/<archetype>.toml` + `mise.mk`)
 

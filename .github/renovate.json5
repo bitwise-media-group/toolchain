@@ -27,6 +27,10 @@
 //     because Renovate only runs the sweep when a task has a command (`^true$`
 //     is in allowedCommands in renovate-config's renovate-global.json5). The
 //     sidecars in .mise/locks/ need no help: the manager collects those itself.
+//     They only survive `mise lock` because no mise config owns the root link
+//     (the dogfood config is .config/mise.toml, not a root mise.toml — see the
+//     comment there); a root mise.toml made every lock-file-maintenance run
+//     delete or re-add them.
 //
 //   - This repo's own workflow callers are CI plumbing, not library content:
 //     actions bumps land as release-please-ignored `ci` (the preset's
