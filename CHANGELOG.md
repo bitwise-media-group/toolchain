@@ -1,5 +1,40 @@
 # Changelog
 
+## [4.0.0](https://github.com/bitwise-media-group/toolchain/compare/v3.4.0...v4.0.0) (2026-11-05)
+
+
+### ⚠ BREAKING CHANGES
+
+* **prose:** the shared core:node pin is removed. Node repos must pin `node` in their root mise.toml [tools] (already the documented contract).
+
+### Features
+
+* **node:** bun-first archetype contract ([eca25cc](https://github.com/bitwise-media-group/toolchain/commit/eca25cc4b93a7b8fe6ec597f7a41431ff428fc24))
+* **prose:** format markdown with bun fmt instead of prettier ([f1dfa50](https://github.com/bitwise-media-group/toolchain/commit/f1dfa50a012945ba065fd69ff92475ea00b50608))
+* **prose:** run prettier and markdownlint-cli2 on bun instead of node ([8a4d182](https://github.com/bitwise-media-group/toolchain/commit/8a4d1827bb87bcfd8a56fc9d1fd272cd0e7f14d7))
+
+
+### Bug Fixes
+
+* **deps:** lock file maintenance ([#178](https://github.com/bitwise-media-group/toolchain/issues/178)) ([18bb936](https://github.com/bitwise-media-group/toolchain/commit/18bb9360184d326b439b7dfcff1aa8cf35a4d8cb))
+* **deps:** lock file maintenance ([#191](https://github.com/bitwise-media-group/toolchain/issues/191)) ([bc264fe](https://github.com/bitwise-media-group/toolchain/commit/bc264fe9936b13636ba292256db0a364f0751835))
+* **deps:** lock file maintenance ([#192](https://github.com/bitwise-media-group/toolchain/issues/192)) ([d630a9f](https://github.com/bitwise-media-group/toolchain/commit/d630a9f8304d35662b3ada1060ac47149df80038))
+* **deps:** lock file maintenance ([#194](https://github.com/bitwise-media-group/toolchain/issues/194)) ([018f1a0](https://github.com/bitwise-media-group/toolchain/commit/018f1a0a3f4c7f7b8e4c2aec13e84e4ef09f8083))
+* **deps:** lock file maintenance ([#196](https://github.com/bitwise-media-group/toolchain/issues/196)) ([076c38d](https://github.com/bitwise-media-group/toolchain/commit/076c38d48fadbcb4d10dbc6c6dd9cc46ec6fdf9d))
+* **deps:** lock file maintenance ([#199](https://github.com/bitwise-media-group/toolchain/issues/199)) ([62ab5c5](https://github.com/bitwise-media-group/toolchain/commit/62ab5c52cb4b1e38d8d3d5e4efdc08d94d49f3b8))
+* **deps:** lock file maintenance ([#200](https://github.com/bitwise-media-group/toolchain/issues/200)) ([cc48ec0](https://github.com/bitwise-media-group/toolchain/commit/cc48ec074492ac88b8e70f79e1f19172d21ca864))
+* **deps:** lock file maintenance ([#201](https://github.com/bitwise-media-group/toolchain/issues/201)) ([fb98dac](https://github.com/bitwise-media-group/toolchain/commit/fb98dacfc6a18339cbdb793335af7d1c71686edf))
+* **deps:** lock file maintenance ([#202](https://github.com/bitwise-media-group/toolchain/issues/202)) ([274835f](https://github.com/bitwise-media-group/toolchain/commit/274835f9d76545b1b4573c48902913748b194df5))
+* **deps:** lock file maintenance ([#203](https://github.com/bitwise-media-group/toolchain/issues/203)) ([15c9713](https://github.com/bitwise-media-group/toolchain/commit/15c9713355c7610f7695bfc13a26aca6c99ec306))
+* **deps:** lock file maintenance ([#204](https://github.com/bitwise-media-group/toolchain/issues/204)) ([ace8b4a](https://github.com/bitwise-media-group/toolchain/commit/ace8b4a074c6dc515f8e826db5635f4b006eed6d))
+* **deps:** lock file maintenance ([#205](https://github.com/bitwise-media-group/toolchain/issues/205)) ([01b8c1e](https://github.com/bitwise-media-group/toolchain/commit/01b8c1eda3587ddcb5fcead267ae7df8542452ef))
+* **deps:** lock file maintenance ([#207](https://github.com/bitwise-media-group/toolchain/issues/207)) ([00ad2de](https://github.com/bitwise-media-group/toolchain/commit/00ad2de0304a813927991247c48d5ae10bda680a))
+* **deps:** update dependency aqua:hashicorp/terraform to v1.17.1 ([#195](https://github.com/bitwise-media-group/toolchain/issues/195)) ([13038e7](https://github.com/bitwise-media-group/toolchain/commit/13038e7131266184aa7efebc6cf921db9bf67f57))
+* **deps:** update dependency aqua:kubescape/kubescape to v4.0.17 ([#193](https://github.com/bitwise-media-group/toolchain/issues/193)) ([f941d2a](https://github.com/bitwise-media-group/toolchain/commit/f941d2a569883093c96d6dbfdce68339f561cbd0))
+* **deps:** update dependency aqua:pnpm/pnpm to v12.16.1 ([#186](https://github.com/bitwise-media-group/toolchain/issues/186)) ([1c9b413](https://github.com/bitwise-media-group/toolchain/commit/1c9b41373b8efe92edb0bb2fd571b5abb0e578e0))
+* **deps:** update dependency aqua:pnpm/pnpm to v12.17.0 ([#206](https://github.com/bitwise-media-group/toolchain/issues/206)) ([4c8d58e](https://github.com/bitwise-media-group/toolchain/commit/4c8d58eecb3f2cd56325ab1c66316328e1497df8))
+* **lock:** keep the npm sidecars by moving the dogfood config to .config/ ([3552d10](https://github.com/bitwise-media-group/toolchain/commit/3552d10ec592d10e113603ada6715266044cea49))
+
 ## [3.4.0](https://github.com/bitwise-media-group/toolchain/compare/v3.3.0...v3.4.0) (2026-10-30)
 
 
