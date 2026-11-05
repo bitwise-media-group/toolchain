@@ -4,25 +4,42 @@
 # node — archetype for a Node/TypeScript repo: a library (design-system,
 # evolve-design-system) or a GitHub Action (ff-merge, setup-evolve).
 #
-# Include AFTER common/tasks.toml in the consumer's root mise.toml, and pin
-# the runtime in the repo's own root [tools] (the library pins no node; the
-# prose tools run on its bun):
+# Include AFTER common/tasks.toml in the consumer's root mise.toml. A bun
+# repo (the default for new repos) pins nothing: bun — runtime, package
+# manager, formatter, type checker, bundler and test runner in one — comes
+# from the library's shared pin. An npm or pnpm repo still pins its runtime in
+# its own root [tools]:
 #   [tools]
-#   node = "24.20.0"
+#   node = "24.20.0"            # npm / pnpm repos only
 #   [task_config]
 #   includes = [".mise/common/tasks.toml", ".mise/archetypes/node/tasks.toml"]
 #
-# The contract is the repo's package.json scripts, by ecosystem convention:
-#   check / check:fix   biome (lint + format check / auto-fix)      optional
-#   format              a formatter pass beyond biome --write        optional
-#   typecheck           tsc --noEmit                                 required
-#   build               tsup / tsc / rollup                          required
-#   test:coverage       vitest with coverage → coverage/            optional
-# Optional scripts run only when package.json defines them, so a library with
-# no tests still has a (trivially passing) `test` task — the one place the
-# library tolerates a task that may do nothing, since the script set is the
-# repo's declaration of what applies. biome owns the code; prettier +
-# markdownlint (common) own the markdown.
+# The contract is the repo's package.json scripts, by ecosystem convention.
+# For a bun repo:
+#   check / check:fix   linter: biome lint [--write] today (its bin is a
+#                       node script: run it as `bun ./node_modules/
+#                       @biomejs/biome/bin/biome lint .` so no node is
+#                       needed), then bun lint [--fix] once a stable
+#                       bun ships it                                   optional
+#   format              bun fmt --no-script                            optional
+#   typecheck           bun check --no-script                          required
+#   build               bun build                                      required
+#   test:coverage       bun test --coverage → coverage/lcov.info and
+#                       coverage/junit.xml                             optional
+# (an npm / pnpm repo fills the same slots with its own tools: biome, tsc,
+# tsup, vitest, ...). Optional scripts run only when package.json defines
+# them, so a library with no tests still has a (trivially passing) `test`
+# task — the one place the library tolerates a task that may do nothing,
+# since the script set is the repo's declaration of what applies. The
+# repo's linter and formatter own the code; bun fmt + markdownlint (common)
+# own the markdown.
+#
+# Mind `--no-script`: `bun check` and `bun fmt` run a package.json script of
+# the same name (`check`, `fmt`) instead of the built-in when one exists. The
+# contract's `check` script is the linter, so a `typecheck` script of a bare
+# `bun check` would run `check` — and a `check` script that called `bun check`
+# would run itself forever. Always spell them `bun check --no-script` and
+# `bun fmt --no-script`.
 #
 # npm, pnpm and bun are all supported; every task goes through
 # scripts/pm.sh, which picks the package manager in this order:
@@ -33,9 +50,10 @@
 #      pnpm-lock.yaml → pnpm, bun.lock / bun.lockb → bun (lockfiles from more
 #      than one manager fail — set node_package_manager to pick)
 #   4. npm
-# pnpm and bun come from the shared lazy pins (checksum-locked, installed on
-# first use); a repo may pin its own version in its root [tools]. pnpm never
-# self-switches to the version "packageManager" names.
+# bun comes from the shared pin every repo installs, pnpm from a shared lazy
+# pin (installed on first use); both are checksum-locked, and a repo may pin
+# its own version in its root [tools]. pnpm never self-switches to the version
+# "packageManager" names.
 #
 # The install runs with the node_install_flags var (--ignore-scripts by
 # default, the safe choice for a library; npm also gets --no-fund). A GitHub
@@ -96,7 +114,8 @@ depends = ["node-install"]
 env = { TOOLCHAIN_NODE_PM = "{{vars.node_package_manager}}" }
 run = "{{config_root}}/.mise/archetypes/node/scripts/pm.sh run build"
 
-# vitest with coverage — emits coverage/cobertura-coverage.xml + coverage/junit.xml.
+# The test:coverage script — bun test emits coverage/lcov.info + coverage/junit.xml,
+# which the reusable CI uploads.
 [node-test]
 hide = true
 dir = "{{cwd}}"

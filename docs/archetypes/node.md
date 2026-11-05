@@ -6,9 +6,6 @@ scripts.
 
 ```toml
 # mise.toml
-[tools]
-node = "24.20.0"
-
 [task_config]
 includes = [".mise/common/tasks.toml", ".mise/archetypes/node/tasks.toml"]
 ```
@@ -18,25 +15,60 @@ includes = [".mise/common/tasks.toml", ".mise/archetypes/node/tasks.toml"]
 include .mise/archetypes/node/include.mk
 ```
 
-The repo pins its own `node`; the library pins none. prettier and markdownlint run on the library's bun, so they never
-touch the repo's runtime.
+A bun repo pins nothing. bun is the library's always-installed pin, and it is the repo's runtime, package manager,
+formatter, type checker, bundler and test runner in one. An npm or pnpm repo still pins its own runtime in the root
+`[tools]`, because the library pins no `node`:
+
+```toml
+[tools]
+node = "24.20.0"
+```
+
+The prose gate runs on the library's bun either way, so it never touches the repo's runtime.
 
 ## The package.json-script contract
 
-The archetype never calls biome, tsc or vitest itself. It runs the repo's package.json scripts, by ecosystem convention:
+The archetype never calls a linter, type checker, bundler or test runner itself. It runs the repo's package.json
+scripts, by ecosystem convention. For a bun repo:
 
-| Script          | Typically                          | Used by | Required? |
-| --------------- | ---------------------------------- | ------- | --------- |
-| `check`         | biome: lint and format check       | `lint`  | optional  |
-| `check:fix`     | biome: auto-fix                    | `fmt`   | optional  |
-| `format`        | a formatter pass beyond biome      | `fmt`   | optional  |
-| `typecheck`     | `tsc --noEmit`                     | `lint`  | required  |
-| `build`         | tsup, tsc or rollup                | `build` | required  |
-| `test:coverage` | vitest with coverage → `coverage/` | `test`  | optional  |
+| Script          | Typically                                                               | Used by | Required? |
+| --------------- | ----------------------------------------------------------------------- | ------- | --------- |
+| `check`         | the linter: `biome lint .` today, `bun lint` once a stable bun ships it | `lint`  | optional  |
+| `check:fix`     | the linter's auto-fix: `biome lint --write .`, later `bun lint --fix`   | `fmt`   | optional  |
+| `format`        | `bun fmt --no-script`                                                   | `fmt`   | optional  |
+| `typecheck`     | `bun check --no-script`                                                 | `lint`  | required  |
+| `build`         | `bun build`                                                             | `build` | required  |
+| `test:coverage` | `bun test --coverage` → `coverage/lcov.info` and `coverage/junit.xml`   | `test`  | optional  |
+
+biome's npm bin is a `#!/usr/bin/env node` launcher, so a bun repo with no Node.js runs it with bun:
+`bun ./node_modules/@biomejs/biome/bin/biome lint .`. An npm or pnpm repo fills the same slots with its own tools
+(biome, `tsc --noEmit`, tsup, vitest and so on).
 
 Optional scripts run only when `package.json` defines them. A library with no tests still gets a `test` task that passes
 trivially. This is the one place the library tolerates a task that may do nothing, because the script set is the repo's
-declaration of what applies. biome owns the code, and prettier plus markdownlint (from common) own the Markdown.
+declaration of what applies. The repo's linter and formatter own the code, and bun fmt plus markdownlint (from common)
+own the Markdown.
+
+!!! warning "Always pass `--no-script`"
+
+    `bun check` and `bun fmt` run a package.json script of the same name (`check`, `fmt`) instead of the built-in tool
+    when one exists. The contract's `check` script is the linter, so a `typecheck` script of a bare `bun check` would
+    run the linter, and a `check` script that called `bun check` would call itself forever. Spell them
+    `bun check --no-script` and `bun fmt --no-script`.
+
+A bun repo that commits a `.prettierrc.yaml` for its code options replaces the house prose options wholesale, so it
+carries them over for Markdown in an `overrides` entry:
+
+```yaml
+semi: false
+singleQuote: true
+printWidth: 100
+overrides:
+  - files: "*.md"
+    options:
+      proseWrap: always
+      printWidth: 120
+```
 
 ## Tasks
 
@@ -53,7 +85,9 @@ Every node task depends on a hidden `node-install` task, which installs exactly 
 from `node_modules`, never through `npx` or a global install.
 
 The reusable CI fails an action PR if the committed `dist/` differs from a fresh build, so an action's `build` must be
-reproducible. Such a repo lists `dist/**` in `.licenseignore` so the license pass doesn't stamp the bundle.
+reproducible. Such a repo lists `dist/**` in `.licenseignore` so the license pass doesn't stamp the bundle. If its
+`format` script runs `bun fmt`, it also lists `dist/` in a repo `.prettierignore`. That file replaces the house ignore
+list wholesale, so copy the house entries into it too.
 
 ## Package managers
 
@@ -67,9 +101,9 @@ Every node task goes through `archetypes/node/scripts/pm.sh`, which picks the pa
    `node_package_manager` (or `"packageManager"`) to pick one.
 4. **npm**.
 
-pnpm and bun come from the shared lazy pins, so they're checksum-locked and installed the first time a task needs them.
-CI needs no setup step. A repo may pin its own version in its root `[tools]` (`"aqua:pnpm/pnpm" = "…"`), and its pin
-wins.
+bun comes from the shared pin every repo installs, and pnpm from a shared lazy pin that installs the first time a task
+needs it. Both are checksum-locked, so CI needs no setup step. A repo may pin its own version in its root `[tools]`
+(`"aqua:pnpm/pnpm" = "…"`), and its pin wins.
 
 !!! note "pnpm never self-switches"
 

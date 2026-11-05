@@ -46,9 +46,9 @@ The root `mise.toml` does four jobs:
 === "node"
 
     ```toml
-    # mise.toml — a TypeScript library or GitHub Action
-    [tools]
-    node = "24.20.0"
+    # mise.toml — a TypeScript library or GitHub Action on bun
+    # (bun comes from the library; an npm or pnpm repo also pins
+    # node = "24.20.0" in [tools])
 
     # [vars]
     # node_install_flags = ""   # an action repo that runs lifecycle scripts

@@ -36,10 +36,11 @@ check_pm() {
 }
 
 # package.json is read with a JS runtime rather than a JSON-parsing
-# dependency: the repo's node pin when it has one, else the bun the library
-# always installs (`bun -e` runs the same CommonJS snippet).
+# dependency: always the bun the library installs in every repo, so the
+# dispatcher behaves the same whether or not the repo pins node (and a stale
+# global node shim with no version set can't break it).
 js() {
-  if command -v node >/dev/null 2>&1; then node "$@"; else bun "$@"; fi
+  bun "$@"
 }
 
 # Prints the package.json "packageManager" field's package-manager name (the

@@ -168,8 +168,9 @@ precedes `lint` inside `pr`.
   when defined). Works with npm, pnpm or bun (see [pnpm / bun](#pnpm--bun)). The locked install (`npm ci`,
   `pnpm install --frozen-lockfile`, `bun install --frozen-lockfile`) runs with `node_install_flags` (`--ignore-scripts`
   by default, plus `--no-fund` for npm); an action repo that runs lifecycle scripts sets `node_install_flags = ""`. The
-  older npm-only `npm_ci_flags` still works for npm repos but is deprecated. biome owns the code, prettier +
-  markdownlint own the markdown.
+  older npm-only `npm_ci_flags` still works for npm repos but is deprecated. A bun repo pins no runtime and fills the
+  contract with bun's built-ins (`bun fmt`, `bun check --no-script`, `bun build`, `bun test --coverage` → LCOV); its
+  linter owns the code, bun fmt + markdownlint own the markdown.
 - **python** — uv-native: `uv` (a shared pin) provisions Python from `.python-version`/`requires-python` and the project
   environment from `pyproject.toml`/`uv.lock`; ruff, pytest and pytest-cov come from the project's dev dependencies. A
   project without ruff or pytest (a docs-only site) skips those passes with a message. `build` runs `uv build` when
@@ -224,10 +225,12 @@ repo.
   rebuild it once: `mise install -f "go:golang.org/x/vuln/cmd/govulncheck"` (a fresh CI runner compiles it with the
   pinned Go automatically). golangci-lint, gotestsum and goreleaser stay shared (prebuilt binaries); override
   `golangci-lint` in the root `[tools]` if the repo's Go outpaces the shared pin.
-- **Node repos** pin `node` in their root `[tools]`; the library provides none. The npm-backed prettier and
-  markdownlint-cli2 run on the shared, always-installed `bun` instead (`prose.sh` puts a `node` → bun wrapper first on
-  its own PATH only), so repos lint prose without a `package.json` or Node.js. pnpm is a shared lazy pin (installed on
-  first use); a repo may pin its own pnpm or bun version in its root `[tools]`.
+- **Node repos** on bun pin nothing: the shared, always-installed `bun` is their runtime, package manager, formatter,
+  type checker, bundler and test runner. npm and pnpm repos pin `node` in their root `[tools]`; the library provides
+  none. The prose gate needs no Node.js either: `bun fmt` formats natively, and the npm-backed markdownlint-cli2 runs on
+  bun (`prose.sh` puts a `node` → bun wrapper first on its own PATH only), so repos lint prose without a `package.json`
+  or Node.js. pnpm is a shared lazy pin (installed on first use); a repo may pin its own pnpm or bun version in its root
+  `[tools]`.
 - **Python repos** pin nothing: `uv` provisions the interpreter. A repo that wants a mise-managed Python adds `python`
   to its root `[tools]`.
 - **Swift repos** pin `swift` in their root `[tools]`; `swift format` and `llvm-cov` ship inside that toolchain.

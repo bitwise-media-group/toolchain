@@ -7,7 +7,8 @@ shared pins.
 ## Steps
 
 1. **Move the runtime pins into the root `mise.toml [tools]`.** A Go repo adds `go` and
-   `"go:golang.org/x/vuln/cmd/govulncheck"`, and a Node repo adds `node`. Python repos pin nothing.
+   `"go:golang.org/x/vuln/cmd/govulncheck"`, and an npm or pnpm Node repo adds `node`. A bun Node repo and Python repos
+   pin nothing.
 
 2. **Replace the include.** Swap `includes = [".mise/tasks/<archetype>.toml"]` for
    `includes = [".mise/common/tasks.toml", ".mise/archetypes/<lang>/tasks.toml"]`, using the
@@ -21,6 +22,27 @@ shared pins.
 
 5. **Run `make lint` once and address zizmor.** Workflow lint now includes zizmor. Fix its findings, or accept them
    inline (`# zizmor: ignore[audit-name]`) or in a `zizmor.yml`.
+
+## Moving a Node repo to bun
+
+The node archetype is bun-first: a bun repo pins no runtime, because the library's own bun pin is its runtime, package
+manager, formatter, type checker, bundler and test runner. npm and pnpm repos keep working unchanged. To move one over:
+
+1. **Drop the `node` pin** from the root `[tools]` (and any `.node-version`).
+2. **Switch the package manager.** Delete `package-lock.json` (or `pnpm-lock.yaml`), set
+   `"packageManager": "bun@<version>"` in `package.json`, and run `bun install` to write `bun.lock`.
+3. **Point the scripts at bun's built-ins**: `typecheck` → `bun check --no-script`, `format` → `bun fmt --no-script`,
+   `build` → `bun build …`, `test:coverage` → `bun test --coverage`. Always keep `--no-script`, or `bun check` runs the
+   repo's `check` script (see [node](../archetypes/node.md)).
+4. **Drop the tools bun replaces** from `devDependencies` (typescript, the bundler, vitest, prettier) and add
+   `@types/bun`.
+5. **Have `bun test` write LCOV.** Set `coverageReporter = ["text", "lcov"]` and `coverageDir = "coverage"` under
+   `[test]` in `bunfig.toml`. The reusable CI uploads `coverage/lcov.info`.
+
+## Prettier is now `bun fmt`
+
+The prose gate formats Markdown with `bun fmt`, bun's built-in, Prettier-compatible formatter, instead of the pinned
+prettier. It reads the same `.prettierrc.yaml` and `.prettierignore`, so a repo needs no change.
 
 ## Archetype mapping
 
