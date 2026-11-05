@@ -22,23 +22,23 @@ failure.
 
 Defined in `common/tasks.toml` and available in every repo.
 
-| Task              | Hidden | Dir       | Runs                                                                     |
-| ----------------- | ------ | --------- | ------------------------------------------------------------------------ |
-| `commit`          |        | cwd       | `./commit.sh` if it exists and is executable.                            |
-| `license`         |        | cwd       | `common/scripts/license.sh`: addlicense, inject mode.                    |
-| `license-check`   | yes    | cwd       | `common/scripts/license.sh --check`.                                     |
-| `fmt-prose`       | yes    | repo root | `common/scripts/prose.sh fmt`: prettier `--write`, markdownlint `--fix`. |
-| `lint-prose`      | yes    | repo root | `common/scripts/prose.sh check`: markdownlint, prettier `--check`.       |
-| `actionlint`      |        | repo root | `actionlint`.                                                            |
-| `zizmor`          |        | repo root | `zizmor --min-severity {{vars.zizmor_min_severity}} .github/workflows`.  |
-| `lint-workflows`  | yes    | repo root | `common/scripts/lint-workflows.sh`: actionlint, then zizmor.             |
-| `lint-docker`     | yes    | repo root | `common/scripts/lint-docker.sh`: hadolint, grype on base images.         |
-| `lint-helm`       | yes    | repo root | `common/scripts/lint-helm.sh`: helm lint, kubescape per chart.           |
-| `lint-kustomize`  | yes    | repo root | `common/scripts/lint-kustomize.sh`: kubescape per kustomization.         |
-| `lint-shell`      | yes    | repo root | `common/scripts/lint-shell.sh`: shellcheck over `scripts/`, `hack/`.     |
-| `lint-containers` | yes    | —         | lint-docker, lint-helm, lint-kustomize.                                  |
-| `docs-build`      |        | cwd       | `common/scripts/docs.sh build`: `uv sync`, then `zensical build`.        |
-| `serve`           |        | cwd       | `common/scripts/docs.sh serve`: `uv sync`, then `zensical serve`.        |
+| Task              | Hidden | Dir       | Runs                                                                    |
+| ----------------- | ------ | --------- | ----------------------------------------------------------------------- |
+| `commit`          |        | cwd       | `./commit.sh` if it exists and is executable.                           |
+| `license`         |        | cwd       | `common/scripts/license.sh`: addlicense, inject mode.                   |
+| `license-check`   | yes    | cwd       | `common/scripts/license.sh --check`.                                    |
+| `fmt-prose`       | yes    | repo root | `common/scripts/prose.sh fmt`: `bun fmt`, markdownlint `--fix`.         |
+| `lint-prose`      | yes    | repo root | `common/scripts/prose.sh check`: markdownlint, `bun fmt --check`.       |
+| `actionlint`      |        | repo root | `actionlint`.                                                           |
+| `zizmor`          |        | repo root | `zizmor --min-severity {{vars.zizmor_min_severity}} .github/workflows`. |
+| `lint-workflows`  | yes    | repo root | `common/scripts/lint-workflows.sh`: actionlint, then zizmor.            |
+| `lint-docker`     | yes    | repo root | `common/scripts/lint-docker.sh`: hadolint, grype on base images.        |
+| `lint-helm`       | yes    | repo root | `common/scripts/lint-helm.sh`: helm lint, kubescape per chart.          |
+| `lint-kustomize`  | yes    | repo root | `common/scripts/lint-kustomize.sh`: kubescape per kustomization.        |
+| `lint-shell`      | yes    | repo root | `common/scripts/lint-shell.sh`: shellcheck over `scripts/`, `hack/`.    |
+| `lint-containers` | yes    | —         | lint-docker, lint-helm, lint-kustomize.                                 |
+| `docs-build`      |        | cwd       | `common/scripts/docs.sh build`: `uv sync`, then `zensical build`.       |
+| `serve`           |        | cwd       | `common/scripts/docs.sh serve`: `uv sync`, then `zensical serve`.       |
 
 ## go
 

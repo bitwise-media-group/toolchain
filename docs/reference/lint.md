@@ -39,14 +39,16 @@ addlicense would stamp `.tf` files.
 
 ## Prose
 
-`fmt-prose` and `lint-prose` run the pinned prettier and markdownlint-cli2 over every `*.md`, from the repo root:
+`fmt-prose` and `lint-prose` run `bun fmt` (bun's built-in, Prettier-compatible formatter) and the pinned
+markdownlint-cli2 over every `*.md`, from the repo root:
 
-| Mode    | Steps                                               |
-| ------- | --------------------------------------------------- |
-| `fmt`   | `prettier --write`, then `markdownlint-cli2 --fix`. |
-| `check` | `markdownlint-cli2`, then `prettier --check`.       |
+| Mode    | Steps                                        |
+| ------- | -------------------------------------------- |
+| `fmt`   | `bun fmt`, then `markdownlint-cli2 --fix`.   |
+| `check` | `markdownlint-cli2`, then `bun fmt --check`. |
 
-Prettier honours `.gitignore` as well as the prettier ignore file.
+bun fmt reads Prettier's config and ignore files, and honours `.gitignore` as well as the prettier ignore file. It
+always runs with `--no-script`, so a repo's own package.json `fmt` script can't take its place.
 
 ### House defaults
 
@@ -59,7 +61,7 @@ copy of a file, which then overrides that file **wholesale**:
 | `.prettierignore`         | `CHANGELOG.md`, `node_modules/`, `.mise/`, `.venv/`, `.build/`, `.swiftpm/`, `.claude/`.                                                                                                                   |
 | `.markdownlint-cli2.yaml` | All default rules; 120-column lines (tables exempt); sibling-only duplicate headings; fenced code blocks. Ignores `node_modules/`, `.mise/`, `.venv/`, `.build/`, `.swiftpm/`, `.claude/`, `CHANGELOG.md`. |
 
-Patterns in the house ignore files are deliberately unanchored, because prettier and markdownlint resolve them against
+Patterns in the house ignore files are deliberately unanchored, because bun fmt and markdownlint resolve them against
 the invoking repo, not against `.mise/`.
 
 ??? abstract ".markdownlint-cli2.yaml"

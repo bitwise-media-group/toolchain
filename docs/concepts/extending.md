@@ -97,13 +97,14 @@ The repo's root `mise.toml` has higher precedence than `.mise/config.toml`, so:
 
 ## Override house prose config
 
-Prettier, markdownlint and their ignore files are read from `.mise/` unless the repo commits its own copy:
+The `bun fmt` and markdownlint configs and their ignore files are read from `.mise/` unless the repo commits its own
+copy. bun fmt is Prettier-compatible, so its files keep Prettier's names:
 
-| File                      | Effect of committing your own                                  |
-| ------------------------- | -------------------------------------------------------------- |
-| `.prettierrc.yaml`        | Replaces the house prettier options (120 columns, prose wrap). |
-| `.prettierignore`         | Replaces the house prettier ignore list.                       |
-| `.markdownlint-cli2.yaml` | Replaces the house markdownlint rules, globs and ignores.      |
+| File                      | Effect of committing your own                                 |
+| ------------------------- | ------------------------------------------------------------- |
+| `.prettierrc.yaml`        | Replaces the house bun fmt options (120 columns, prose wrap). |
+| `.prettierignore`         | Replaces the house bun fmt ignore list.                       |
+| `.markdownlint-cli2.yaml` | Replaces the house markdownlint rules, globs and ignores.     |
 
 A repo's copy overrides that file **wholesale**: nothing merges. Start from the library's version and change what you
 need.

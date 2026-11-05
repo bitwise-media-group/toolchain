@@ -27,8 +27,8 @@ sees the fixed tree, then lint, test and build. For a Go repo:
 tidy → fmt → lint → test → build → commit
 ```
 
-Rollups are sequential, so the mutating passes (`go fmt`, `prettier --write`, `addlicense`) never race each other, and
-`fmt` always finishes before `lint` starts. If any step fails, the gate stops there.
+Rollups are sequential, so the mutating passes (`go fmt`, `bun fmt`, `addlicense`) never race each other, and `fmt`
+always finishes before `lint` starts. If any step fails, the gate stops there.
 
 The last step, `commit`, runs `./commit.sh` if the repo has an executable one. Coding agents that can't sign commits
 from inside their sandbox prepare one, so a green local run flows straight into a commit you sign. If there's no
@@ -95,7 +95,7 @@ A fresh CI runner does this automatically.
 
 ## When something fails
 
-- **Prose lint fails.** Run `make fmt`. Prettier and `markdownlint-cli2 --fix` fix most findings, and what's left is
+- **Prose lint fails.** Run `make fmt`. `bun fmt` and `markdownlint-cli2 --fix` fix most findings, and what's left is
   usually a line over 120 characters.
 - **License check fails.** Run `make fmt` to inject the missing SPDX header. If the file is generated, add it to
   `.licenseignore` instead.

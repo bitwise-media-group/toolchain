@@ -198,8 +198,8 @@ The node archetype drives whichever package manager the repo uses. Every node ta
 4. npm.
 
 pnpm and bun come from the shared `[tools]` pins (checksum-locked; pnpm installs lazily the first time a task needs it,
-and bun is always installed as the prose-tool runtime), so CI needs no setup step. A repo may pin its own version in its
-root `[tools]` (`"aqua:pnpm/pnpm" = "…"`), and its root pin wins. pnpm is stopped from switching to the version
+and bun is always installed, since the prose gate runs on it), so CI needs no setup step. A repo may pin its own version
+in its root `[tools]` (`"aqua:pnpm/pnpm" = "…"`), and its root pin wins. pnpm is stopped from switching to the version
 `"packageManager"` names; a mismatch is only reported as a warning. The install is skipped while
 `node_modules/.toolchain-install` is newer than `package.json`, every manager's lockfile and `pnpm-workspace.yaml`. A
 repo needs no `.gitignore` or `.licenseignore` change: `node_modules/` is already ignored, and the license tasks skip
@@ -208,12 +208,13 @@ repo needs no `.gitignore` or `.licenseignore` change: `node_modules/` is alread
 ## Developer tools
 
 Every developer CLI (`addlicense`, `golangci-lint`, `gotestsum`, `goreleaser`, `syft`, `grype`, `cosign`, `hadolint`,
-`helm`, `kubescape`, `shellcheck`, `terraform`, `tflint`, `terraform-docs`, `actionlint`, `zizmor`, `uv`, `prettier`,
-`markdownlint-cli2`, plus `bun` as the runtime prettier and markdownlint-cli2 run on) is pinned in `config.toml [tools]`
-— exact version plus per-platform sha256 checksums (and, where the publisher provides it, cosign/SLSA/GitHub-attestation
-provenance) — locked in `mise.lock`. Tasks run with the pinned tools already on PATH — there is no `tools/go.mod`, no
-`package.json` for linters, and no tool-path plumbing anywhere. mise installs a tool into its shared per-machine store
-the first time a task needs it (verifying the checksum) and reuses it across every repo.
+`helm`, `kubescape`, `shellcheck`, `terraform`, `tflint`, `terraform-docs`, `actionlint`, `zizmor`, `uv`,
+`markdownlint-cli2`, plus `bun`, whose built-in `bun fmt` formats the prose and which markdownlint-cli2 runs on) is
+pinned in `config.toml [tools]` — exact version plus per-platform sha256 checksums (and, where the publisher provides
+it, cosign/SLSA/GitHub-attestation provenance) — locked in `mise.lock`. Tasks run with the pinned tools already on PATH
+— there is no `tools/go.mod`, no `package.json` for linters, and no tool-path plumbing anywhere. mise installs a tool
+into its shared per-machine store the first time a task needs it (verifying the checksum) and reuses it across every
+repo.
 
 **Language runtimes are per-repo**, not fleet-wide, so each repo tracks its own version at its own cadence:
 
@@ -279,11 +280,11 @@ scripts also accept the old spellings (`APP`, `APP_PKG`, …) from the environme
   `pnpm-lock.yaml`) and an agent-prepared `commit.sh` by default; a repo's `.licenseignore` adds to that. Every
   archetype but terraform runs them — a node action repo whose committed `dist/` bundle must stay byte-identical to the
   build output lists `dist/**` in its `.licenseignore`.
-- **Prose is linted in every archetype, with zero per-repo config**: `fmt`/`lint` always run the pinned prettier +
-  markdownlint-cli2 over all `*.md` from the repo root, excluding generated and vendored content (`CHANGELOG.md`,
-  `node_modules/`, `.mise/`, `.venv/`, `.build/`, `.swiftpm/`, `.claude/`). The house defaults are this library's own
-  `.prettierrc.yaml` / `.prettierignore` / `.markdownlint-cli2.yaml`, read from `.mise/` — a repo that commits its own
-  copy of one of those files overrides that file wholesale.
+- **Prose is linted in every archetype, with zero per-repo config**: `fmt`/`lint` always run `bun fmt` (bun's
+  Prettier-compatible formatter) + the pinned markdownlint-cli2 over all `*.md` from the repo root, excluding generated
+  and vendored content (`CHANGELOG.md`, `node_modules/`, `.mise/`, `.venv/`, `.build/`, `.swiftpm/`, `.claude/`). The
+  house defaults are this library's own `.prettierrc.yaml` / `.prettierignore` / `.markdownlint-cli2.yaml`, read from
+  `.mise/` — a repo that commits its own copy of one of those files overrides that file wholesale.
 - **GitHub Actions workflows are linted in every archetype, with zero per-repo config**: `lint` runs actionlint (syntax,
   expressions, embedded shell) and zizmor (security: injection, unpinned actions, excessive permissions, dangerous
   triggers) over `.github/workflows`, no-op where there are none. zizmor fails the gate at **low** severity and up by

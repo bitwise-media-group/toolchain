@@ -515,44 +515,51 @@ url_api = "https://api.github.com/repos/kubescape/kubescape/releases/assets/6846
 provenance = "github-attestations"
 
 [[tools."aqua:oven-sh/bun"]]
-version = "1.4.3"
+version = "1.4.4"
 backend = "aqua:oven-sh/bun"
-specifiers = ["1.4.3"]
+specifiers = ["1.4.4"]
 
 [tools."aqua:oven-sh/bun"."platforms.linux-arm64"]
-checksum = "sha256:efa9813da5ed72423bf847f916e8d2c47c0d776add972354026a75e10da9aa21"
-url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.3/bun-linux-aarch64.zip"
-url_api = "https://api.github.com/repos/oven-sh/bun/releases/assets/626788529"
+checksum = "sha256:baa6bb36f51d6e58561e02bbea825038a9df454f673d6d776e8bbf86f8c7850e"
+checksum_source = "mise-versions"
+url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.4/bun-linux-aarch64.zip"
+url_api = "https://api.github.com/repos/oven-sh/bun/releases/assets/665259460"
 
 [tools."aqua:oven-sh/bun"."platforms.linux-arm64-musl"]
-checksum = "sha256:efa9813da5ed72423bf847f916e8d2c47c0d776add972354026a75e10da9aa21"
-url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.3/bun-linux-aarch64.zip"
-url_api = "https://api.github.com/repos/oven-sh/bun/releases/assets/626788529"
+checksum = "sha256:baa6bb36f51d6e58561e02bbea825038a9df454f673d6d776e8bbf86f8c7850e"
+checksum_source = "mise-versions"
+url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.4/bun-linux-aarch64.zip"
+url_api = "https://api.github.com/repos/oven-sh/bun/releases/assets/665259460"
 
 [tools."aqua:oven-sh/bun"."platforms.linux-x64"]
-checksum = "sha256:3e730528d89775f03f87f05c06787c4df4099d0a37f3f252e7b829cb23816e18"
-url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.3/bun-linux-x64.zip"
-url_api = "https://api.github.com/repos/oven-sh/bun/releases/assets/626788717"
+checksum = "sha256:bf8ccbfb2b0b80159e0f9a6d15c55317add8077534dbc6130a3edb52fccb395c"
+checksum_source = "mise-versions"
+url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.4/bun-linux-x64.zip"
+url_api = "https://api.github.com/repos/oven-sh/bun/releases/assets/665259752"
 
 [tools."aqua:oven-sh/bun"."platforms.linux-x64-musl"]
-checksum = "sha256:3e730528d89775f03f87f05c06787c4df4099d0a37f3f252e7b829cb23816e18"
-url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.3/bun-linux-x64.zip"
-url_api = "https://api.github.com/repos/oven-sh/bun/releases/assets/626788717"
+checksum = "sha256:bf8ccbfb2b0b80159e0f9a6d15c55317add8077534dbc6130a3edb52fccb395c"
+checksum_source = "mise-versions"
+url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.4/bun-linux-x64.zip"
+url_api = "https://api.github.com/repos/oven-sh/bun/releases/assets/665259752"
 
 [tools."aqua:oven-sh/bun"."platforms.macos-arm64"]
-checksum = "sha256:80afd4c069b46a6fa8f3ec520bebc750a7843e4a8d5b9583d29ad436c00a3403"
-url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.3/bun-darwin-aarch64.zip"
-url_api = "https://api.github.com/repos/oven-sh/bun/releases/assets/626788936"
+checksum = "sha256:c240d7f0ccb90c263a849fcdb09b7ee62630d921348ed6aafda86b9d577bc510"
+checksum_source = "mise-versions"
+url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.4/bun-darwin-aarch64.zip"
+url_api = "https://api.github.com/repos/oven-sh/bun/releases/assets/665260236"
 
 [tools."aqua:oven-sh/bun"."platforms.macos-x64"]
-checksum = "sha256:62660e6438eb872278877acca77e1152d5d031324df368d4a81b428211489d2d"
-url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.3/bun-darwin-x64.zip"
-url_api = "https://api.github.com/repos/oven-sh/bun/releases/assets/626789149"
+checksum = "sha256:50a3491f73abc2fe81673171a85762d3bc2cc1680ccecadd983de99adf77977e"
+checksum_source = "mise-versions"
+url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.4/bun-darwin-x64.zip"
+url_api = "https://api.github.com/repos/oven-sh/bun/releases/assets/665261039"
 
 [tools."aqua:oven-sh/bun"."platforms.windows-x64"]
-checksum = "sha256:0bf84e808552beea67bf1202a287a35c6c825d837b287b3f8e9dd513dba35d3d"
-url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.3/bun-windows-x64.zip"
-url_api = "https://api.github.com/repos/oven-sh/bun/releases/assets/626789809"
+checksum = "sha256:cd2c0fccc78f3ede1f50ca827a15f063eda13d4d150a3d0674f4f6e323d864a5"
+checksum_source = "mise-versions"
+url = "https://github.com/oven-sh/bun/releases/download/bun-v1.4.4/bun-windows-x64.zip"
+url_api = "https://api.github.com/repos/oven-sh/bun/releases/assets/665265163"
 
 [[tools."aqua:pnpm/pnpm"]]
 version = "12.17.0"
@@ -907,12 +914,6 @@ version = "0.24.0"
 aube = { path = "locks/npm-markdownlint-cli2/0.24.0", digest = "sha256:b38be5102270e6a898ac4ecc1dbe772e511f6dd4f1000dc6c6df8a992cecc761" }
 backend = "npm:markdownlint-cli2"
 specifiers = ["0.24.0"]
-
-[[tools."npm:prettier"]]
-version = "3.9.10"
-aube = { path = "locks/npm-prettier/3.9.10", digest = "sha256:0a52cf3e98ebe971f9f0c338c08e668756d290a8d14fe3fd308251084fba1522" }
-backend = "npm:prettier"
-specifiers = ["3.9.10"]
 
 [[tools.python]]
 version = "3.15.2"

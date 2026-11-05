@@ -5,7 +5,7 @@
 # archetype, which builds the documentation site. This thin caller runs the
 # reusable CI (v5+: mise-task aware), which discovers the canonical tasks the
 # repo defines via `mise tasks ls --name-only` and runs `make <target>` for
-# each: `lint` (addlicense + prettier + markdownlint, the actionlint + zizmor
+# each: `lint` (addlicense + bun fmt + markdownlint, the actionlint + zizmor
 # workflow lint, and shellcheck over the library's own task scripts; ruff is
 # skipped, it isn't a project dependency), `build` (zensical renders the docs
 # site, so a broken page fails the PR) and `test` (pytest isn't a project

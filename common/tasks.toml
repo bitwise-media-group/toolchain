@@ -50,7 +50,7 @@ dir = "{{cwd}}"
 env = { LICENSE_HOLDER = "{{vars.license_holder}}" }
 run = "{{config_root}}/.mise/common/scripts/license.sh --check"
 
-# Prose format/lint via the pinned prettier + markdownlint-cli2, wired into
+# Prose format/lint via bun fmt + the pinned markdownlint-cli2, wired into
 # every archetype: all *.md, excluding generated/vendored content. The house
 # defaults are this library's own .prettierrc.yaml / .prettierignore /
 # .markdownlint-cli2.yaml (read from .mise/ in a consumer); a repo that carries
@@ -155,7 +155,7 @@ description = "format prose, inject license headers"
 run = [{ task = "fmt-prose" }, { task = "license" }]
 
 [lint]
-description = "prose lint (prettier + markdownlint) + license, container, shell and workflow checks"
+description = "prose lint (bun fmt + markdownlint) + license, container, shell and workflow checks"
 run = [
   { task = "license-check" },
   { task = "lint-containers" },

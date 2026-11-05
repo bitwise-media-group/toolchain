@@ -133,7 +133,7 @@ Each archetype's `include.mk` adds its extra task names to `MISE_TASKS` (the go 
 
 Every task runs with the pinned tools already on `PATH`. mise resolves each `[tools]` entry against `mise.lock`,
 installs it into its shared per-machine store on first use, and verifies the checksum. There's no tool-path plumbing:
-scripts just call `golangci-lint`, `prettier` or `grype`. See [Pinned tools](tools.md).
+scripts just call `golangci-lint`, `markdownlint-cli2` or `grype`. See [Pinned tools](tools.md).
 
 ## This repository's own layout
 

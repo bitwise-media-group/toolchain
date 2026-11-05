@@ -9,7 +9,7 @@ Each entry names the tool by an **explicit backend** and an **exact version**:
 
 ```toml
 "aqua:golangci/golangci-lint" = { version = "2.14.0", lazy = true, lazy_bins = "golangci-lint" }
-"npm:prettier" = "3.9.9"
+"npm:markdownlint-cli2" = "0.24.0"
 "github:google/addlicense" = "1.2.0"
 ```
 
@@ -20,10 +20,10 @@ Each entry names the tool by an **explicit backend** and an **exact version**:
   provenance wherever the publisher provides it. mise verifies them on every install, and all verification is on by
   default.
 
-Every tool is a **prebuilt release binary**, except prettier and markdownlint-cli2. Those are npm packages with no
-standalone binaries, so mise's built-in aube installs them from the npm registry, and they run on the bun pinned
-alongside them. Their shims call `node`, so `prose.sh` puts a `node` wrapper that execs bun first on its own PATH; no
-Node.js is installed.
+Every tool is a **prebuilt release binary**, except markdownlint-cli2. It's an npm package with no standalone binary, so
+mise's built-in aube installs it from the npm registry, and it runs on the bun pinned alongside it. Its shim calls
+`node`, so `prose.sh` puts a `node` wrapper that execs bun first on its own PATH; no Node.js is installed. The prose
+formatter needs no package at all: it's `bun fmt`, built into bun and compatible with Prettier.
 
 The full, current list of pins is on the [Tool pins](../reference/tool-pins.md) reference page, generated from
 `config.toml` itself.
@@ -34,8 +34,8 @@ Most pins carry `lazy = true` with `lazy_bins`. mise doesn't install a lazy tool
 something actually runs the named binary. A Python docs repo never downloads golangci-lint or terraform, and a fresh CI
 runner for a Markdown repo only fetches the prose and workflow linters.
 
-The always-installed core is small: bun (as the prose runtime), prettier, markdownlint-cli2, addlicense, shellcheck,
-actionlint and zizmor.
+The always-installed core is small: bun (the prose formatter and markdownlint's runtime), markdownlint-cli2, addlicense,
+shellcheck, actionlint and zizmor.
 
 ## Supply-chain guards
 
@@ -50,9 +50,9 @@ minimum_release_age = "3d"
 
 - **`lockfile = true`**: installs resolve against `mise.lock` and verify its checksums.
 - **`minimum_release_age = "3d"`**: a release must be at least three days old before mise resolves it. mise forwards
-  this into npm's transitive resolution (`--min-release-age`), so even prettier's and markdownlint-cli2's transitive
-  dependencies can't pull a release younger than the cooldown. Renovate applies the same three-day `minimumReleaseAge`
-  to the pins themselves, surfaced as the `renovate/stability-days` check.
+  this into npm's transitive resolution (`--min-release-age`), so even markdownlint-cli2's transitive dependencies can't
+  pull a release younger than the cooldown. Renovate applies the same three-day `minimumReleaseAge` to the pins
+  themselves, surfaced as the `renovate/stability-days` check.
 - **`minimum_release_age_excludes`** exempts our own first-party CLIs (`github:bitwise-media-group/dotty`, `evolve`,
   `patchy`), so a release we cut rolls out at once, and `core:go`, so toolchain security releases land promptly. mise
   has no org-wide wildcard, so each first-party tool is listed by its full backend ID. Consumers can append entries,

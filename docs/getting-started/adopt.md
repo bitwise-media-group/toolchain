@@ -165,7 +165,7 @@ dist/
 generated, one pattern per line. A node action repo, for example, lists `dist/**` because its committed bundle must stay
 byte-identical to the build output.
 
-**Prose and workflow config.** You need none. Prettier, markdownlint, actionlint and zizmor read the library's house
+**Prose and workflow config.** You need none. bun fmt, markdownlint, actionlint and zizmor read the library's house
 defaults from `.mise/`. Commit your own `.prettierrc.yaml`, `.prettierignore` or `.markdownlint-cli2.yaml` only if you
 want to override that file wholesale.
 

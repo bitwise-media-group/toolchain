@@ -1,5 +1,10 @@
 # Copyright 2026 BitWise Media Group Ltd
 # SPDX-License-Identifier: MIT
 
+# House prose layout for the whole fleet, applied by `bun fmt` (bun's built-in,
+# Prettier-compatible formatter, which reads Prettier config files). Read as
+# .mise/.prettierrc.yaml in a consumer unless the repo carries its own
+# .prettierrc.yaml, which then replaces this file wholesale — a repo that adds
+# code options should keep these two for *.md (e.g. in an `overrides` entry).
 proseWrap: always
 printWidth: 120

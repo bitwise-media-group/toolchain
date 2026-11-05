@@ -16,7 +16,7 @@
 # project's own dev dependencies, so the repo controls their versions; a
 # project without them (a docs-only site) skips those passes with a message
 # rather than failing — see scripts/. The house prose format/lint runs
-# alongside ruff: ruff owns the code, prettier + markdownlint own the
+# alongside ruff: ruff owns the code, bun fmt + markdownlint own the
 # markdown. `docs-build` and `serve` come from common; what this archetype
 # adds for a docs site is that `build` (and so CI) builds it too.
 

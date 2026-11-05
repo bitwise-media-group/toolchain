@@ -114,7 +114,7 @@ the header and the page body via the `tabs` block; the article `content` block i
                         <div class="tc-dim">$ make pr <span class="tc-blink"></span></div>
                         <div class="tc-run"><span class="t">tidy</span><span class="d">go mod tidy</span><span class="ok">✓</span></div>
                         <div class="tc-run"><span class="t">fmt</span><span class="d">go fmt · golangci-lint --fix</span><span class="ok">✓</span></div>
-                        <div class="tc-run"><span class="t"></span><span class="d">prettier · markdownlint · addlicense</span><span class="ok">✓</span></div>
+                        <div class="tc-run"><span class="t"></span><span class="d">bun fmt · markdownlint · addlicense</span><span class="ok">✓</span></div>
                         <div class="tc-run"><span class="t">lint</span><span class="d">golangci-lint · govulncheck</span><span class="ok">✓</span></div>
                         <div class="tc-run"><span class="t"></span><span class="d">hadolint · grype · kubescape · shellcheck</span><span class="ok">✓</span></div>
                         <div class="tc-run"><span class="t"></span><span class="d">actionlint · zizmor · prose · license</span><span class="ok">✓</span></div>
@@ -135,7 +135,7 @@ the header and the page body via the `tabs` block; the article `content` block i
     <!-- MARQUEE -->
     {#- The pinned CLIs the toolchain puts on PATH. Rendered twice so the translateX(-50%) scroll loops seamlessly;
     aria-hidden because it is decorative and would otherwise be announced twice. -#}
-    {% set tc_marquee = ["mise", "mise.lock", "addlicense", "prettier", "markdownlint-cli2", "actionlint", "zizmor",
+    {% set tc_marquee = ["mise", "mise.lock", "addlicense", "markdownlint-cli2", "actionlint", "zizmor",
     "shellcheck", "hadolint", "grype", "syft", "cosign", "helm", "kubescape", "golangci-lint", "gotestsum",
     "goreleaser", "uv", "pnpm", "bun", "terraform", "tflint", "terraform-docs"] %}
     <div class="tc-marquee" aria-hidden="true">
@@ -217,7 +217,7 @@ the header and the page body via the `tabs` block; the article `content` block i
                 </div>
                 <h3>Zero-config house policy</h3>
                 <p>
-                    SPDX headers via addlicense, prose via prettier + markdownlint, and workflows via actionlint +
+                    SPDX headers via addlicense, prose via bun fmt + markdownlint, and workflows via actionlint +
                     zizmor — in every archetype, with house defaults read from <code>.mise/</code>.
                 </p>
             </div>

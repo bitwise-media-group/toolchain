@@ -18,7 +18,7 @@ include .mise/common/include.mk
 
 | Task         | What it runs                                                                      |
 | ------------ | --------------------------------------------------------------------------------- |
-| `fmt`        | `fmt-prose` (prettier `--write`, markdownlint `--fix`), then `license`.           |
+| `fmt`        | `fmt-prose` (`bun fmt`, markdownlint `--fix`), then `license`.                    |
 | `lint`       | `license-check`, `lint-containers`, `lint-shell`, `lint-workflows`, `lint-prose`. |
 | `ci`         | `lint`: the only gate a common-only repo has.                                     |
 | `pr`         | `fmt`, then `lint`.                                                               |
@@ -36,7 +36,7 @@ There's no `build` or `test` task. The reusable CI discovers that and runs only 
 Even when an archetype is included, common still supplies the shared passes the archetype's rollups call:
 
 - **`license` / `license-check`**: SPDX headers via addlicense, with the house ignores plus `.licenseignore`.
-- **`fmt-prose` / `lint-prose`**: prettier and markdownlint over every `*.md`.
+- **`fmt-prose` / `lint-prose`**: `bun fmt` and markdownlint over every `*.md`.
 - **`lint-workflows`**: actionlint, then zizmor, over `.github/workflows`.
 - **`lint-containers`**: the composite of `lint-docker`, `lint-helm` and `lint-kustomize`.
 - **`lint-shell`**: shellcheck over `scripts/` and `hack/`.

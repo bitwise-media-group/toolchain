@@ -17,22 +17,25 @@
 # selection always lives in the consumer's root mise.toml (this repo's own
 # .config/mise.toml dogfoods the same way).
 #
-# Language runtimes are NOT pinned here. go, python, node and swift are
-# per-repo concerns so each repo can track its own version at its own cadence:
-# a Go repo pins `go` (and govulncheck, below) in its root [tools], a Node repo
-# pins `node` (the library provides none), a Swift repo pins `swift` (swift
-# format and llvm-cov ship in that toolchain), and a Python repo lets uv
+# Language runtimes are NOT pinned here (bun aside, below). go, python, node
+# and swift are per-repo concerns so each repo can track its own version at its
+# own cadence: a Go repo pins `go` (and govulncheck, below) in its root
+# [tools], an npm or pnpm Node repo pins `node` (the library provides none; a
+# bun repo pins nothing and runs on the shared bun), a Swift repo pins `swift`
+# (swift format and llvm-cov ship in that toolchain), and a Python repo lets uv
 # provision Python from .python-version / requires-python (or pins `python`
 # itself). Each repo's own Renovate bumps those pins.
 #
-# bun IS always installed here, as the runtime for the npm-backed prose tools
-# (prettier, markdownlint-cli2): aube installs them, but their shims
-# `exec node <entry>`, and repos must be able to lint prose without a
-# package.json or a Node.js install. common/scripts/prose.sh puts
-# common/bin/ first on PATH, whose `node` is a wrapper that execs bun, so the
-# prose tools run on bun. The wrapper is scoped to prose.sh alone: it
-# never shadows a Node repo's own `node` pin anywhere else. The same pin also
-# serves the node archetype's bun repos.
+# bun IS always installed here: every repo must be able to format and lint
+# prose without a package.json or a Node.js install. `bun fmt` (bun's
+# built-in, Prettier-compatible formatter) formats the markdown natively. The
+# one npm-backed prose tool left, markdownlint-cli2, is installed by aube, but
+# its shim `exec`s node: common/scripts/prose.sh puts common/bin/ first on
+# PATH, whose `node` is a wrapper that execs bun, so it runs on bun too. The
+# wrapper is scoped to prose.sh alone: it never shadows a Node repo's own
+# `node` pin anywhere else. The same pin is the runtime, package manager,
+# formatter, type checker, bundler and test runner of the node archetype's bun
+# repos, which therefore pin no runtime of their own.
 #
 # govulncheck is deliberately absent: it publishes no binaries and must be
 # `go install`ed by the same Go the repo builds with, so every Go repo pins
@@ -50,11 +53,11 @@
 # GitHub-attestation verification where the publisher provides it (all on by
 # default).
 #
-# prettier and markdownlint-cli2 are npm packages with no standalone binaries,
-# so they install from the npm registry (npm: backend) via aube and run on the
-# bun pinned below (see above). Top-level versions are pinned exactly here
-# (checksums in mise.lock); unlike a package-lock.json, transitive npm dependencies are not
-# pinned (prettier has none; markdownlint-cli2's tree is small). mise forwards
+# markdownlint-cli2 is an npm package with no standalone binary, so it
+# installs from the npm registry (npm: backend) via aube and runs on the bun
+# pinned below (see above). Its top-level version is pinned exactly here
+# (checksums in mise.lock); unlike a package-lock.json, its transitive npm
+# dependencies are not pinned (the tree is small). mise forwards
 # minimum_release_age into transitive resolution (npm >= 11.10
 # --min-release-age), so even transitives can't pull a release younger than
 # the cooldown. npm.package_manager is left at its "auto" default: aube is
@@ -118,8 +121,7 @@ minimum_release_age_excludes = [
 "core:python" = { version = "3.15.2", lazy = true }
 
 "npm:markdownlint-cli2" = "0.24.0"
-"npm:prettier" = "3.9.10"
-"aqua:oven-sh/bun" = "1.4.3"
+"aqua:oven-sh/bun" = "1.4.4"
 
 "github:google/addlicense" = "1.2.0"
 
