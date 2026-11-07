@@ -1,5 +1,19 @@
 # Changelog
 
+## [4.0.1](https://github.com/bitwise-media-group/toolchain/compare/v4.0.0...v4.0.1) (2026-11-07)
+
+
+### Bug Fixes
+
+* **deps:** lock file maintenance ([#208](https://github.com/bitwise-media-group/toolchain/issues/208)) ([1583c20](https://github.com/bitwise-media-group/toolchain/commit/1583c20a75b28ac2390a3e494b2576f3a0397614))
+* **deps:** lock file maintenance ([#218](https://github.com/bitwise-media-group/toolchain/issues/218)) ([56232f8](https://github.com/bitwise-media-group/toolchain/commit/56232f826bb6ba560b2f19dcc565b80533dbccb0))
+* **deps:** lock file maintenance ([#220](https://github.com/bitwise-media-group/toolchain/issues/220)) ([4b18f7b](https://github.com/bitwise-media-group/toolchain/commit/4b18f7b94659427d564d526ed0625714364baa1f))
+* **deps:** update dependency aqua:anchore/grype to v0.121.1 ([#213](https://github.com/bitwise-media-group/toolchain/issues/213)) ([6a02c09](https://github.com/bitwise-media-group/toolchain/commit/6a02c0934a0b169430d7146e63831de72c8178ce))
+* **deps:** update dependency aqua:anchore/syft to v1.56.0 ([#214](https://github.com/bitwise-media-group/toolchain/issues/214)) ([3be4703](https://github.com/bitwise-media-group/toolchain/commit/3be4703cfdf1903251c758e10aa7fd7588003781))
+* **deps:** update dependency aqua:astral-sh/uv to v0.13.7 ([#216](https://github.com/bitwise-media-group/toolchain/issues/216)) ([da8fab9](https://github.com/bitwise-media-group/toolchain/commit/da8fab9acb22a7bc73de286f18e88c4f2a1a4806))
+* **deps:** update dependency aqua:docker/buildx to v0.38.2 ([#219](https://github.com/bitwise-media-group/toolchain/issues/219)) ([535e7fa](https://github.com/bitwise-media-group/toolchain/commit/535e7fa5e262f7ba97ac0e3c602b085c6592f096))
+* **deps:** update dependency aqua:zizmorcore/zizmor to v1.32.0 ([#217](https://github.com/bitwise-media-group/toolchain/issues/217)) ([2d13e48](https://github.com/bitwise-media-group/toolchain/commit/2d13e48f4f04c3a30d358617ef0deb21cc3226a1))
+
 ## [4.0.0](https://github.com/bitwise-media-group/toolchain/compare/v3.4.0...v4.0.0) (2026-11-05)
 
 
