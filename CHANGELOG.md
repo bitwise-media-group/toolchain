@@ -1,5 +1,37 @@
 # Changelog
 
+## [4.1.0](https://github.com/bitwise-media-group/toolchain/compare/v4.0.0...v4.1.0) (2026-11-10)
+
+
+### Features
+
+* **archetypes:** build the docs site in every archetype's build ([c63771d](https://github.com/bitwise-media-group/toolchain/commit/c63771dcfc722e8d389ad8da8a65291670f0bad7))
+* **containers:** add an archetype for repos that publish OCI artifacts with patchy ([010097e](https://github.com/bitwise-media-group/toolchain/commit/010097ea4168dde0276b17f6a7e0500da8f75376))
+* **tools:** pin fnox as a shared lazy tool for repository secrets ([543e0dd](https://github.com/bitwise-media-group/toolchain/commit/543e0ddd93267e2054f7cb653fd4fedbffb2d6b7))
+
+
+### Bug Fixes
+
+* **archetypes:** build the docs site in ci and pr, not in build ([8eec8bf](https://github.com/bitwise-media-group/toolchain/commit/8eec8bfb534db67f331b2d0ee0c6380f64f8ba43))
+* **deps:** lock file maintenance ([#208](https://github.com/bitwise-media-group/toolchain/issues/208)) ([1583c20](https://github.com/bitwise-media-group/toolchain/commit/1583c20a75b28ac2390a3e494b2576f3a0397614))
+* **deps:** lock file maintenance ([#218](https://github.com/bitwise-media-group/toolchain/issues/218)) ([56232f8](https://github.com/bitwise-media-group/toolchain/commit/56232f826bb6ba560b2f19dcc565b80533dbccb0))
+* **deps:** lock file maintenance ([#220](https://github.com/bitwise-media-group/toolchain/issues/220)) ([4b18f7b](https://github.com/bitwise-media-group/toolchain/commit/4b18f7b94659427d564d526ed0625714364baa1f))
+* **deps:** lock file maintenance ([#225](https://github.com/bitwise-media-group/toolchain/issues/225)) ([940f9b5](https://github.com/bitwise-media-group/toolchain/commit/940f9b515e92b6d4143b434dcf7cd70e361b7956))
+* **deps:** lock file maintenance ([#231](https://github.com/bitwise-media-group/toolchain/issues/231)) ([870b767](https://github.com/bitwise-media-group/toolchain/commit/870b767bd23a211bac61cba55a7edefba4ec3aab))
+* **deps:** update dependency aqua:anchore/grype to v0.121.1 ([#213](https://github.com/bitwise-media-group/toolchain/issues/213)) ([6a02c09](https://github.com/bitwise-media-group/toolchain/commit/6a02c0934a0b169430d7146e63831de72c8178ce))
+* **deps:** update dependency aqua:anchore/grype to v0.121.2 ([#226](https://github.com/bitwise-media-group/toolchain/issues/226)) ([a314d0b](https://github.com/bitwise-media-group/toolchain/commit/a314d0bfd8e6dc0f84e82e77fcc097ec5ba97ea3))
+* **deps:** update dependency aqua:anchore/syft to v1.56.0 ([#214](https://github.com/bitwise-media-group/toolchain/issues/214)) ([3be4703](https://github.com/bitwise-media-group/toolchain/commit/3be4703cfdf1903251c758e10aa7fd7588003781))
+* **deps:** update dependency aqua:anchore/syft to v1.57.0 ([#227](https://github.com/bitwise-media-group/toolchain/issues/227)) ([12b3ce5](https://github.com/bitwise-media-group/toolchain/commit/12b3ce51ef69728d90d81dbed6125409f7041e33))
+* **deps:** update dependency aqua:astral-sh/uv to v0.13.7 ([#216](https://github.com/bitwise-media-group/toolchain/issues/216)) ([da8fab9](https://github.com/bitwise-media-group/toolchain/commit/da8fab9acb22a7bc73de286f18e88c4f2a1a4806))
+* **deps:** update dependency aqua:docker/buildx to v0.38.2 ([#219](https://github.com/bitwise-media-group/toolchain/issues/219)) ([535e7fa](https://github.com/bitwise-media-group/toolchain/commit/535e7fa5e262f7ba97ac0e3c602b085c6592f096))
+* **deps:** update dependency aqua:goreleaser/goreleaser to v2.20.0 ([#222](https://github.com/bitwise-media-group/toolchain/issues/222)) ([73cd4d1](https://github.com/bitwise-media-group/toolchain/commit/73cd4d1fc8034b2779d5d789164c650f0dafcd38))
+* **deps:** update dependency aqua:kubescape/kubescape to v4.0.18 ([#221](https://github.com/bitwise-media-group/toolchain/issues/221)) ([9286bc2](https://github.com/bitwise-media-group/toolchain/commit/9286bc2464f85f9a5f682b6e8c57236c4a29c56d))
+* **deps:** update dependency aqua:kubescape/kubescape to v4.0.19 ([#224](https://github.com/bitwise-media-group/toolchain/issues/224)) ([6822e4e](https://github.com/bitwise-media-group/toolchain/commit/6822e4ee3be5ce7a3d98c00143431f3b3c459ff4))
+* **deps:** update dependency aqua:kubescape/kubescape to v4.0.20 ([#228](https://github.com/bitwise-media-group/toolchain/issues/228)) ([78ede04](https://github.com/bitwise-media-group/toolchain/commit/78ede044fbb0a8fa39d74c6f88bb5fa0788ad070))
+* **deps:** update dependency aqua:pnpm/pnpm to v12.18.0 ([#223](https://github.com/bitwise-media-group/toolchain/issues/223)) ([36129de](https://github.com/bitwise-media-group/toolchain/commit/36129dec4dd053c96d3db86edd23ceb7eada7e0f))
+* **deps:** update dependency aqua:zizmorcore/zizmor to v1.32.0 ([#217](https://github.com/bitwise-media-group/toolchain/issues/217)) ([2d13e48](https://github.com/bitwise-media-group/toolchain/commit/2d13e48f4f04c3a30d358617ef0deb21cc3226a1))
+* **terraform:** inject secrets with fnox exec instead of dotty env run ([bc4f71e](https://github.com/bitwise-media-group/toolchain/commit/bc4f71ea0bc460ba8c1c8641651a73d7e0325fee))
+
 ## [4.0.0](https://github.com/bitwise-media-group/toolchain/compare/v3.4.0...v4.0.0) (2026-11-05)
 
 
