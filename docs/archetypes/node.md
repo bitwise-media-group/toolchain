@@ -76,7 +76,7 @@ overrides:
 | ------- | ------------------------------------------------------------------------------------------------- |
 | `fmt`   | `check:fix` and `format` scripts (if defined), prose format, license headers.                     |
 | `lint`  | license check, `check` script (if defined) then `typecheck`, containers, shell, workflows, prose. |
-| `build` | The `build` script.                                                                               |
+| `build` | The `build` script, then the docs site (`docs-build`).                                            |
 | `test`  | The `test:coverage` script, if defined.                                                           |
 | `ci`    | `lint`, `build`, `test`.                                                                          |
 | `pr`    | `fmt`, `lint`, `build`, `test`, `commit`.                                                         |

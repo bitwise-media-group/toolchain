@@ -31,14 +31,14 @@ New tasks go in the root `mise.toml` under `[tasks]`:
 description = "regenerate the CLI reference and build the docs site"
 dir = "{{cwd}}"
 run = [
-  { task = "build" },
+  { task = "go-build" },
   "./dotty docs --out docs/cli --format markdown",
   { task = "docs-build" },
 ]
 ```
 
-Repo-local tasks can call any library task by name (`build`, `docs-build`) and use the pinned tools on `PATH`. The make
-shim's `.DEFAULT` catch-all forwards unknown targets, so `make docs` works without touching the Makefile.
+Repo-local tasks can call any library task by name (`go-build`, `docs-build`) and use the pinned tools on `PATH`. The
+make shim's `.DEFAULT` catch-all forwards unknown targets, so `make docs` works without touching the Makefile.
 
 When the list grows, move the tasks to a separate file in the same simplified format the library uses. dotty and evolve
 keep theirs in a root `tasks.toml`.

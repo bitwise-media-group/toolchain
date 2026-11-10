@@ -40,12 +40,6 @@ hide = true
 dir = "{{config_root}}"
 run = "{{config_root}}/.mise/archetypes/containers/scripts/patchy.sh build --dry-run"
 
-# The documentation site, when the repo has one (see scripts/site.sh).
-[site-build]
-hide = true
-dir = "{{config_root}}"
-run = "{{config_root}}/.mise/archetypes/containers/scripts/site.sh"
-
 # Build, scan, publish and sign the build entries — normally a publish
 # workflow's job (it needs registry logins and, keyless, an OIDC token), not a
 # workstation's. Tags never move, so a re-run reports skipped-current.
@@ -120,7 +114,7 @@ run = [
 
 [build]
 description = "build and scan every patchy build entry without publishing, then the docs site"
-run = [{ task = "containers-build" }, { task = "site-build" }]
+run = [{ task = "containers-build" }, { task = "docs-build" }]
 
 [ci]
 description = "the gates the reusable CI workflow runs"

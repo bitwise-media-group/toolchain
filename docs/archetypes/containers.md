@@ -57,8 +57,8 @@ Every task runs from the repo root, because patchy finds its config there and re
 must stay byte-identical to whatever generated or reviewed them.
 
 `build` is the pull-request gate. It proves every artifact builds and passes its scans, with no push credentials. In a
-mirror store with no `build:` entries, patchy reports that there is nothing to build and succeeds. The docs-site half
-runs the `docs-build` task by name when the repo has a `zensical.toml`, and skips with a message when it doesn't.
+mirror store with no `build:` entries, patchy reports that there is nothing to build and succeeds. Like every
+archetype's, `build` then runs common's `docs-build`, which skips with a message when the repo has no `zensical.toml`.
 
 No rollup runs a `mirror-*` task. `mirror-validate` pulls every upstream chart, and its lint stage checks allowlist
 expiry against today's date. In `lint` or `ci`, an entry expiring anywhere in the store would fail every pull request. A

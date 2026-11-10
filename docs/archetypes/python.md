@@ -33,7 +33,7 @@ project without them, such as a docs-only site, skips those passes with a messag
 | `fmt`   | License headers **first**, then `ruff format` and `ruff check --fix`, then prose format.    |
 | `lint`  | license check, `ruff check` and `ruff format --check`, containers, shell, workflows, prose. |
 | `test`  | pytest with a JUnit report (and Cobertura coverage when pytest-cov is installed).           |
-| `build` | `uv build` and/or `zensical build`, depending on what the project declares.                 |
+| `build` | `uv build` when the project declares a package, then the docs site (`docs-build`).          |
 | `ci`    | `lint`, `test`, `build`.                                                                    |
 | `pr`    | `fmt`, `lint`, `test`, `build`, `commit`.                                                   |
 
@@ -48,15 +48,13 @@ Every Python task depends on a hidden `sync` task (`uv sync`), so the environmen
 
 ### What `build` builds
 
-`build` looks at the project and builds whatever it declares:
-
-- **`uv build`** (sdist and wheel into `dist/`) when `pyproject.toml` has a `[build-system]` table;
-- **`zensical build`** (the site into `site/`) when a `zensical.toml` is present;
-- both, if both apply, or neither, with a message.
+`build` runs `uv build` (sdist and wheel into `dist/`) when `pyproject.toml` has a `[build-system]` table, and skips it
+with a message otherwise. Then, like every archetype, it runs common's `docs-build`, which builds the site into `site/`
+when a `zensical.toml` is present.
 
 A docs-only site has a `pyproject.toml` with `zensical` as a dependency and no `[build-system]`, so `build` is just the
-site build. That's the reason to pick this archetype for one: common alone gives it `docs-build` and `serve`, but no
-`build`, so CI would never build the site.
+site build. Pick this archetype for one rather than common alone: common has no `build`, so the reusable CI's build job
+would never run.
 
 ### What `test` writes
 

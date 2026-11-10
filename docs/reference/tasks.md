@@ -12,33 +12,33 @@ failure.
 | ------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------------- |
 | `fmt`   | fmt-prose, license                                                     | go-fmt, fmt-prose, license                                                      | node-fmt, fmt-prose, license                                                      | license, py-fmt, fmt-prose                                                      | swift-fmt, fmt-prose, license                                                      | tf-fmt, fmt-prose                                                | fmt-prose, license                                                     |
 | `lint`  | license-check, lint-containers, lint-shell, lint-workflows, lint-prose | license-check, go-lint, lint-containers, lint-shell, lint-workflows, lint-prose | license-check, node-lint, lint-containers, lint-shell, lint-workflows, lint-prose | license-check, py-lint, lint-containers, lint-shell, lint-workflows, lint-prose | license-check, swift-lint, lint-containers, lint-shell, lint-workflows, lint-prose | tf-lint, lint-containers, lint-shell, lint-workflows, lint-prose | license-check, lint-containers, lint-shell, lint-workflows, lint-prose |
-| `build` | —                                                                      | go-build                                                                        | node-build                                                                        | py-build                                                                        | swift-build                                                                        | —                                                                | containers-build, site-build                                           |
+| `build` | —                                                                      | go-build, docs-build                                                            | node-build, docs-build                                                            | py-build, docs-build                                                            | swift-build, docs-build                                                            | —                                                                | containers-build, docs-build                                           |
 | `test`  | —                                                                      | go-test                                                                         | node-test                                                                         | py-test                                                                         | swift-test                                                                         | —                                                                | — (repo-local)                                                         |
-| `docs`  | —                                                                      | — (repo-local)                                                                  | —                                                                                 | —                                                                               | —                                                                                  | tf-docs                                                          | —                                                                      |
-| `ci`    | lint                                                                   | lint, test, build                                                               | lint, build, test                                                                 | lint, test, build                                                               | lint, test, build                                                                  | lint, docs                                                       | lint, build                                                            |
-| `pr`    | fmt, lint                                                              | tidy, fmt, lint, test, build, commit                                            | fmt, lint, build, test, commit                                                    | fmt, lint, test, build, commit                                                  | fmt, lint, test, build, commit                                                     | fmt, lint, docs                                                  | fmt, lint, build, commit                                               |
+| `docs`  | —                                                                      | — (repo-local)                                                                  | —                                                                                 | —                                                                               | —                                                                                  | tf-docs, docs-build                                              | —                                                                      |
+| `ci`    | lint, docs-build                                                       | lint, test, build                                                               | lint, build, test                                                                 | lint, test, build                                                               | lint, test, build                                                                  | lint, docs                                                       | lint, build                                                            |
+| `pr`    | fmt, lint, docs-build                                                  | tidy, fmt, lint, test, build, commit                                            | fmt, lint, build, test, commit                                                    | fmt, lint, test, build, commit                                                  | fmt, lint, test, build, commit                                                     | fmt, lint, docs                                                  | fmt, lint, build, commit                                               |
 
 ## common
 
 Defined in `common/tasks.toml` and available in every repo.
 
-| Task              | Hidden | Dir       | Runs                                                                    |
-| ----------------- | ------ | --------- | ----------------------------------------------------------------------- |
-| `commit`          |        | cwd       | `./commit.sh` if it exists and is executable.                           |
-| `license`         |        | cwd       | `common/scripts/license.sh`: addlicense, inject mode.                   |
-| `license-check`   | yes    | cwd       | `common/scripts/license.sh --check`.                                    |
-| `fmt-prose`       | yes    | repo root | `common/scripts/prose.sh fmt`: `bun fmt`, markdownlint `--fix`.         |
-| `lint-prose`      | yes    | repo root | `common/scripts/prose.sh check`: markdownlint, `bun fmt --check`.       |
-| `actionlint`      |        | repo root | `actionlint`.                                                           |
-| `zizmor`          |        | repo root | `zizmor --min-severity {{vars.zizmor_min_severity}} .github/workflows`. |
-| `lint-workflows`  | yes    | repo root | `common/scripts/lint-workflows.sh`: actionlint, then zizmor.            |
-| `lint-docker`     | yes    | repo root | `common/scripts/lint-docker.sh`: hadolint, grype on base images.        |
-| `lint-helm`       | yes    | repo root | `common/scripts/lint-helm.sh`: helm lint, kubescape per chart.          |
-| `lint-kustomize`  | yes    | repo root | `common/scripts/lint-kustomize.sh`: kubescape per kustomization.        |
-| `lint-shell`      | yes    | repo root | `common/scripts/lint-shell.sh`: shellcheck over `scripts/`, `hack/`.    |
-| `lint-containers` | yes    | —         | lint-docker, lint-helm, lint-kustomize.                                 |
-| `docs-build`      |        | cwd       | `common/scripts/docs.sh build`: `uv sync`, then `zensical build`.       |
-| `serve`           |        | cwd       | `common/scripts/docs.sh serve`: `uv sync`, then `zensical serve`.       |
+| Task              | Hidden | Dir       | Runs                                                                                             |
+| ----------------- | ------ | --------- | ------------------------------------------------------------------------------------------------ |
+| `commit`          |        | cwd       | `./commit.sh` if it exists and is executable.                                                    |
+| `license`         |        | cwd       | `common/scripts/license.sh`: addlicense, inject mode.                                            |
+| `license-check`   | yes    | cwd       | `common/scripts/license.sh --check`.                                                             |
+| `fmt-prose`       | yes    | repo root | `common/scripts/prose.sh fmt`: `bun fmt`, markdownlint `--fix`.                                  |
+| `lint-prose`      | yes    | repo root | `common/scripts/prose.sh check`: markdownlint, `bun fmt --check`.                                |
+| `actionlint`      |        | repo root | `actionlint`.                                                                                    |
+| `zizmor`          |        | repo root | `zizmor --min-severity {{vars.zizmor_min_severity}} .github/workflows`.                          |
+| `lint-workflows`  | yes    | repo root | `common/scripts/lint-workflows.sh`: actionlint, then zizmor.                                     |
+| `lint-docker`     | yes    | repo root | `common/scripts/lint-docker.sh`: hadolint, grype on base images.                                 |
+| `lint-helm`       | yes    | repo root | `common/scripts/lint-helm.sh`: helm lint, kubescape per chart.                                   |
+| `lint-kustomize`  | yes    | repo root | `common/scripts/lint-kustomize.sh`: kubescape per kustomization.                                 |
+| `lint-shell`      | yes    | repo root | `common/scripts/lint-shell.sh`: shellcheck over `scripts/`, `hack/`.                             |
+| `lint-containers` | yes    | —         | lint-docker, lint-helm, lint-kustomize.                                                          |
+| `docs-build`      |        | cwd       | `common/scripts/docs.sh build`: `uv sync`, then `zensical build`; skips with no `zensical.toml`. |
+| `serve`           |        | cwd       | `common/scripts/docs.sh serve`: `uv sync`, then `zensical serve`.                                |
 
 ## go
 
@@ -78,7 +78,7 @@ Defined in `archetypes/python/tasks.toml`. Every task runs in the invoking direc
 | `py-fmt`   | yes    | `scripts/ruff.sh fmt`: `ruff format`, then `ruff check --fix`.        |
 | `py-lint`  | yes    | `scripts/ruff.sh check`: `ruff check`, then `ruff format --check`.    |
 | `py-test`  | yes    | `scripts/test.sh`: pytest with JUnit and optional Cobertura coverage. |
-| `py-build` | yes    | `scripts/build.sh`: `uv build` and/or `zensical build`.               |
+| `py-build` | yes    | `scripts/build.sh`: `uv build` when the project declares a package.   |
 
 ## swift
 
@@ -118,18 +118,17 @@ Defined in `archetypes/containers/tasks.toml`. Every task runs from the repo roo
 unset) and `REGISTRY` narrows publishing, both through `scripts/patchy.sh`; anything after `--` on `mise run` is
 appended.
 
-| Task                | Hidden | Runs                                                                                   |
-| ------------------- | ------ | -------------------------------------------------------------------------------------- |
-| `containers-build`  | yes    | `scripts/patchy.sh build --dry-run`: `patchy build --all --dry-run`.                   |
-| `site-build`        | yes    | `scripts/site.sh`: `mise run docs-build` when there is a `zensical.toml`, else a skip. |
-| `publish`           |        | `scripts/patchy.sh build`: build, scan, publish, sign.                                 |
-| `update-allowlists` |        | `scripts/patchy.sh build --update-allowlists`.                                         |
-| `mirror-add`        |        | `patchy mirror add [$ENTRY] --url $URL`.                                               |
-| `mirror-check`      |        | `scripts/patchy.sh mirror upgrade --check`.                                            |
-| `mirror-upgrade`    |        | `scripts/patchy.sh mirror upgrade`.                                                    |
-| `mirror-validate`   |        | `scripts/patchy.sh mirror validate`.                                                   |
-| `mirror-lint`       |        | `scripts/patchy.sh mirror validate --only lint`.                                       |
-| `mirror-publish`    |        | `scripts/patchy.sh mirror sync`.                                                       |
+| Task                | Hidden | Runs                                                                 |
+| ------------------- | ------ | -------------------------------------------------------------------- |
+| `containers-build`  | yes    | `scripts/patchy.sh build --dry-run`: `patchy build --all --dry-run`. |
+| `publish`           |        | `scripts/patchy.sh build`: build, scan, publish, sign.               |
+| `update-allowlists` |        | `scripts/patchy.sh build --update-allowlists`.                       |
+| `mirror-add`        |        | `patchy mirror add [$ENTRY] --url $URL`.                             |
+| `mirror-check`      |        | `scripts/patchy.sh mirror upgrade --check`.                          |
+| `mirror-upgrade`    |        | `scripts/patchy.sh mirror upgrade`.                                  |
+| `mirror-validate`   |        | `scripts/patchy.sh mirror validate`.                                 |
+| `mirror-lint`       |        | `scripts/patchy.sh mirror validate --only lint`.                     |
+| `mirror-publish`    |        | `scripts/patchy.sh mirror sync`.                                     |
 
 `scripts/flux-substitute.sh` and `scripts/kubeconform.sh` back no task: they are helpers for a repo's own Flux
 validation harness. See [containers](../archetypes/containers.md#flux-validation-helpers).

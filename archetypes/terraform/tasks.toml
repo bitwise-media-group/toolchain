@@ -91,8 +91,8 @@ run = [
 ]
 
 [docs]
-description = "generate module docs (terraform-docs)"
-run = [{ task = "tf-docs" }]
+description = "generate module docs (terraform-docs), then build the docs site"
+run = [{ task = "tf-docs" }, { task = "docs-build" }]
 
 [ci]
 description = "the checks the reusable CI workflow runs"

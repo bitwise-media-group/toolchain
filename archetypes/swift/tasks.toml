@@ -116,8 +116,8 @@ run = [
 ]
 
 [build]
-description = "release build of the package's products"
-run = [{ task = "swift-build" }]
+description = "release build of the package's products, then the docs site"
+run = [{ task = "swift-build" }, { task = "docs-build" }]
 
 [test]
 description = "run the tests with coverage"

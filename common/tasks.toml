@@ -130,8 +130,9 @@ run = [
 # whatever the repo's language: a docs site is common across archetypes. Not
 # wired into any rollup — a repo with a generated reference (a Go CLI's
 # `./<app> docs …`) defines a repo-local `docs` task that regenerates it and
-# then calls docs-build. Runs in the invoker's directory and fails with a
-# pointer when there is no zensical.toml there. See scripts/docs.sh.
+# then calls docs-build. Runs in the invoker's directory and skips with a
+# message when there is no zensical.toml there, which is what lets every
+# archetype's build (and common's own ci/pr) carry it. See scripts/docs.sh.
 # The reusable release workflow's docs job runs `mise run docs-build` and
 # publishes ./site to GitHub Pages, so a repo whose site embeds generated,
 # uncommitted content overrides this task to generate it first; the override
@@ -166,8 +167,8 @@ run = [
 
 [ci]
 description = "the gates the reusable CI workflow runs"
-run = [{ task = "lint" }]
+run = [{ task = "lint" }, { task = "docs-build" }]
 
 [pr]
 description = "full local gate before a pull request"
-run = [{ task = "fmt" }, { task = "lint" }]
+run = [{ task = "fmt" }, { task = "lint" }, { task = "docs-build" }]

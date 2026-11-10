@@ -32,7 +32,7 @@ The prose passes still run from the repo root, so a repo-wide Markdown sweep rid
 | `apply` | `plan`, then `terraform apply plan.tfplan`, through `tf-run.sh`.                        |
 | `fmt`   | `terraform fmt -recursive`, then prose format.                                          |
 | `lint`  | backend-less init, `terraform validate .`, tflint, containers, shell, workflows, prose. |
-| `docs`  | `terraform-docs .`.                                                                     |
+| `docs`  | `terraform-docs .`, then the docs site (`docs-build`).                                  |
 | `ci`    | `lint`, `docs`.                                                                         |
 | `pr`    | `fmt`, `lint`, `docs`.                                                                  |
 

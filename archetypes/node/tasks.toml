@@ -139,8 +139,8 @@ run = [
 ]
 
 [build]
-description = "package.json build"
-run = [{ task = "node-build" }]
+description = "package.json build, then the docs site"
+run = [{ task = "node-build" }, { task = "docs-build" }]
 
 [test]
 description = "package.json test:coverage (if the repo defines it)"

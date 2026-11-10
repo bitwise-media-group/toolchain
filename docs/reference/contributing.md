@@ -51,7 +51,7 @@ This repo uses its own tasks, but it _is_ the library, so its layout is the inve
   prefix (its `config_root` is still the repo root). It must not move to a root `mise.toml`: a root config owns the root
   `mise.lock` link, so `mise lock` would lock the tool-less dogfood config through it, prune every tool entry in the
   shared `.mise/mise.lock` and delete the npm sidecars from `.mise/locks/`. The root `mise.lock` link exists only for
-  Renovate. The python archetype builds this site, so `make build` is `zensical build` and CI catches a broken page.
+  Renovate. `make build` ends with `docs-build`, as in every archetype, so CI catches a broken page.
 - The Makefile includes `archetypes/python/include.mk` and adds `lint: lint-scripts`, a make-side prerequisite that
   shellchecks the library's own scripts. (The consumer-facing `lint-shell` pass only sweeps a repo's root `scripts/` and
   `hack/`.)
@@ -84,6 +84,7 @@ make pr       # the whole gate
 - **New knob?** Add a commented default to `config.toml [vars]`, inside the `--8<--` markers, and document it on the
   [Knobs](knobs.md) page.
 - **Never stub.** If an archetype has no real work for a canonical task, don't define it. CI discovers what exists.
+  (`docs-build` is the one pass every `build` carries regardless: it skips with a message when there's no site.)
 
 Then update the relevant pages here. The [Tasks](tasks.md) reference and the archetype pages are hand-written, but the
 "Source" blocks and the pins and knob defaults are embedded from the live files.

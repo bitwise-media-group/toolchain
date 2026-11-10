@@ -20,16 +20,17 @@ include .mise/common/include.mk
 | ------------ | --------------------------------------------------------------------------------- |
 | `fmt`        | `fmt-prose` (`bun fmt`, markdownlint `--fix`), then `license`.                    |
 | `lint`       | `license-check`, `lint-containers`, `lint-shell`, `lint-workflows`, `lint-prose`. |
-| `ci`         | `lint`: the only gate a common-only repo has.                                     |
-| `pr`         | `fmt`, then `lint`.                                                               |
+| `ci`         | `lint`, then `docs-build`.                                                        |
+| `pr`         | `fmt`, `lint`, then `docs-build`.                                                 |
 | `commit`     | `./commit.sh` if present and executable.                                          |
 | `license`    | addlicense: inject SPDX headers.                                                  |
 | `actionlint` | actionlint over `.github/workflows`, on its own.                                  |
 | `zizmor`     | zizmor over `.github/workflows`, on its own.                                      |
-| `docs-build` | `uv sync`, then `zensical build` into `site/`. Needs a `zensical.toml`.           |
+| `docs-build` | `uv sync`, then `zensical build` into `site/`. Skips without a `zensical.toml`.   |
 | `serve`      | `uv sync`, then `zensical serve`: a live-reloading preview.                       |
 
-There's no `build` or `test` task. The reusable CI discovers that and runs only `lint`.
+There's no `build` or `test` task, so the reusable CI runs only `lint`. A common-only repo with a docs site builds it in
+`ci` and `pr`, but CI's `lint` job won't.
 
 ## What common gives every archetype
 
@@ -42,7 +43,9 @@ Even when an archetype is included, common still supplies the shared passes the 
 - **`lint-shell`**: shellcheck over `scripts/` and `hack/`.
 - **`commit`**: the agent-prepared commit handoff.
 - **`docs-build` / `serve`**: the Zensical docs site, built or previewed via the shared `uv` pin. They run in the
-  invoking directory, fail with a pointer when it has no `zensical.toml`, and aren't wired into any rollup.
+  invoking directory and skip with a message when it has no `zensical.toml`. Every archetype's `build` ends with
+  `docs-build` (terraform's `docs` does), so `pr` builds the site and CI checks it. A repo whose pages embed generated
+  content overrides `docs-build` to generate it first; the release workflow's docs job runs the same task.
 
 Every one of the lint passes is runtime-detected and no-ops silently when the repo has none of the files it checks. See
 [Shared lint passes](../reference/lint.md) for each one in detail.

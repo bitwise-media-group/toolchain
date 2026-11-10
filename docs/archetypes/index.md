@@ -15,15 +15,15 @@ language: it decides what `fmt`, `lint`, `build` and `test` mean.
 
 ## What each archetype provides
 
-| archetype  | `fmt`                                             | `lint`                                                                            | `build`                                   | `test`                        | extras                                     |
-| ---------- | ------------------------------------------------- | --------------------------------------------------------------------------------- | ----------------------------------------- | ----------------------------- | ------------------------------------------ |
-| go         | `go fmt`, `golangci-lint --fix`, prose, license   | golangci-lint, govulncheck, license, containers, shell, workflows, prose          | `go build` with version ldflags           | gotestsum, `-race`, coverage  | `tidy`, `fuzz`, `snapshot`, `release`      |
-| node       | `check:fix` / `format` scripts, prose, license    | `check` / `typecheck` scripts, license, containers, shell, workflows, prose       | `build` script                            | `test:coverage` script        | —                                          |
-| python     | license, `ruff format`, `ruff check --fix`, prose | `ruff check`, `ruff format --check`, license, containers, shell, workflows, prose | `uv build` and/or `zensical build`        | pytest (+ pytest-cov)         | —                                          |
-| swift      | `swift format`, prose, license                    | `swift format lint --strict`, license, containers, shell, workflows, prose        | `swift build -c release`                  | `swift test`, coverage (LCOV) | `resolve`, `update`, `snapshot`, `release` |
-| terraform  | `terraform fmt -recursive`, prose                 | validate, tflint, containers, shell, workflows, prose                             | —                                         | —                             | `init`, `plan`, `apply`, `docs`            |
-| containers | prose, license                                    | license, containers, shell, workflows, prose                                      | `patchy build --all --dry-run`, docs site | — (repo-local harness)        | `publish`, `update-allowlists`, `mirror-*` |
-| _common_   | prose, license                                    | license, containers, shell, workflows, prose                                      | —                                         | —                             | `commit`, `actionlint`, `zizmor`           |
+| archetype  | `fmt`                                             | `lint`                                                                            | `build`                                    | `test`                        | extras                                        |
+| ---------- | ------------------------------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------ | ----------------------------- | --------------------------------------------- |
+| go         | `go fmt`, `golangci-lint --fix`, prose, license   | golangci-lint, govulncheck, license, containers, shell, workflows, prose          | `go build` with version ldflags, docs site | gotestsum, `-race`, coverage  | `tidy`, `fuzz`, `snapshot`, `release`         |
+| node       | `check:fix` / `format` scripts, prose, license    | `check` / `typecheck` scripts, license, containers, shell, workflows, prose       | `build` script, docs site                  | `test:coverage` script        | —                                             |
+| python     | license, `ruff format`, `ruff check --fix`, prose | `ruff check`, `ruff format --check`, license, containers, shell, workflows, prose | `uv build`, docs site                      | pytest (+ pytest-cov)         | —                                             |
+| swift      | `swift format`, prose, license                    | `swift format lint --strict`, license, containers, shell, workflows, prose        | `swift build -c release`, docs site        | `swift test`, coverage (LCOV) | `resolve`, `update`, `snapshot`, `release`    |
+| terraform  | `terraform fmt -recursive`, prose                 | validate, tflint, containers, shell, workflows, prose                             | —                                          | —                             | `init`, `plan`, `apply`, `docs` (+ docs site) |
+| containers | prose, license                                    | license, containers, shell, workflows, prose                                      | `patchy build --all --dry-run`, docs site  | — (repo-local harness)        | `publish`, `update-allowlists`, `mirror-*`    |
+| _common_   | prose, license                                    | license, containers, shell, workflows, prose                                      | —                                          | —                             | `commit`, `actionlint`, `zizmor`              |
 
 Every archetype's `lint` includes everything common's does: license (except terraform), containers, shell, workflows and
 prose. The common tasks (`commit`, `license`, `actionlint`, `zizmor`) are available in every repo.
@@ -50,8 +50,10 @@ with them.
 
 Cross-language needs are carried **inside** an archetype instead:
 
-- **A docs site** needs no archetype at all. common ships the Zensical tasks (`docs-build`, `serve`), so every repo has
-  them; a Go repo with a CLI reference wires `docs-build` into a repo-local `docs` task.
+- **A docs site** needs no archetype at all. common ships the Zensical tasks (`docs-build`, `serve`), and every
+  archetype's `build` ends with `docs-build` (terraform's `docs` and common's `ci`/`pr` do too). A repo without a
+  `zensical.toml` skips it with a message. A Go repo with a CLI reference adds a repo-local `docs` task that regenerates
+  the reference first.
 - **A Go repo with an embedded web UI** adds a repo-local `ui` task and redefines `build` to run it before `go-build`.
   See [Extending & overriding](../concepts/extending.md#redefine-an-archetype-task).
 - **The python archetype** is for repos whose _primary_ language is Python, including docs-only Zensical sites.
