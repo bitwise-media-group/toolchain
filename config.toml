@@ -137,7 +137,7 @@ minimum_release_age_excludes = [
 "aqua:hadolint/hadolint" = { version = "2.15.1", lazy = true, lazy_bins = "hadolint" }
 "aqua:hashicorp/terraform" = { version = "1.17.1", lazy = true, lazy_bins = "terraform" }
 "aqua:helm/helm" = { version = "4.3.1", lazy = true, lazy_bins = "helm" }
-"aqua:kubescape/kubescape" = { version = "4.0.19", lazy = true, lazy_bins = "kubescape" }
+"aqua:kubescape/kubescape" = { version = "4.0.20", lazy = true, lazy_bins = "kubescape" }
 "aqua:pnpm/pnpm" = { version = "12.18.0", lazy = true, lazy_bins = "pnpm" }
 "aqua:sigstore/cosign" = { version = "3.1.4", lazy = true, lazy_bins = "cosign" }
 "aqua:terraform-docs/terraform-docs" = { version = "0.24.0", lazy = true, lazy_bins = "terraform-docs" }
