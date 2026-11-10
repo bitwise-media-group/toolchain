@@ -95,10 +95,23 @@ precedence over them.
 **kubescape** downloads its controls artifacts (cached in `~/.kubescape`). The first container or deploy lint on a
 machine needs network. Neither scan ever contacts a Kubernetes cluster: the tasks point `KUBECONFIG` at nothing.
 
-## fnox is never installed
+## Secrets with fnox
 
-`fnox`, the secrets manager dotty installs, is deliberately absent from `[tools]`. The only thing that calls it is the
-terraform archetype's `tf-run.sh` wrapper, and only to inject secrets when a module directory carries a `fnox.toml`.
-That's a local-development convenience that's never present in CI. The wrapper checks for `fnox` on `PATH` itself and
-runs the command uninjected if it's missing, rather than having mise provision (and so pin and shadow) a CLI most tasks
-never touch and every developer already has.
+`fnox`, the secrets manager, is a shared lazy pin. A repo keeps its secrets in a committed `fnox.toml` (encrypted
+values, or references into a vault) and runs the commands that need them through `fnox exec`, on the same fnox version
+locally and in CI. A repo without a `fnox.toml` never calls fnox, so it never downloads it.
+
+To hand a repo-local task its secrets, wrap the command in `fnox exec`:
+
+```toml
+[tasks.deploy]
+run = "fnox exec -- ./scripts/deploy.sh"
+```
+
+The terraform archetype already does this: its `tf-run.sh` wrapper runs every state-touching command through `fnox exec`
+when the module directory carries a `fnox.toml` (see
+[Variables and secrets](../archetypes/terraform.md#variables-and-secrets)).
+
+A secret fnox can't resolve, such as in a CI job without vault access, only warns by default and the command still runs.
+Set `if_missing = "error"` in `fnox.toml` to make it fail instead, or `FNOX_IF_MISSING` to change it for one job. Plain,
+non-secret variables need no tool at all: put them in `mise.toml [env]`.

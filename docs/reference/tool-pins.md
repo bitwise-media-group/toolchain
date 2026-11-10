@@ -25,6 +25,7 @@ built from.
 | hadolint          | `aqua:hadolint/hadolint`             | `lint-docker`                                                    | yes  |
 | terraform         | `aqua:hashicorp/terraform`           | terraform archetype                                              | yes  |
 | helm              | `aqua:helm/helm`                     | `lint-helm`                                                      | yes  |
+| fnox              | `aqua:jdx/fnox`                      | repo secrets via `fnox exec`; terraform's `tf-run.sh`            | yes  |
 | kubescape         | `aqua:kubescape/kubescape`           | `lint-helm`, `lint-kustomize`                                    | yes  |
 | pnpm              | `aqua:pnpm/pnpm`                     | node archetype (pnpm repos)                                      | yes  |
 | cosign            | `aqua:sigstore/cosign`               | GoReleaser signing                                               | yes  |
@@ -32,7 +33,7 @@ built from.
 | tflint            | `aqua:terraform-linters/tflint`      | `tf-lint`                                                        | yes  |
 
 govulncheck isn't here: every Go repo pins `go:golang.org/x/vuln/cmd/govulncheck` next to its own `go`, because it must
-be compiled by that Go. fnox isn't here either; see [Pinned tools](../concepts/tools.md#fnox-is-never-installed).
+be compiled by that Go.
 
 ## Current pins
 

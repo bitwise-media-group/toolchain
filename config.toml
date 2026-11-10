@@ -72,15 +72,17 @@
 # shellcheck are plain release binaries (helm ships via get.helm.sh rather
 # than GitHub releases), checksum-locked like everything else.
 #
-# fnox (the secrets manager dotty installs) is deliberately absent from
-# [tools] and never mise-installed here: it is only ever invoked (via the
-# terraform archetype's tf-run.sh) to inject secrets when a terraform module
-# directory carries a fnox.toml, which is a local-dev convenience and never
-# present in CI. tf-run.sh checks for fnox on PATH itself (falling through to
-# an uninjected run if it's missing, rather than mise provisioning — and
-# thereby pinning/shadowing — a CLI that CI never needs and every developer
-# already has their own copy of). Plain, non-secret module variables need no
-# tool at all: they live in the module's mise.toml [env].
+# fnox, the secrets manager, is a shared lazy pin so any repo can keep its
+# secrets in a committed fnox.toml (encrypted values, or references into a
+# vault) and run commands with them through `fnox exec`, on the same version
+# locally and in CI. Being lazy, it is only downloaded the first time
+# something calls `fnox`, so a repo without a fnox.toml never installs it.
+# The terraform archetype's tf-run.sh is the one shared caller: it wraps the
+# state-touching tasks in `fnox exec` when the module directory carries a
+# fnox.toml. A secret fnox can't resolve (a CI job without vault access, say)
+# only warns by default (if_missing = "warn") and the command still runs;
+# FNOX_IF_MISSING overrides that per job. Plain, non-secret variables need no
+# tool at all: they live in the repo's or module's mise.toml [env].
 #
 # Updates: every [tools] entry is an exact pin, bumped by the org Renovate bot
 # (bitwise-media-group/renovate-config) — one PR per tool that updates the pin
@@ -138,6 +140,7 @@ minimum_release_age_excludes = [
 "aqua:hadolint/hadolint" = { version = "2.15.1", lazy = true, lazy_bins = "hadolint" }
 "aqua:hashicorp/terraform" = { version = "1.17.1", lazy = true, lazy_bins = "terraform" }
 "aqua:helm/helm" = { version = "4.3.1", lazy = true, lazy_bins = "helm" }
+"aqua:jdx/fnox" = { version = "1.47.0", lazy = true, lazy_bins = "fnox" }
 "aqua:kubescape/kubescape" = { version = "4.0.20", lazy = true, lazy_bins = "kubescape" }
 "aqua:pnpm/pnpm" = { version = "12.18.0", lazy = true, lazy_bins = "pnpm" }
 "aqua:sigstore/cosign" = { version = "3.1.4", lazy = true, lazy_bins = "cosign" }

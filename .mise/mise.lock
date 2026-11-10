@@ -437,6 +437,53 @@ url = "https://get.helm.sh/helm-v4.3.1-darwin-amd64.tar.gz"
 checksum = "sha256:5735a2bd59071b814546c6d0a76f29a8fd3ebe06e3a4791dd2784804ae895f34"
 url = "https://get.helm.sh/helm-v4.3.1-windows-amd64.tar.gz"
 
+[[tools."aqua:jdx/fnox"]]
+version = "1.47.0"
+backend = "aqua:jdx/fnox"
+specifiers = ["1.47.0"]
+
+[tools."aqua:jdx/fnox"."platforms.linux-arm64"]
+checksum = "sha256:11a347e775fe0531f0b767c38fa9f6a2848f10b04f2d6824680821c56fe11da1"
+checksum_source = "mise-versions"
+url = "https://github.com/jdx/fnox/releases/download/v1.47.0/fnox-aarch64-unknown-linux-gnu.tar.gz"
+url_api = "https://api.github.com/repos/jdx/fnox/releases/assets/706550704"
+
+[tools."aqua:jdx/fnox"."platforms.linux-arm64-musl"]
+checksum = "sha256:310ef903464817770823f9c4d3189c0f9457ec1c57463451059eefd31046de97"
+checksum_source = "mise-versions"
+url = "https://github.com/jdx/fnox/releases/download/v1.47.0/fnox-aarch64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/jdx/fnox/releases/assets/706550709"
+
+[tools."aqua:jdx/fnox"."platforms.linux-x64"]
+checksum = "sha256:6d48c4b088a713fa976e5fdbe869c7e0620f77a1e9e6ad1d71c6f4523d7aafb4"
+checksum_source = "mise-versions"
+url = "https://github.com/jdx/fnox/releases/download/v1.47.0/fnox-x86_64-unknown-linux-gnu.tar.gz"
+url_api = "https://api.github.com/repos/jdx/fnox/releases/assets/706550848"
+
+[tools."aqua:jdx/fnox"."platforms.linux-x64-musl"]
+checksum = "sha256:d371fcc893f4abc660ff8f10b5c6fe36745d81ba6ae094c22c8fe4dbdaf17e4f"
+checksum_source = "mise-versions"
+url = "https://github.com/jdx/fnox/releases/download/v1.47.0/fnox-x86_64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/jdx/fnox/releases/assets/706550854"
+
+[tools."aqua:jdx/fnox"."platforms.macos-arm64"]
+checksum = "sha256:e1afc59116fe9bfee645f3e0d0353b0f7ff68ce4a76bc6c516da7aedd9a47179"
+checksum_source = "mise-versions"
+url = "https://github.com/jdx/fnox/releases/download/v1.47.0/fnox-aarch64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/jdx/fnox/releases/assets/706550717"
+
+[tools."aqua:jdx/fnox"."platforms.macos-x64"]
+checksum = "sha256:0412589afdf46dfe6fa1b7587b7b850e45fbf472417168bab09dc300fac0d701"
+checksum_source = "mise-versions"
+url = "https://github.com/jdx/fnox/releases/download/v1.47.0/fnox-x86_64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/jdx/fnox/releases/assets/706550708"
+
+[tools."aqua:jdx/fnox"."platforms.windows-x64"]
+checksum = "sha256:695065d180cbb2e431cd7a6e762f00b37ec5648dff78c47dfbba08c343a0decc"
+checksum_source = "mise-versions"
+url = "https://github.com/jdx/fnox/releases/download/v1.47.0/fnox-x86_64-pc-windows-msvc.zip"
+url_api = "https://api.github.com/repos/jdx/fnox/releases/assets/706550819"
+
 [[tools."aqua:koalaman/shellcheck"]]
 version = "0.11.0"
 backend = "aqua:koalaman/shellcheck"

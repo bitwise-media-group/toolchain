@@ -209,7 +209,7 @@ repo needs no `.gitignore` or `.licenseignore` change: `node_modules/` is alread
 ## Developer tools
 
 Every developer CLI (`addlicense`, `golangci-lint`, `gotestsum`, `goreleaser`, `syft`, `grype`, `cosign`, `hadolint`,
-`helm`, `kubescape`, `shellcheck`, `terraform`, `tflint`, `terraform-docs`, `actionlint`, `zizmor`, `uv`,
+`helm`, `kubescape`, `shellcheck`, `terraform`, `tflint`, `terraform-docs`, `actionlint`, `zizmor`, `uv`, `fnox`,
 `markdownlint-cli2`, plus `bun`, whose built-in `bun fmt` formats the prose and which markdownlint-cli2 runs on) is
 pinned in `config.toml [tools]` — exact version plus per-platform sha256 checksums (and, where the publisher provides
 it, cosign/SLSA/GitHub-attestation provenance) — locked in `mise.lock`. Tasks run with the pinned tools already on PATH
@@ -239,10 +239,11 @@ Each repo's own Renovate bumps its runtime pins in its root `mise.toml` (the org
 `mise.toml`). A repo can override any shared tool version (or add tools) in its root `mise.toml [tools]` — the root
 config wins.
 
-`fnox` is the exception: the secrets manager dotty installs, never mise-installed here. The terraform archetype's
-`tf-run.sh` wrapper invokes it only to inject secrets when a module directory carries a `fnox.toml` — a local-dev
-convenience that's never present in CI — so the wrapper checks for `fnox` on PATH itself and runs the command uninjected
-if it's missing, rather than having mise provision (and thereby pin/shadow) a CLI most tasks never touch.
+**Secrets** come from `fnox`, a shared lazy pin: a repo keeps them in a committed `fnox.toml` (encrypted values, or
+references into a vault) and wraps the commands that need them in `fnox exec`, as the terraform archetype's `tf-run.sh`
+does when a module directory carries a `fnox.toml`. A secret fnox can't resolve (a CI job without vault access, say)
+only warns by default and the command still runs; `if_missing = "error"` in `fnox.toml` or `FNOX_IF_MISSING` changes
+that.
 
 Consuming repos should keep `coverage/` (and `node_modules/`, `.venv/`, `.build/`, `.swiftpm/`, `site/`, `dist/` as
 applicable) in `.gitignore`.

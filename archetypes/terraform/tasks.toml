@@ -16,10 +16,9 @@
 # scripts/tf-run.sh wraps every state-touching invocation: it injects
 # secrets via fnox only when the module directory carries a fnox.toml and
 # calls the binary directly otherwise. Plain, non-secret variables live in the
-# module's mise.toml [env] and reach every task without the wrapper. fnox is
-# never mise-installed (see the library config header) — dotty installs it
-# for local dev and CI never needs it, so the wrapper checks for it on PATH
-# itself rather than any task carrying a `tools` map for it.
+# module's mise.toml [env] and reach every task without the wrapper. fnox is a
+# shared lazy pin (see the library config header), so no task carries a
+# `tools` map for it; a module without a fnox.toml never installs it.
 #
 # {{vars.terraform_binary}} picks the driver: "terraform" (the shared pin) by
 # default; an OpenTofu repo sets it to "tofu" and adds the opentofu pin to its

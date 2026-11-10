@@ -74,17 +74,19 @@ Secrets go in the module's `fnox.toml`. `archetypes/terraform/scripts/tf-run.sh`
 (`init`, `plan`, `apply` and lint's backend-less init):
 
 ```sh
-if command -v fnox >/dev/null && [ -f fnox.toml ]; then
+if [ -f fnox.toml ]; then
   exec fnox exec -- "$@"
 fi
 exec "$@"
 ```
 
-- When the module directory has a `fnox.toml` **and** `fnox` is on `PATH`, its secrets are injected through `fnox exec`.
+- When the module directory has a `fnox.toml`, its secrets are injected through `fnox exec`.
 - Otherwise the command runs untouched.
 
-fnox is never mise-installed here. dotty installs it on developer machines and CI never needs it, so the wrapper checks
-for it itself. A module with secrets on a machine without fnox degrades to an uninjected run instead of blocking.
+fnox is a shared lazy pin (see [Secrets with fnox](../concepts/tools.md#secrets-with-fnox)), so it's installed the first
+time a module with a `fnox.toml` runs a task. CI runs the wrapper too, through lint's backend-less init. A secret the
+runner can't resolve only warns by default, so lint still runs. A module that sets `if_missing = "error"` needs vault
+access in CI, or `FNOX_IF_MISSING=warn` on the job.
 
 `dotty env migrate` converts a legacy `.env.dotty` into both files: its plain lines into `mise.toml`, its
 `{{ dotty://… }}` references into `fnox.toml`.
