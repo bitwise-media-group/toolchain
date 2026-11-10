@@ -143,7 +143,7 @@ minimum_release_age_excludes = [
 "aqua:rhysd/actionlint" = "1.7.12"
 "aqua:zizmorcore/zizmor" = "1.32.0"
 "aqua:anchore/grype" = { version = "0.121.2", lazy = true, lazy_bins = "grype" }
-"aqua:anchore/syft" = { version = "1.56.0", lazy = true, lazy_bins = "syft" }
+"aqua:anchore/syft" = { version = "1.57.0", lazy = true, lazy_bins = "syft" }
 "aqua:astral-sh/uv" = { version = "0.13.7", lazy = true, lazy_bins = "uv" }
 "aqua:golangci/golangci-lint" = { version = "2.15.0", lazy = true, lazy_bins = "golangci-lint" }
 "aqua:google/go-containerregistry" = { version = "0.22.1", lazy = true, lazy_bins = "crane" }
