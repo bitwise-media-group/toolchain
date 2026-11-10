@@ -1,8 +1,8 @@
 # go
 
 The go archetype is for Go CLI applications: dotty, evolve and gh-claude. It formats, lints, tests, builds and releases
-a single binary. A Go repo with a docs site needs no second archetype: `build` ends with common's `docs-build`, so the
-site is built by `pr` and checked in CI.
+a single binary. A Go repo with a docs site needs no second archetype: common's `docs-build` and `serve` are always
+there, and `ci` and `pr` end with `docs-build`.
 
 ```toml
 # mise.toml
@@ -41,9 +41,9 @@ golangci-lint, override `"aqua:golangci/golangci-lint"` in the root `[tools]`.
 | `fmt`      | `go fmt ./...` and `golangci-lint run --fix`, then prose format, then license headers.              |
 | `lint`     | license check, golangci-lint + govulncheck per GOOS, containers, shell, workflows, prose.           |
 | `test`     | gotestsum with `-race -covermode=atomic`, writing `coverage/coverage.out` and `coverage/junit.xml`. |
-| `build`    | `CGO_ENABLED=0 go build -trimpath` with version metadata via `-ldflags`, then the docs site.        |
-| `ci`       | `lint`, `test`, `build`.                                                                            |
-| `pr`       | `tidy`, `fmt`, `lint`, `test`, `build`, `commit`.                                                   |
+| `build`    | `CGO_ENABLED=0 go build -trimpath` with version metadata stamped in via `-ldflags`.                 |
+| `ci`       | `lint`, `test`, `build`, `docs-build`.                                                              |
+| `pr`       | `tidy`, `fmt`, `lint`, `test`, `build`, `docs-build`, `commit`.                                     |
 | `tidy`     | Delete `go.sum`, then `go mod tidy`.                                                                |
 | `fuzz`     | Fuzz one target (`FUZZ`, `FUZZTIME`, `FUZZ_PKG`).                                                   |
 | `snapshot` | `goreleaser release --snapshot --clean --skip=sign,notarize`.                                       |
@@ -112,14 +112,13 @@ every asset has landed. Override `release` in the repo to add release steps; the
 ### Docs
 
 The archetype deliberately leaves `docs` to the repo, because regenerating a CLI reference is app-specific. A typical
-repo-local task builds the binary, regenerates the reference, then builds the site with common's `docs-build`. It calls
-`go-build` rather than `build`, which would build the site before the reference is fresh:
+repo-local task builds the binary, regenerates the reference, then builds the site with common's `docs-build`:
 
 ```toml
 [tasks.docs]
 description = "regenerate the CLI reference and build the docs site"
 dir = "{{cwd}}"
-run = [{ task = "go-build" }, "./dotty docs --out docs/cli --format markdown", { task = "docs-build" }]
+run = [{ task = "build" }, "./dotty docs --out docs/cli --format markdown", { task = "docs-build" }]
 ```
 
 ```makefile

@@ -29,8 +29,7 @@ include .mise/common/include.mk
 | `docs-build` | `uv sync`, then `zensical build` into `site/`. Skips without a `zensical.toml`.   |
 | `serve`      | `uv sync`, then `zensical serve`: a live-reloading preview.                       |
 
-There's no `build` or `test` task, so the reusable CI runs only `lint`. A common-only repo with a docs site builds it in
-`ci` and `pr`, but CI's `lint` job won't.
+There's no `build` or `test` task, so the reusable CI runs only `lint`.
 
 ## What common gives every archetype
 
@@ -43,9 +42,9 @@ Even when an archetype is included, common still supplies the shared passes the 
 - **`lint-shell`**: shellcheck over `scripts/` and `hack/`.
 - **`commit`**: the agent-prepared commit handoff.
 - **`docs-build` / `serve`**: the Zensical docs site, built or previewed via the shared `uv` pin. They run in the
-  invoking directory and skip with a message when it has no `zensical.toml`. Every archetype's `build` ends with
-  `docs-build` (terraform's `docs` does), so `pr` builds the site and CI checks it. A repo whose pages embed generated
-  content overrides `docs-build` to generate it first; the release workflow's docs job runs the same task.
+  invoking directory and skip with a message when it has no `zensical.toml`. Every archetype's `ci` and `pr` end with
+  `docs-build` (python's `build` builds the site itself); it stays out of `build` because the reusable CI runs `build`
+  as its own job and the release workflow builds the site in a separate docs job.
 
 Every one of the lint passes is runtime-detected and no-ops silently when the repo has none of the files it checks. See
 [Shared lint passes](../reference/lint.md) for each one in detail.

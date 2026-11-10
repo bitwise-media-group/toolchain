@@ -91,13 +91,13 @@ run = [
 ]
 
 [docs]
-description = "generate module docs (terraform-docs), then build the docs site"
-run = [{ task = "tf-docs" }, { task = "docs-build" }]
+description = "generate module docs (terraform-docs)"
+run = [{ task = "tf-docs" }]
 
 [ci]
 description = "the checks the reusable CI workflow runs"
-run = [{ task = "lint" }, { task = "docs" }]
+run = [{ task = "lint" }, { task = "docs" }, { task = "docs-build" }]
 
 [pr]
 description = "full local gate before a pull request"
-run = [{ task = "fmt" }, { task = "lint" }, { task = "docs" }]
+run = [{ task = "fmt" }, { task = "lint" }, { task = "docs" }, { task = "docs-build" }]

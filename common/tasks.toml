@@ -127,12 +127,15 @@ run = [
 ]
 
 # Zensical documentation site (Python via the shared uv pin), available
-# whatever the repo's language: a docs site is common across archetypes. Not
-# wired into any rollup — a repo with a generated reference (a Go CLI's
-# `./<app> docs …`) defines a repo-local `docs` task that regenerates it and
-# then calls docs-build. Runs in the invoker's directory and skips with a
-# message when there is no zensical.toml there, which is what lets every
-# archetype's build (and common's own ci/pr) carry it. See scripts/docs.sh.
+# whatever the repo's language: a docs site is common across archetypes. A
+# repo with a generated reference (a Go CLI's `./<app> docs …`) defines a
+# repo-local `docs` task that regenerates it and then calls docs-build. Runs
+# in the invoker's directory and skips with a message when there is no
+# zensical.toml there, which is what lets the ci and pr rollups — common's and
+# every archetype's but python's, whose build already builds the site — end
+# with it. It stays out of build on purpose: the reusable CI runs build as its
+# own job and the release workflow builds the site in a separate docs job, so
+# wiring it into build would build the site twice. See scripts/docs.sh.
 # The reusable release workflow's docs job runs `mise run docs-build` and
 # publishes ./site to GitHub Pages, so a repo whose site embeds generated,
 # uncommitted content overrides this task to generate it first; the override

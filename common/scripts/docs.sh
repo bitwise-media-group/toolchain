@@ -5,9 +5,9 @@
 # Build (`docs.sh build`) or live-preview (`docs.sh serve`) the Zensical docs
 # site in the current directory. `uv sync` provisions Python + zensical from
 # pyproject.toml/uv.lock, then zensical runs from that environment; the built
-# site/ is git-ignored. Every archetype's build (terraform's docs) runs
-# docs-build, so a directory with no zensical.toml — a repo without a site —
-# is not an error: it skips with a message.
+# site/ is git-ignored. The ci and pr rollups run docs-build (python's build
+# builds the site itself), so a directory with no zensical.toml — a repo
+# without a site — is not an error: it skips with a message.
 set -eu
 
 mode=${1:?usage: docs.sh build|serve}

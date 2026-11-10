@@ -71,7 +71,7 @@ includes = [".mise/common/tasks.toml", ".mise/archetypes/go/tasks.toml"] # commo
 [tasks.docs]
 description = "regenerate the CLI reference and build the docs site"
 dir = "{{cwd}}"
-run = ["mise run go-build", "./dotty docs --out docs/cli --format markdown", "mise run docs-build"]
+run = ["mise run build", "./dotty docs --out docs/cli --format markdown", "mise run docs-build"]
 ```
 
 ```makefile
@@ -108,10 +108,11 @@ include .mise/common/include.mk
 **Archetypes do not stack**: mise merges included task files whole-task with the later include winning, so a second
 archetype would silently replace the first's `fmt`/`lint`/`build`/`test`/`ci`/`pr` rollups. Cross-language needs are
 carried _inside_ an archetype instead. A docs site needs none: common ships the zensical tasks (`docs-build`, `serve`),
-and every archetype's `build` ends with `docs-build` (terraform's `docs` does, and common's own `ci`/`pr`), skipping
-with a message when the repo has no `zensical.toml`. So whatever the archetype, `pr` builds the site and CI catches a
-broken page. A Go repo with a CLI reference adds a repo-local `docs` task that regenerates it first. The python
-archetype is for repos whose primary language is Python, including docs-only zensical sites.
+and every archetype's `ci` and `pr` end with `docs-build`, which skips with a message when there's no `zensical.toml`.
+So `pr` builds the site whatever the archetype. It stays out of `build`, because the reusable CI runs `build` as its own
+job and the release workflow builds the site in a separate docs job. A Go repo with a CLI reference wires `docs-build`
+into a repo-local `docs` task. The python archetype is for repos whose primary language is Python (including docs-only
+zensical sites, whose `build` — and so CI — then builds the site).
 
 Run `mise trust --all` once per clone (CI trusts the workspace automatically), and `make help` (or `mise tasks`) to list
 what the repo exposes. Because the Makefile only forwards, `make <anything>` and `mise run <anything>` are
@@ -150,15 +151,15 @@ precedes `lint` inside `pr`.
 
 ### Archetypes
 
-| archetype  | `fmt`                                             | `lint`                                                                            | `build`                                    | `test`                        | extras                                                                 |
-| ---------- | ------------------------------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------ | ----------------------------- | ---------------------------------------------------------------------- |
-| go         | `go fmt`, `golangci-lint --fix`, prose, license   | golangci-lint, govulncheck, license, containers, shell, workflows, prose          | `go build` with version ldflags, docs site | gotestsum, `-race`, coverage  | `tidy`, `fuzz`, `snapshot`, `release`                                  |
-| node       | `check:fix` / `format` scripts, prose, license    | `check` / `typecheck` scripts, license, containers, shell, workflows, prose       | `build` script, docs site                  | `test:coverage` script        | —                                                                      |
-| python     | license, `ruff format`, `ruff check --fix`, prose | `ruff check`, `ruff format --check`, license, containers, shell, workflows, prose | `uv build`, docs site                      | pytest (+ pytest-cov)         | —                                                                      |
-| swift      | `swift format`, prose, license                    | `swift format lint --strict`, license, containers, shell, workflows, prose        | `swift build -c release`, docs site        | `swift test`, coverage (LCOV) | `resolve`, `update`, `snapshot`, `release`                             |
-| terraform  | `terraform fmt -recursive`, prose                 | validate, tflint, containers, shell, workflows, prose                             | —                                          | —                             | `init`, `plan`, `apply`, `docs` (+ docs site)                          |
-| containers | prose, license                                    | license, containers, shell, workflows, prose                                      | `patchy build --all --dry-run`, docs site  | — (repo-local harness)        | `publish`, `update-allowlists`, `mirror-*`                             |
-| _common_   | prose, license                                    | license, containers, shell, workflows, prose                                      | —                                          | —                             | `commit`, `actionlint`, `zizmor`, `docs-build` (in `ci`/`pr`), `serve` |
+| archetype  | `fmt`                                             | `lint`                                                                            | `build`                                   | `test`                        | extras                                                  |
+| ---------- | ------------------------------------------------- | --------------------------------------------------------------------------------- | ----------------------------------------- | ----------------------------- | ------------------------------------------------------- |
+| go         | `go fmt`, `golangci-lint --fix`, prose, license   | golangci-lint, govulncheck, license, containers, shell, workflows, prose          | `go build` with version ldflags           | gotestsum, `-race`, coverage  | `tidy`, `fuzz`, `snapshot`, `release`                   |
+| node       | `check:fix` / `format` scripts, prose, license    | `check` / `typecheck` scripts, license, containers, shell, workflows, prose       | `build` script                            | `test:coverage` script        | —                                                       |
+| python     | license, `ruff format`, `ruff check --fix`, prose | `ruff check`, `ruff format --check`, license, containers, shell, workflows, prose | `uv build` and/or `zensical build`        | pytest (+ pytest-cov)         | —                                                       |
+| swift      | `swift format`, prose, license                    | `swift format lint --strict`, license, containers, shell, workflows, prose        | `swift build -c release`                  | `swift test`, coverage (LCOV) | `resolve`, `update`, `snapshot`, `release`              |
+| terraform  | `terraform fmt -recursive`, prose                 | validate, tflint, containers, shell, workflows, prose                             | —                                         | —                             | `init`, `plan`, `apply`, `docs`                         |
+| containers | prose, license                                    | license, containers, shell, workflows, prose                                      | `patchy build --all --dry-run`, docs site | — (repo-local harness)        | `publish`, `update-allowlists`, `mirror-*`              |
+| _common_   | prose, license                                    | license, containers, shell, workflows, prose                                      | —                                         | —                             | `commit`, `actionlint`, `zizmor`, `docs-build`, `serve` |
 
 - **go** — `go` and `govulncheck` are pinned by the repo (govulncheck must be `go install`ed by the same Go that builds
   the module). Structural knobs `app`, `app_pkg`, `build_tags`, `version_pkg`, `goos` come from `[vars]`. `goos` is a
@@ -178,7 +179,7 @@ precedes `lint` inside `pr`.
 - **python** — uv-native: `uv` (a shared pin) provisions Python from `.python-version`/`requires-python` and the project
   environment from `pyproject.toml`/`uv.lock`; ruff, pytest and pytest-cov come from the project's dev dependencies. A
   project without ruff or pytest (a docs-only site) skips those passes with a message. `build` runs `uv build` when
-  `pyproject.toml` has a `[build-system]`, then the docs site like every archetype.
+  `pyproject.toml` has a `[build-system]` and `zensical build` when a `zensical.toml` is present.
 - **swift** — SwiftPM packages and CLIs (no Xcode projects). The repo pins `swift` (mise's `core:swift`);
   `swift format`, `llvm-cov` and `llvm-profdata` ship in that toolchain, so nothing else is pinned. `fmt`/`lint` run
   `swift format` (honouring the repo's `.swift-format`), `test` writes JUnit + LCOV under `coverage/`, and `build` is
@@ -192,9 +193,9 @@ precedes `lint` inside `pr`.
 - **containers** — repos whose products are OCI artifacts published with patchy: a mirror store (`patchy mirror`), or
   first-party images and Flux manifest artifacts (`patchy build`). Every pipeline tool is a shared lazy pin (patchy,
   cosign, osv-scanner, crane, kustomize, kubeconform, yq, flux-operator, plus grype, kubescape and buildx), so the repo
-  pins nothing. `build` is `patchy build --all --dry-run` plus the docs site; `publish`, `update-allowlists` and the
-  `mirror-*` tasks wrap the rest, selected per run by `ENTRY` / `REGISTRY`. No `test`: a repo's Flux render harness is
-  its own, and `scripts/flux-substitute.sh` / `scripts/kubeconform.sh` are the shared halves it calls.
+  pins nothing. `build` is `patchy build --all --dry-run`; `publish`, `update-allowlists` and the `mirror-*` tasks wrap
+  the rest, selected per run by `ENTRY` / `REGISTRY`. No `test`: a repo's Flux render harness is its own, and
+  `scripts/flux-substitute.sh` / `scripts/kubeconform.sh` are the shared halves it calls.
 
 ### pnpm / bun
 

@@ -6,7 +6,7 @@
 # charts and images (`patchy mirror`: flux-containers), first-party images and
 # Flux manifest artifacts (`patchy build`: flux-manifests,
 # patchy-app-manifests), or both — plus the documentation site most of them
-# carry, which `build` builds when there is a zensical.toml.
+# carry, which `ci` and `pr` build when there is a zensical.toml.
 #
 # Include AFTER common/tasks.toml in the consumer's root mise.toml:
 #   [task_config]
@@ -113,13 +113,13 @@ run = [
 ]
 
 [build]
-description = "build and scan every patchy build entry without publishing, then the docs site"
-run = [{ task = "containers-build" }, { task = "docs-build" }]
+description = "build and scan every patchy build entry without publishing"
+run = [{ task = "containers-build" }]
 
 [ci]
 description = "the gates the reusable CI workflow runs"
-run = [{ task = "lint" }, { task = "build" }]
+run = [{ task = "lint" }, { task = "build" }, { task = "docs-build" }]
 
 [pr]
 description = "full local gate before a pull request"
-run = [{ task = "fmt" }, { task = "lint" }, { task = "build" }, { task = "commit" }]
+run = [{ task = "fmt" }, { task = "lint" }, { task = "build" }, { task = "docs-build" }, { task = "commit" }]

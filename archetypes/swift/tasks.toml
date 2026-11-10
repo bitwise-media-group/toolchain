@@ -116,8 +116,8 @@ run = [
 ]
 
 [build]
-description = "release build of the package's products, then the docs site"
-run = [{ task = "swift-build" }, { task = "docs-build" }]
+description = "release build of the package's products"
+run = [{ task = "swift-build" }]
 
 [test]
 description = "run the tests with coverage"
@@ -125,7 +125,7 @@ run = [{ task = "swift-test" }]
 
 [ci]
 description = "the gates the reusable CI workflow runs"
-run = [{ task = "lint" }, { task = "test" }, { task = "build" }]
+run = [{ task = "lint" }, { task = "test" }, { task = "build" }, { task = "docs-build" }]
 
 [pr]
 description = "full local gate before a pull request"
@@ -134,5 +134,6 @@ run = [
   { task = "lint" },
   { task = "test" },
   { task = "build" },
+  { task = "docs-build" },
   { task = "commit" },
 ]

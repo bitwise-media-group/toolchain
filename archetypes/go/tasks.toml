@@ -24,15 +24,14 @@
 # works because make exports command-line variables to recipe subshells, and
 # the go knobs also accept env (`make build APP=x`) for muscle-memory parity.
 #
-# `build` ends with common's docs-build (zensical via the shared uv pin), a
-# no-op without a zensical.toml, so a docs site is built — and checked in CI —
-# with no wiring. `docs` is left to the repo: regenerating a CLI reference is
+# `docs` is intentionally left to the repo — regenerating a CLI reference is
 # app-specific (`./<app> docs …`). A repo defines a `docs` task in its root
-# mise.toml [tasks] that runs go-build (not build, which would build the site
-# before the reference is fresh), regenerates the reference, then runs
-# docs-build, and appends it to the gate (`pr: docs` in its Makefile, or a
-# redefined `pr` task). No `e2e` here: the reusable CI's e2e job is opt-in
-# and no Go repo opts in; a repo that does defines its own e2e task.
+# mise.toml [tasks] and appends it to the gate (`pr: docs` in its Makefile, or
+# a redefined `pr` task); common's `docs-build` and `serve` (zensical via the
+# shared uv pin) are there to call. ci and pr end with docs-build, which skips
+# without a zensical.toml; build stays the binary alone, since CI runs it as
+# its own job and the release workflow builds the site in a job of its own. No `e2e` here: the reusable CI's e2e job is opt-in and no Go
+# repo opts in; a repo that does defines its own e2e task.
 
 [tidy]
 description = "tidy the go module graph"
@@ -118,8 +117,8 @@ run = [
 ]
 
 [build]
-description = "build the application binary, then the docs site"
-run = [{ task = "go-build" }, { task = "docs-build" }]
+description = "build the application binary"
+run = [{ task = "go-build" }]
 
 [test]
 description = "run the unit tests with coverage"
@@ -127,7 +126,7 @@ run = [{ task = "go-test" }]
 
 [ci]
 description = "the gates the reusable CI workflow runs"
-run = [{ task = "lint" }, { task = "test" }, { task = "build" }]
+run = [{ task = "lint" }, { task = "test" }, { task = "build" }, { task = "docs-build" }]
 
 [pr]
 description = "full local gate before a pull request"
@@ -137,5 +136,6 @@ run = [
   { task = "lint" },
   { task = "test" },
   { task = "build" },
+  { task = "docs-build" },
   { task = "commit" },
 ]

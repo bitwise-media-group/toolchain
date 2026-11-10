@@ -39,9 +39,9 @@ must be installed. Swift Testing ships with the toolchain itself.
 | `fmt`      | `swift format format --in-place`, then prose format, then license headers.                            |
 | `lint`     | license check, `swift format lint --strict`, containers, shell, workflows, prose.                     |
 | `test`     | `swift test --enable-code-coverage`, writing JUnit reports and `coverage/lcov.info`.                  |
-| `build`    | `swift build -c release` for every product or the one `swift_product` names, then the docs site.      |
-| `ci`       | `lint`, `test`, `build`.                                                                              |
-| `pr`       | `fmt`, `lint`, `test`, `build`, `commit`.                                                             |
+| `build`    | `swift build -c release`, for every product or the one `swift_product` names.                         |
+| `ci`       | `lint`, `test`, `build`, `docs-build`.                                                                |
+| `pr`       | `fmt`, `lint`, `test`, `build`, `docs-build`, `commit`.                                               |
 | `update`   | `swift package update`, which rewrites `Package.resolved`.                                            |
 | `snapshot` | `goreleaser release --snapshot --clean --skip=sign,notarize`.                                         |
 | `release`  | `goreleaser release --clean`. Needs a `vX.Y.Z` tag and credentials.                                   |

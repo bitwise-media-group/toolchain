@@ -37,28 +37,28 @@ repo on this archetype pins nothing itself and only downloads what its tasks cal
 
 Every task runs from the repo root, because patchy finds its config there and resolves build paths against it.
 
-| Task                | What it does                                                                                                        |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| `build`             | `patchy build --all --dry-run`: build and scan every build entry without contacting a registry. Then the docs site. |
-| `publish`           | `patchy build`: build, scan, publish every tag, sign.                                                               |
-| `update-allowlists` | `patchy build --update-allowlists`: rebuild, rescan and regenerate `security/allowlists/<name>.yaml`.               |
-| `mirror-add`        | `patchy mirror add`: scaffold an entry from `URL` (and an optional `ENTRY` name).                                   |
-| `mirror-check`      | `patchy mirror upgrade --check`: the update plan, without touching the tree.                                        |
-| `mirror-upgrade`    | `patchy mirror upgrade`: move pins and regenerate everything derived.                                               |
-| `mirror-validate`   | `patchy mirror validate`: regenerate and byte-compare, verify provenance, scan, lint.                               |
-| `mirror-lint`       | `patchy mirror validate --only lint`: manifests and CVE allowlists.                                                 |
-| `mirror-publish`    | `patchy mirror sync`: publish charts and images by digest, signed.                                                  |
-| `fmt`               | Prose format, license headers. Nothing rewrites YAML.                                                               |
-| `lint`              | License, containers, shell, workflows, prose.                                                                       |
-| `ci`                | `lint`, `build`.                                                                                                    |
-| `pr`                | `fmt`, `lint`, `build`, `commit`.                                                                                   |
+| Task                | What it does                                                                                          |
+| ------------------- | ----------------------------------------------------------------------------------------------------- |
+| `build`             | `patchy build --all --dry-run`: build and scan every build entry without contacting a registry.       |
+| `publish`           | `patchy build`: build, scan, publish every tag, sign.                                                 |
+| `update-allowlists` | `patchy build --update-allowlists`: rebuild, rescan and regenerate `security/allowlists/<name>.yaml`. |
+| `mirror-add`        | `patchy mirror add`: scaffold an entry from `URL` (and an optional `ENTRY` name).                     |
+| `mirror-check`      | `patchy mirror upgrade --check`: the update plan, without touching the tree.                          |
+| `mirror-upgrade`    | `patchy mirror upgrade`: move pins and regenerate everything derived.                                 |
+| `mirror-validate`   | `patchy mirror validate`: regenerate and byte-compare, verify provenance, scan, lint.                 |
+| `mirror-lint`       | `patchy mirror validate --only lint`: manifests and CVE allowlists.                                   |
+| `mirror-publish`    | `patchy mirror sync`: publish charts and images by digest, signed.                                    |
+| `fmt`               | Prose format, license headers. Nothing rewrites YAML.                                                 |
+| `lint`              | License, containers, shell, workflows, prose.                                                         |
+| `ci`                | `lint`, `build`, `docs-build`.                                                                        |
+| `pr`                | `fmt`, `lint`, `build`, `docs-build`, `commit`.                                                       |
 
 `fmt` stops at prose and license headers on purpose. Vendored charts, rendered output, lock files and Flux manifests
 must stay byte-identical to whatever generated or reviewed them.
 
 `build` is the pull-request gate. It proves every artifact builds and passes its scans, with no push credentials. In a
-mirror store with no `build:` entries, patchy reports that there is nothing to build and succeeds. Like every
-archetype's, `build` then runs common's `docs-build`, which skips with a message when the repo has no `zensical.toml`.
+mirror store with no `build:` entries, patchy reports that there is nothing to build and succeeds. `ci` and `pr` then
+run common's `docs-build`, which skips with a message when the repo has no `zensical.toml`.
 
 No rollup runs a `mirror-*` task. `mirror-validate` pulls every upstream chart, and its lint stage checks allowlist
 expiry against today's date. In `lint` or `ci`, an entry expiring anywhere in the store would fail every pull request. A
@@ -169,8 +169,9 @@ run = [{ task = "fmt" }, { task = "lint" }, { task = "test" }, { task = "build" 
 
 ## A docs site with generated pages
 
-`build` reaches the site through the `docs-build` task, so a site whose pages embed generated content overrides
-`docs-build` to generate it first. flux-containers renders its chart reference pages from the committed tree:
+`ci`, `pr` and the release workflow all reach the site through the `docs-build` task, so a site whose pages embed
+generated content overrides `docs-build` to generate it first. flux-containers renders its chart reference pages from
+the committed tree:
 
 ```toml
 # tasks.toml

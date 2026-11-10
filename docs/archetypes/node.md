@@ -76,10 +76,10 @@ overrides:
 | ------- | ------------------------------------------------------------------------------------------------- |
 | `fmt`   | `check:fix` and `format` scripts (if defined), prose format, license headers.                     |
 | `lint`  | license check, `check` script (if defined) then `typecheck`, containers, shell, workflows, prose. |
-| `build` | The `build` script, then the docs site (`docs-build`).                                            |
+| `build` | The `build` script.                                                                               |
 | `test`  | The `test:coverage` script, if defined.                                                           |
-| `ci`    | `lint`, `build`, `test`.                                                                          |
-| `pr`    | `fmt`, `lint`, `build`, `test`, `commit`.                                                         |
+| `ci`    | `lint`, `build`, `test`, `docs-build`.                                                            |
+| `pr`    | `fmt`, `lint`, `build`, `test`, `docs-build`, `commit`.                                           |
 
 Every node task depends on a hidden `node-install` task, which installs exactly as locked and runs everything straight
 from `node_modules`, never through `npx` or a global install.

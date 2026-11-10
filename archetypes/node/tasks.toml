@@ -139,8 +139,8 @@ run = [
 ]
 
 [build]
-description = "package.json build, then the docs site"
-run = [{ task = "node-build" }, { task = "docs-build" }]
+description = "package.json build"
+run = [{ task = "node-build" }]
 
 [test]
 description = "package.json test:coverage (if the repo defines it)"
@@ -148,7 +148,7 @@ run = [{ task = "node-test" }]
 
 [ci]
 description = "the gates the reusable CI workflow runs"
-run = [{ task = "lint" }, { task = "build" }, { task = "test" }]
+run = [{ task = "lint" }, { task = "build" }, { task = "test" }, { task = "docs-build" }]
 
 [pr]
 description = "full local gate before a pull request"
@@ -157,5 +157,6 @@ run = [
   { task = "lint" },
   { task = "build" },
   { task = "test" },
+  { task = "docs-build" },
   { task = "commit" },
 ]

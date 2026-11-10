@@ -17,9 +17,8 @@
 # project without them (a docs-only site) skips those passes with a message
 # rather than failing — see scripts/. The house prose format/lint runs
 # alongside ruff: ruff owns the code, bun fmt + markdownlint own the
-# markdown. `docs-build` and `serve` come from common, and `build` (and so
-# CI) ends with docs-build like every archetype's, so a docs-only site needs
-# nothing beyond the include.
+# markdown. `docs-build` and `serve` come from common; what this archetype
+# adds for a docs site is that `build` (and so CI) builds it too.
 
 # Provision the project environment (Python + locked dependencies).
 [sync]
@@ -48,8 +47,7 @@ dir = "{{cwd}}"
 depends = ["sync"]
 run = "{{config_root}}/.mise/archetypes/python/scripts/test.sh"
 
-# `uv build` for a packaged project; the docs site is common's docs-build,
-# which the build rollup runs after it
+# `uv build` for a packaged project and/or `zensical build` for a docs site
 # (see scripts/build.sh).
 [py-build]
 hide = true
@@ -76,8 +74,8 @@ run = [
 ]
 
 [build]
-description = "uv build (package), then the docs site"
-run = [{ task = "py-build" }, { task = "docs-build" }]
+description = "uv build (package) and/or zensical build (docs site)"
+run = [{ task = "py-build" }]
 
 [test]
 description = "pytest with coverage"
