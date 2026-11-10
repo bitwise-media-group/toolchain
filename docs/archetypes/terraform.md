@@ -58,25 +58,36 @@ terraform_binary = "tofu"
 
 Every task then drives `tofu` instead of `terraform`.
 
-## Secrets with dotty
+## Variables and secrets
 
-`archetypes/terraform/scripts/tf-run.sh` wraps every state-touching invocation (`init`, `plan`, `apply` and lint's
-backend-less init):
+Plain, non-secret variables — a service account to impersonate, a region — go in the module's own `mise.toml`:
+
+```toml
+[env]
+GOOGLE_IMPERSONATE_SERVICE_ACCOUNT = "terraform-apply@o-foundation-1234.iam.gserviceaccount.com"
+```
+
+mise loads `[env]` from the invoking directory into every task, so they reach `terraform` with no wrapper (and into the
+shell on `cd`, for running `terraform` by hand). mise expands `$VARS` and `{{ … }}` templates in these values.
+
+Secrets go in the module's `fnox.toml`. `archetypes/terraform/scripts/tf-run.sh` wraps every state-touching invocation
+(`init`, `plan`, `apply` and lint's backend-less init):
 
 ```sh
-if command -v dotty && [ -f .env.dotty ]; then
-  exec dotty env run -- "$@"
+if command -v fnox >/dev/null && [ -f fnox.toml ]; then
+  exec fnox exec -- "$@"
 fi
 exec "$@"
 ```
 
-- When the module directory has a `.env.dotty` **and** `dotty` is on `PATH`, secrets and environment are injected
-  through `dotty env run`.
-- Otherwise the command runs untouched. `dotty env run` fails hard when there's nothing to inject, so it's only used
-  when there's a `.env.dotty`.
+- When the module directory has a `fnox.toml` **and** `fnox` is on `PATH`, its secrets are injected through `fnox exec`.
+- Otherwise the command runs untouched.
 
-dotty is never mise-installed. It's a local-development convenience CI never needs, so the wrapper checks for it itself.
-A module with a stale `.env.dotty` on a machine without dotty degrades to an uninjected run instead of blocking.
+fnox is never mise-installed here. dotty installs it on developer machines and CI never needs it, so the wrapper checks
+for it itself. A module with secrets on a machine without fnox degrades to an uninjected run instead of blocking.
+
+`dotty env migrate` converts a legacy `.env.dotty` into both files: its plain lines into `mise.toml`, its
+`{{ dotty://… }}` references into `fnox.toml`.
 
 ## Knobs
 

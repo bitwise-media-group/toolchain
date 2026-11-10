@@ -182,8 +182,8 @@ precedes `lint` inside `pr`.
   `Package.resolved`; `update` rewrites it. GoReleaser has no Swift builder, so `snapshot`/`release` drive `swift build`
   through the go builder with the archetype's `goreleaser-build.sh` as its `tool`.
 - **terraform** — every task runs in the invoking directory (`environments/<name>/`); `tf-run.sh` injects secrets via
-  `dotty` only when the module carries a `.env.dotty`. `terraform_binary = "tofu"` switches to OpenTofu. No license
-  tasks (addlicense would stamp `.tf` files).
+  `fnox` only when the module carries a `fnox.toml`, and plain variables come from the module's `mise.toml` `[env]`.
+  `terraform_binary = "tofu"` switches to OpenTofu. No license tasks (addlicense would stamp `.tf` files).
 
 ### pnpm / bun
 
@@ -239,10 +239,10 @@ Each repo's own Renovate bumps its runtime pins in its root `mise.toml` (the org
 `mise.toml`). A repo can override any shared tool version (or add tools) in its root `mise.toml [tools]` — the root
 config wins.
 
-`dotty` is the exception: our own first-party CLI, never mise-installed at all. The terraform archetype's `tf-run.sh`
-wrapper invokes it only to inject secrets when a module directory carries a `.env.dotty` — a local-dev convenience
-that's never present in CI — so the wrapper checks for `dotty` on PATH itself and runs the command uninjected if it's
-missing, rather than having mise provision (and thereby pin/shadow) a CLI most tasks never touch.
+`fnox` is the exception: the secrets manager dotty installs, never mise-installed here. The terraform archetype's
+`tf-run.sh` wrapper invokes it only to inject secrets when a module directory carries a `fnox.toml` — a local-dev
+convenience that's never present in CI — so the wrapper checks for `fnox` on PATH itself and runs the command uninjected
+if it's missing, rather than having mise provision (and thereby pin/shadow) a CLI most tasks never touch.
 
 Consuming repos should keep `coverage/` (and `node_modules/`, `.venv/`, `.build/`, `.swiftpm/`, `site/`, `dist/` as
 applicable) in `.gitignore`.

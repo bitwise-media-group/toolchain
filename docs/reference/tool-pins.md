@@ -32,7 +32,7 @@ built from.
 | tflint            | `aqua:terraform-linters/tflint`      | `tf-lint`                                                        | yes  |
 
 govulncheck isn't here: every Go repo pins `go:golang.org/x/vuln/cmd/govulncheck` next to its own `go`, because it must
-be compiled by that Go. dotty isn't here either; see [Pinned tools](../concepts/tools.md#dotty-is-never-installed).
+be compiled by that Go. fnox isn't here either; see [Pinned tools](../concepts/tools.md#fnox-is-never-installed).
 
 ## Current pins
 

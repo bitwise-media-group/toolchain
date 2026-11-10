@@ -95,10 +95,10 @@ precedence over them.
 **kubescape** downloads its controls artifacts (cached in `~/.kubescape`). The first container or deploy lint on a
 machine needs network. Neither scan ever contacts a Kubernetes cluster: the tasks point `KUBECONFIG` at nothing.
 
-## dotty is never installed
+## fnox is never installed
 
-`dotty`, our own first-party CLI, is deliberately absent from `[tools]`. The only thing that calls it is the terraform
-archetype's `tf-run.sh` wrapper, and only to inject secrets when a module directory carries a `.env.dotty`. That's a
-local-development convenience that's never present in CI. The wrapper checks for `dotty` on `PATH` itself and runs the
-command uninjected if it's missing, rather than having mise provision (and so pin and shadow) a CLI most tasks never
-touch and every developer already has.
+`fnox`, the secrets manager dotty installs, is deliberately absent from `[tools]`. The only thing that calls it is the
+terraform archetype's `tf-run.sh` wrapper, and only to inject secrets when a module directory carries a `fnox.toml`.
+That's a local-development convenience that's never present in CI. The wrapper checks for `fnox` on `PATH` itself and
+runs the command uninjected if it's missing, rather than having mise provision (and so pin and shadow) a CLI most tasks
+never touch and every developer already has.

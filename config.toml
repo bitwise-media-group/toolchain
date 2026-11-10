@@ -72,14 +72,15 @@
 # shellcheck are plain release binaries (helm ships via get.helm.sh rather
 # than GitHub releases), checksum-locked like everything else.
 #
-# dotty — our own first-party CLI — is deliberately absent from [tools] and
-# never mise-installed at all: it is only ever invoked (via the terraform
-# archetype's tf-run.sh) to inject secrets when a terraform module directory
-# carries a .env.dotty, which is a local-dev convenience and never present in
-# CI. tf-run.sh checks for dotty on PATH itself (falling through to an
-# uninjected run if it's missing, rather than mise provisioning — and thereby
-# pinning/shadowing — a CLI that CI never needs and every developer already
-# has their own copy of).
+# fnox (the secrets manager dotty installs) is deliberately absent from
+# [tools] and never mise-installed here: it is only ever invoked (via the
+# terraform archetype's tf-run.sh) to inject secrets when a terraform module
+# directory carries a fnox.toml, which is a local-dev convenience and never
+# present in CI. tf-run.sh checks for fnox on PATH itself (falling through to
+# an uninjected run if it's missing, rather than mise provisioning — and
+# thereby pinning/shadowing — a CLI that CI never needs and every developer
+# already has their own copy of). Plain, non-secret module variables need no
+# tool at all: they live in the module's mise.toml [env].
 #
 # Updates: every [tools] entry is an exact pin, bumped by the org Renovate bot
 # (bitwise-media-group/renovate-config) — one PR per tool that updates the pin
@@ -192,8 +193,8 @@ swift_product = ""
 # terraform: which binary the terraform archetype drives — set to "tofu" in
 # an OpenTofu repo (and add the opentofu pin to that repo's root [tools]; the
 # shared [tools] only pins terraform). Secrets/env injection is not a knob:
-# tf-run.sh always wraps the state-touching tasks and engages dotty only when
-# the module directory carries a .env.dotty.
+# tf-run.sh always wraps the state-touching tasks and engages fnox only when
+# the module directory carries a fnox.toml.
 terraform_binary = "terraform"
 # container/deploy lint: minimum severity that fails the gate — grype
 # --fail-on for Dockerfile base images, kubescape --severity-threshold for
