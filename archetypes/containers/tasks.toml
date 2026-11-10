@@ -1,0 +1,131 @@
+# Copyright 2026 BitWise Media Group Ltd
+# SPDX-License-Identifier: MIT
+#
+# containers — archetype for a repo whose products are OCI artifacts published
+# with patchy (bitwise-media-group/patchy): a mirror store of vendored upstream
+# charts and images (`patchy mirror`: flux-containers), first-party images and
+# Flux manifest artifacts (`patchy build`: flux-manifests,
+# patchy-app-manifests), or both — plus the documentation site most of them
+# carry, which `build` builds when there is a zensical.toml.
+#
+# Include AFTER common/tasks.toml in the consumer's root mise.toml:
+#   [task_config]
+#   includes = [".mise/common/tasks.toml", ".mise/archetypes/containers/tasks.toml"]
+#
+# No root [tools] pins are needed: patchy, cosign, osv-scanner, grype,
+# kubescape, crane, buildx and the Flux validation set (kustomize,
+# kubeconform, yq, flux-operator) are all shared pins in the library config,
+# lazy so only the repos that call them install them. patchy itself reads the
+# repo's patchy config (patchy.yaml at the root, typically): registries,
+# signing, the scan defaults, and the mirror: and build: blocks.
+#
+# Every task runs from the repo root ({{config_root}}): patchy finds its config
+# from the working directory and resolves build paths against it. Selection
+# is per invocation, through the environment like every archetype's knobs
+# (see scripts/patchy.sh): ENTRY names one or more entries (all when unset),
+# REGISTRY narrows publishing, URL feeds mirror-add. Extra flags go after `--`
+# on `mise run` (`mise run mirror-validate -- -o markdown`).
+#
+# There is no `test`: a repo's validation harness (render the Flux trees with
+# sample inputs, kubeconform them, assert its own invariants) is repo-specific.
+# A repo with one defines `test` in its own tasks.toml — the reusable CI runs
+# it — and adds it to its `ci`/`pr`. scripts/flux-substitute.sh and
+# scripts/kubeconform.sh are the shared halves such a harness calls.
+
+# `patchy build --all --dry-run`: build and scan every build entry without
+# contacting a registry — what `build` (and so CI) proves on every PR. A repo
+# with no build: entries (a mirror store) gets patchy's "nothing to build".
+[containers-build]
+hide = true
+dir = "{{config_root}}"
+run = "{{config_root}}/.mise/archetypes/containers/scripts/patchy.sh build --dry-run"
+
+# The documentation site, when the repo has one (see scripts/site.sh).
+[site-build]
+hide = true
+dir = "{{config_root}}"
+run = "{{config_root}}/.mise/archetypes/containers/scripts/site.sh"
+
+# Build, scan, publish and sign the build entries — normally a publish
+# workflow's job (it needs registry logins and, keyless, an OIDC token), not a
+# workstation's. Tags never move, so a re-run reports skipped-current.
+[publish]
+description = "build, scan, publish and sign the patchy build entries (ENTRY=<name>…, REGISTRY=<name>…)"
+dir = "{{config_root}}"
+run = "{{config_root}}/.mise/archetypes/containers/scripts/patchy.sh build"
+
+# Never publishes, signs or fails on findings: the PR diff is the review.
+[update-allowlists]
+description = "rebuild, rescan and regenerate security/allowlists/<name>.yaml (ENTRY=<name>…)"
+dir = "{{config_root}}"
+run = "{{config_root}}/.mise/archetypes/containers/scripts/patchy.sh build --update-allowlists"
+
+# Mirror store verbs. patchy discovers entries from the tree
+# (charts/*/manifest.yaml, artifacts/*/manifest.yaml); these fail with
+# "the store has no entries" in a repo without any.
+
+[mirror-add]
+description = "scaffold a mirror entry (URL=<upstream> [ENTRY=<name>])"
+dir = "{{config_root}}"
+run = 'patchy mirror add ${ENTRY:-} --url "${URL:?usage: URL=<upstream url> [ENTRY=<name>] mise run mirror-add}"'
+
+[mirror-check]
+description = "print the mirror's lockstep-aware update plan without touching the tree"
+dir = "{{config_root}}"
+run = "{{config_root}}/.mise/archetypes/containers/scripts/patchy.sh mirror upgrade --check"
+
+# The only mirror verb that consults the wall clock (tracked-tag cooldowns,
+# allowlist expiry stamps); a fully converged entry is a no-op.
+[mirror-upgrade]
+description = "move mirror pins forward and regenerate everything derived (ENTRY=<name>…)"
+dir = "{{config_root}}"
+run = "{{config_root}}/.mise/archetypes/containers/scripts/patchy.sh mirror upgrade"
+
+# The full gate for an entry: regenerate out-of-tree and demand byte-identity,
+# verify upstream provenance, scan, lint. Network-heavy, and lint is
+# time-dependent (allowlist expiry), which is why no rollup carries it.
+[mirror-validate]
+description = "regenerate, verify, scan and lint mirror entries (ENTRY=<name>…)"
+dir = "{{config_root}}"
+run = "{{config_root}}/.mise/archetypes/containers/scripts/patchy.sh mirror validate"
+
+[mirror-lint]
+description = "lint mirror manifests and CVE allowlists (ENTRY=<name>…)"
+dir = "{{config_root}}"
+run = "{{config_root}}/.mise/archetypes/containers/scripts/patchy.sh mirror validate --only lint"
+
+# Idempotent: an existing chart tag is never replaced and anything current and
+# signed is skipped.
+[mirror-publish]
+description = "publish mirrored charts and images, signed (ENTRY=<name>…, REGISTRY=<name>…)"
+dir = "{{config_root}}"
+run = "{{config_root}}/.mise/archetypes/containers/scripts/patchy.sh mirror sync"
+
+# Canonical contract. fmt is common's: vendored charts, rendered output, lock
+# files and Flux manifests must stay byte-identical to what generated or
+# reviewed them, so nothing here rewrites YAML.
+[fmt]
+description = "format prose, inject license headers"
+run = [{ task = "fmt-prose" }, { task = "license" }]
+
+[lint]
+description = "license, container, shell, workflow and prose checks"
+run = [
+  { task = "license-check" },
+  { task = "lint-containers" },
+  { task = "lint-shell" },
+  { task = "lint-workflows" },
+  { task = "lint-prose" },
+]
+
+[build]
+description = "build and scan every patchy build entry without publishing, then the docs site"
+run = [{ task = "containers-build" }, { task = "site-build" }]
+
+[ci]
+description = "the gates the reusable CI workflow runs"
+run = [{ task = "lint" }, { task = "build" }]
+
+[pr]
+description = "full local gate before a pull request"
+run = [{ task = "fmt" }, { task = "lint" }, { task = "build" }, { task = "commit" }]

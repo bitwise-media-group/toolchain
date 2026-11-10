@@ -33,7 +33,8 @@ toolchain/                    # this repo == the consumer's .mise/ directory
     ├── node/                 #   package.json-script contract (npm/pnpm/bun)
     ├── python/               #   uv-native: ruff + pytest + uv build (+ docs site)
     ├── swift/                #   SwiftPM: swift format + swift test + GoReleaser
-    └── terraform/            #   init/plan/apply + tf fmt/lint/docs
+    ├── terraform/            #   init/plan/apply + tf fmt/lint/docs
+    └── containers/           #   patchy mirror + build: OCI artifacts, Flux manifests
         ├── tasks.toml        #   each archetype: its tasks + fmt/lint/ci/pr rollups
         ├── include.mk        #   its make shim (pulls in common/include.mk)
         └── scripts/          #   its task scripts
@@ -83,14 +84,15 @@ pr: docs
 
 Per archetype, the root `mise.toml` differs only in what it pins and includes:
 
-| archetype     | root `[tools]`                         | `includes` second entry / `Makefile` include       |
-| ------------- | -------------------------------------- | -------------------------------------------------- |
-| go            | `go`, `go:…/govulncheck`               | `.mise/archetypes/go/…`                            |
-| node          | `node`                                 | `.mise/archetypes/node/…`                          |
-| python        | nothing (uv provisions Python)         | `.mise/archetypes/python/…`                        |
-| swift         | `swift`                                | `.mise/archetypes/swift/…`                         |
-| terraform     | nothing (`opentofu` for a `tofu` repo) | `.mise/archetypes/terraform/…`                     |
-| _common only_ | nothing                                | no second entry; `include .mise/common/include.mk` |
+| archetype     | root `[tools]`                          | `includes` second entry / `Makefile` include       |
+| ------------- | --------------------------------------- | -------------------------------------------------- |
+| go            | `go`, `go:…/govulncheck`                | `.mise/archetypes/go/…`                            |
+| node          | `node`                                  | `.mise/archetypes/node/…`                          |
+| python        | nothing (uv provisions Python)          | `.mise/archetypes/python/…`                        |
+| swift         | `swift`                                 | `.mise/archetypes/swift/…`                         |
+| terraform     | nothing (`opentofu` for a `tofu` repo)  | `.mise/archetypes/terraform/…`                     |
+| containers    | nothing (every pipeline tool is shared) | `.mise/archetypes/containers/…`                    |
+| _common only_ | nothing                                 | no second entry; `include .mise/common/include.mk` |
 
 A Markdown/YAML repo with nothing to build or test (github-workflows, skills, `.github`) includes only `common`:
 
@@ -147,14 +149,15 @@ precedes `lint` inside `pr`.
 
 ### Archetypes
 
-| archetype | `fmt`                                             | `lint`                                                                            | `build`                            | `test`                        | extras                                                  |
-| --------- | ------------------------------------------------- | --------------------------------------------------------------------------------- | ---------------------------------- | ----------------------------- | ------------------------------------------------------- |
-| go        | `go fmt`, `golangci-lint --fix`, prose, license   | golangci-lint, govulncheck, license, containers, shell, workflows, prose          | `go build` with version ldflags    | gotestsum, `-race`, coverage  | `tidy`, `fuzz`, `snapshot`, `release`                   |
-| node      | `check:fix` / `format` scripts, prose, license    | `check` / `typecheck` scripts, license, containers, shell, workflows, prose       | `build` script                     | `test:coverage` script        | —                                                       |
-| python    | license, `ruff format`, `ruff check --fix`, prose | `ruff check`, `ruff format --check`, license, containers, shell, workflows, prose | `uv build` and/or `zensical build` | pytest (+ pytest-cov)         | —                                                       |
-| swift     | `swift format`, prose, license                    | `swift format lint --strict`, license, containers, shell, workflows, prose        | `swift build -c release`           | `swift test`, coverage (LCOV) | `resolve`, `update`, `snapshot`, `release`              |
-| terraform | `terraform fmt -recursive`, prose                 | validate, tflint, containers, shell, workflows, prose                             | —                                  | —                             | `init`, `plan`, `apply`, `docs`                         |
-| _common_  | prose, license                                    | license, containers, shell, workflows, prose                                      | —                                  | —                             | `commit`, `actionlint`, `zizmor`, `docs-build`, `serve` |
+| archetype  | `fmt`                                             | `lint`                                                                            | `build`                                   | `test`                        | extras                                                  |
+| ---------- | ------------------------------------------------- | --------------------------------------------------------------------------------- | ----------------------------------------- | ----------------------------- | ------------------------------------------------------- |
+| go         | `go fmt`, `golangci-lint --fix`, prose, license   | golangci-lint, govulncheck, license, containers, shell, workflows, prose          | `go build` with version ldflags           | gotestsum, `-race`, coverage  | `tidy`, `fuzz`, `snapshot`, `release`                   |
+| node       | `check:fix` / `format` scripts, prose, license    | `check` / `typecheck` scripts, license, containers, shell, workflows, prose       | `build` script                            | `test:coverage` script        | —                                                       |
+| python     | license, `ruff format`, `ruff check --fix`, prose | `ruff check`, `ruff format --check`, license, containers, shell, workflows, prose | `uv build` and/or `zensical build`        | pytest (+ pytest-cov)         | —                                                       |
+| swift      | `swift format`, prose, license                    | `swift format lint --strict`, license, containers, shell, workflows, prose        | `swift build -c release`                  | `swift test`, coverage (LCOV) | `resolve`, `update`, `snapshot`, `release`              |
+| terraform  | `terraform fmt -recursive`, prose                 | validate, tflint, containers, shell, workflows, prose                             | —                                         | —                             | `init`, `plan`, `apply`, `docs`                         |
+| containers | prose, license                                    | license, containers, shell, workflows, prose                                      | `patchy build --all --dry-run`, docs site | — (repo-local harness)        | `publish`, `update-allowlists`, `mirror-*`              |
+| _common_   | prose, license                                    | license, containers, shell, workflows, prose                                      | —                                         | —                             | `commit`, `actionlint`, `zizmor`, `docs-build`, `serve` |
 
 - **go** — `go` and `govulncheck` are pinned by the repo (govulncheck must be `go install`ed by the same Go that builds
   the module). Structural knobs `app`, `app_pkg`, `build_tags`, `version_pkg`, `goos` come from `[vars]`. `goos` is a
@@ -184,6 +187,13 @@ precedes `lint` inside `pr`.
 - **terraform** — every task runs in the invoking directory (`environments/<name>/`); `tf-run.sh` injects secrets via
   `fnox` only when the module carries a `fnox.toml`, and plain variables come from the module's `mise.toml` `[env]`.
   `terraform_binary = "tofu"` switches to OpenTofu. No license tasks (addlicense would stamp `.tf` files).
+
+- **containers** — repos whose products are OCI artifacts published with patchy: a mirror store (`patchy mirror`), or
+  first-party images and Flux manifest artifacts (`patchy build`). Every pipeline tool is a shared lazy pin (patchy,
+  cosign, osv-scanner, crane, kustomize, kubeconform, yq, flux-operator, plus grype, kubescape and buildx), so the repo
+  pins nothing. `build` is `patchy build --all --dry-run` plus the docs site; `publish`, `update-allowlists` and the
+  `mirror-*` tasks wrap the rest, selected per run by `ENTRY` / `REGISTRY`. No `test`: a repo's Flux render harness is
+  its own, and `scripts/flux-substitute.sh` / `scripts/kubeconform.sh` are the shared halves it calls.
 
 ### pnpm / bun
 

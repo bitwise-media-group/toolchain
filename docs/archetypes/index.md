@@ -3,25 +3,27 @@
 Every repo includes `common/tasks.toml` first, then **at most one** archetype. The archetype is the repo's primary
 language: it decides what `fmt`, `lint`, `build` and `test` mean.
 
-| Your repo is…                                        | Use                       |
-| ---------------------------------------------------- | ------------------------- |
-| A Go CLI or service (dotty, evolve, gh-claude)       | [go](go.md)               |
-| A TypeScript library or a GitHub Action              | [node](node.md)           |
-| A Python package, or a Zensical docs site with no Go | [python](python.md)       |
-| A SwiftPM package or CLI                             | [swift](swift.md)         |
-| A Terraform or OpenTofu module or environment        | [terraform](terraform.md) |
-| Markdown and YAML with nothing to build or test      | [common only](common.md)  |
+| Your repo is…                                                                 | Use                         |
+| ----------------------------------------------------------------------------- | --------------------------- |
+| A Go CLI or service (dotty, evolve, gh-claude)                                | [go](go.md)                 |
+| A TypeScript library or a GitHub Action                                       | [node](node.md)             |
+| A Python package, or a Zensical docs site with no Go                          | [python](python.md)         |
+| A SwiftPM package or CLI                                                      | [swift](swift.md)           |
+| A Terraform or OpenTofu module or environment                                 | [terraform](terraform.md)   |
+| OCI artifacts published with patchy: a mirror store, images or Flux manifests | [containers](containers.md) |
+| Markdown and YAML with nothing to build or test                               | [common only](common.md)    |
 
 ## What each archetype provides
 
-| archetype | `fmt`                                             | `lint`                                                                            | `build`                            | `test`                        | extras                                     |
-| --------- | ------------------------------------------------- | --------------------------------------------------------------------------------- | ---------------------------------- | ----------------------------- | ------------------------------------------ |
-| go        | `go fmt`, `golangci-lint --fix`, prose, license   | golangci-lint, govulncheck, license, containers, shell, workflows, prose          | `go build` with version ldflags    | gotestsum, `-race`, coverage  | `tidy`, `fuzz`, `snapshot`, `release`      |
-| node      | `check:fix` / `format` scripts, prose, license    | `check` / `typecheck` scripts, license, containers, shell, workflows, prose       | `build` script                     | `test:coverage` script        | —                                          |
-| python    | license, `ruff format`, `ruff check --fix`, prose | `ruff check`, `ruff format --check`, license, containers, shell, workflows, prose | `uv build` and/or `zensical build` | pytest (+ pytest-cov)         | —                                          |
-| swift     | `swift format`, prose, license                    | `swift format lint --strict`, license, containers, shell, workflows, prose        | `swift build -c release`           | `swift test`, coverage (LCOV) | `resolve`, `update`, `snapshot`, `release` |
-| terraform | `terraform fmt -recursive`, prose                 | validate, tflint, containers, shell, workflows, prose                             | —                                  | —                             | `init`, `plan`, `apply`, `docs`            |
-| _common_  | prose, license                                    | license, containers, shell, workflows, prose                                      | —                                  | —                             | `commit`, `actionlint`, `zizmor`           |
+| archetype  | `fmt`                                             | `lint`                                                                            | `build`                                   | `test`                        | extras                                     |
+| ---------- | ------------------------------------------------- | --------------------------------------------------------------------------------- | ----------------------------------------- | ----------------------------- | ------------------------------------------ |
+| go         | `go fmt`, `golangci-lint --fix`, prose, license   | golangci-lint, govulncheck, license, containers, shell, workflows, prose          | `go build` with version ldflags           | gotestsum, `-race`, coverage  | `tidy`, `fuzz`, `snapshot`, `release`      |
+| node       | `check:fix` / `format` scripts, prose, license    | `check` / `typecheck` scripts, license, containers, shell, workflows, prose       | `build` script                            | `test:coverage` script        | —                                          |
+| python     | license, `ruff format`, `ruff check --fix`, prose | `ruff check`, `ruff format --check`, license, containers, shell, workflows, prose | `uv build` and/or `zensical build`        | pytest (+ pytest-cov)         | —                                          |
+| swift      | `swift format`, prose, license                    | `swift format lint --strict`, license, containers, shell, workflows, prose        | `swift build -c release`                  | `swift test`, coverage (LCOV) | `resolve`, `update`, `snapshot`, `release` |
+| terraform  | `terraform fmt -recursive`, prose                 | validate, tflint, containers, shell, workflows, prose                             | —                                         | —                             | `init`, `plan`, `apply`, `docs`            |
+| containers | prose, license                                    | license, containers, shell, workflows, prose                                      | `patchy build --all --dry-run`, docs site | — (repo-local harness)        | `publish`, `update-allowlists`, `mirror-*` |
+| _common_   | prose, license                                    | license, containers, shell, workflows, prose                                      | —                                         | —                             | `commit`, `actionlint`, `zizmor`           |
 
 Every archetype's `lint` includes everything common's does: license (except terraform), containers, shell, workflows and
 prose. The common tasks (`commit`, `license`, `actionlint`, `zizmor`) are available in every repo.
@@ -30,14 +32,15 @@ prose. The common tasks (`commit`, `license`, `actionlint`, `zizmor`) are availa
 
 The root `mise.toml` differs only in what it pins and which archetype it includes:
 
-| archetype     | root `[tools]`                         | `includes` second entry / `Makefile` include       |
-| ------------- | -------------------------------------- | -------------------------------------------------- |
-| go            | `go`, `go:…/govulncheck`               | `.mise/archetypes/go/…`                            |
-| node          | `node`                                 | `.mise/archetypes/node/…`                          |
-| python        | nothing (uv provisions Python)         | `.mise/archetypes/python/…`                        |
-| swift         | `swift`                                | `.mise/archetypes/swift/…`                         |
-| terraform     | nothing (`opentofu` for a `tofu` repo) | `.mise/archetypes/terraform/…`                     |
-| _common only_ | nothing                                | no second entry; `include .mise/common/include.mk` |
+| archetype     | root `[tools]`                          | `includes` second entry / `Makefile` include       |
+| ------------- | --------------------------------------- | -------------------------------------------------- |
+| go            | `go`, `go:…/govulncheck`                | `.mise/archetypes/go/…`                            |
+| node          | `node`                                  | `.mise/archetypes/node/…`                          |
+| python        | nothing (uv provisions Python)          | `.mise/archetypes/python/…`                        |
+| swift         | `swift`                                 | `.mise/archetypes/swift/…`                         |
+| terraform     | nothing (`opentofu` for a `tofu` repo)  | `.mise/archetypes/terraform/…`                     |
+| containers    | nothing (every pipeline tool is shared) | `.mise/archetypes/containers/…`                    |
+| _common only_ | nothing                                 | no second entry; `include .mise/common/include.mk` |
 
 ## Why archetypes don't stack
 

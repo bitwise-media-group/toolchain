@@ -84,6 +84,17 @@
 # FNOX_IF_MISSING overrides that per job. Plain, non-secret variables need no
 # tool at all: they live in the repo's or module's mise.toml [env].
 #
+# The containers archetype's pipeline tools are shared lazy pins as well, so
+# a repo that publishes OCI artifacts pins nothing of its own: patchy (our own
+# CLI — `patchy mirror` and `patchy build` — exempt from the cooldown below),
+# osv-scanner (patchy's default image scanner; grype is the alternative),
+# crane (registry logins and inspection), and the Flux validation set the
+# archetype's helper scripts drive: kustomize, kubeconform, yq, and the
+# flux-operator CLI (renders ResourceSets with sample inputs). cosign,
+# kubescape and buildx, which patchy also shells out to, are pinned above for
+# their other callers. Being lazy, none of them is downloaded until a task (or
+# a developer) first calls it, so the other archetypes never install them.
+#
 # Updates: every [tools] entry is an exact pin, bumped by the org Renovate bot
 # (bitwise-media-group/renovate-config) — one PR per tool that updates the pin
 # here AND regenerates mise.lock (`mise lock`, the manager's artifact step) in
@@ -135,17 +146,24 @@ minimum_release_age_excludes = [
 "aqua:anchore/syft" = { version = "1.56.0", lazy = true, lazy_bins = "syft" }
 "aqua:astral-sh/uv" = { version = "0.13.7", lazy = true, lazy_bins = "uv" }
 "aqua:golangci/golangci-lint" = { version = "2.15.0", lazy = true, lazy_bins = "golangci-lint" }
+"aqua:google/go-containerregistry" = { version = "0.22.1", lazy = true, lazy_bins = "crane" }
+"aqua:google/osv-scanner" = { version = "2.7.0", lazy = true, lazy_bins = "osv-scanner" }
 "aqua:goreleaser/goreleaser" = { version = "2.20.0", lazy = true, lazy_bins = "goreleaser" }
 "aqua:gotestyourself/gotestsum" = { version = "1.13.0", lazy = true, lazy_bins = "gotestsum" }
 "aqua:hadolint/hadolint" = { version = "2.15.1", lazy = true, lazy_bins = "hadolint" }
 "aqua:hashicorp/terraform" = { version = "1.17.1", lazy = true, lazy_bins = "terraform" }
 "aqua:helm/helm" = { version = "4.3.1", lazy = true, lazy_bins = "helm" }
 "aqua:jdx/fnox" = { version = "1.47.0", lazy = true, lazy_bins = "fnox" }
+"aqua:kubernetes-sigs/kustomize" = { version = "5.7.1", lazy = true, lazy_bins = "kustomize" }
 "aqua:kubescape/kubescape" = { version = "4.0.20", lazy = true, lazy_bins = "kubescape" }
+"aqua:mikefarah/yq" = { version = "4.54.2", lazy = true, lazy_bins = "yq" }
 "aqua:pnpm/pnpm" = { version = "12.18.0", lazy = true, lazy_bins = "pnpm" }
 "aqua:sigstore/cosign" = { version = "3.1.4", lazy = true, lazy_bins = "cosign" }
 "aqua:terraform-docs/terraform-docs" = { version = "0.24.0", lazy = true, lazy_bins = "terraform-docs" }
 "aqua:terraform-linters/tflint" = { version = "0.65.0", lazy = true, lazy_bins = "tflint" }
+"aqua:yannh/kubeconform" = { version = "0.8.0", lazy = true, lazy_bins = "kubeconform" }
+"github:bitwise-media-group/patchy" = { version = "v0.12.0", matching = "patchy-cli", lazy = true, lazy_bins = "patchy" }
+"github:controlplaneio-fluxcd/flux-operator" = { version = "v0.62.1", lazy = true, lazy_bins = "flux-operator" }
 "aqua:docker/buildx" = { version = "0.38.2", postinstall = 'dir="${DOCKER_CONFIG:-$HOME/.docker}/cli-plugins" && mkdir -p "$dir" && ln -sf "$MISE_TOOL_INSTALL_PATH/docker-cli-plugin-docker-buildx" "$dir/docker-buildx"' }
 
 # Structural per-repo knobs, referenced as {{vars.name}} in the task files.

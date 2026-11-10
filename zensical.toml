@@ -40,6 +40,7 @@ nav = [
   { "Archetypes" = [
     { "Choosing an archetype" = "archetypes/index.md" },
     { "common only" = "archetypes/common.md" },
+    { "containers" = "archetypes/containers.md" },
     { "go" = "archetypes/go.md" },
     { "node" = "archetypes/node.md" },
     { "python" = "archetypes/python.md" },

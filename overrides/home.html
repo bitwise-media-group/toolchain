@@ -21,8 +21,8 @@ the header and the page body via the `tabs` block; the article `content` block i
             <div class="tc-kicker"><span class="tc-dot"></span>// Shared build tasks for the fleet</div>
             <h1 class="tc-title">One toolchain.<br /><em>Every repo.</em></h1>
             <p class="tc-lede">
-                Pinned, checksum-locked developer tools, mise task archetypes for Go, Node, Python, Swift and
-                Terraform, and the house lint and license policy — mounted in every repo as a <code>.mise/</code> submodule, with a
+                Pinned, checksum-locked developer tools, mise task archetypes for Go, Node, Python, Swift,
+                Terraform and OCI containers, and the house lint and license policy — mounted in every repo as a <code>.mise/</code> submodule, with a
                 one-line Makefile on top.
             </p>
             <div class="tc-term">
@@ -187,7 +187,7 @@ the header and the page body via the `tabs` block; the article `content` block i
                 <h3>Archetype tasks</h3>
                 <p>
                     <code>common</code> plus exactly one of <code>go</code>, <code>node</code>, <code>python</code>,
-                    <code>swift</code> or <code>terraform</code> — each with real <code>fmt</code>, <code>lint</code>, <code>build</code>,
+                    <code>swift</code>, <code>terraform</code> or <code>containers</code> — each with real <code>fmt</code>, <code>lint</code>, <code>build</code>,
                     <code>test</code>, <code>ci</code> and <code>pr</code> rollups.
                 </p>
             </div>
@@ -284,6 +284,11 @@ the header and the page body via the `tabs` block; the article `content` block i
                 <span class="tc-arch__name">terraform</span>
                 <p>Modules and environments: init, plan, apply, validate, tflint and terraform-docs.</p>
                 <code>archetypes/terraform</code>
+            </a>
+            <a class="tc-arch" href="{{ 'archetypes/containers/' | url }}">
+                <span class="tc-arch__name">containers</span>
+                <p>OCI artifacts with patchy: mirror stores, images and Flux manifests — built, scanned, published, signed.</p>
+                <code>archetypes/containers</code>
             </a>
             <a class="tc-arch tc-arch--common" href="{{ 'archetypes/common/' | url }}">
                 <span class="tc-arch__name">common only</span>

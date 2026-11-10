@@ -8,15 +8,15 @@ Every task the library defines, by archetype. Hidden tasks don't appear in `make
 Each archetype redefines the rollups, replacing common's versions. Each step runs in sequence and stops at the first
 failure.
 
-| Rollup  | common                                                                 | go                                                                              | node                                                                              | python                                                                          | swift                                                                              | terraform                                                        |
-| ------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| `fmt`   | fmt-prose, license                                                     | go-fmt, fmt-prose, license                                                      | node-fmt, fmt-prose, license                                                      | license, py-fmt, fmt-prose                                                      | swift-fmt, fmt-prose, license                                                      | tf-fmt, fmt-prose                                                |
-| `lint`  | license-check, lint-containers, lint-shell, lint-workflows, lint-prose | license-check, go-lint, lint-containers, lint-shell, lint-workflows, lint-prose | license-check, node-lint, lint-containers, lint-shell, lint-workflows, lint-prose | license-check, py-lint, lint-containers, lint-shell, lint-workflows, lint-prose | license-check, swift-lint, lint-containers, lint-shell, lint-workflows, lint-prose | tf-lint, lint-containers, lint-shell, lint-workflows, lint-prose |
-| `build` | —                                                                      | go-build                                                                        | node-build                                                                        | py-build                                                                        | swift-build                                                                        | —                                                                |
-| `test`  | —                                                                      | go-test                                                                         | node-test                                                                         | py-test                                                                         | swift-test                                                                         | —                                                                |
-| `docs`  | —                                                                      | — (repo-local)                                                                  | —                                                                                 | —                                                                               | —                                                                                  | tf-docs                                                          |
-| `ci`    | lint                                                                   | lint, test, build                                                               | lint, build, test                                                                 | lint, test, build                                                               | lint, test, build                                                                  | lint, docs                                                       |
-| `pr`    | fmt, lint                                                              | tidy, fmt, lint, test, build, commit                                            | fmt, lint, build, test, commit                                                    | fmt, lint, test, build, commit                                                  | fmt, lint, test, build, commit                                                     | fmt, lint, docs                                                  |
+| Rollup  | common                                                                 | go                                                                              | node                                                                              | python                                                                          | swift                                                                              | terraform                                                        | containers                                                             |
+| ------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| `fmt`   | fmt-prose, license                                                     | go-fmt, fmt-prose, license                                                      | node-fmt, fmt-prose, license                                                      | license, py-fmt, fmt-prose                                                      | swift-fmt, fmt-prose, license                                                      | tf-fmt, fmt-prose                                                | fmt-prose, license                                                     |
+| `lint`  | license-check, lint-containers, lint-shell, lint-workflows, lint-prose | license-check, go-lint, lint-containers, lint-shell, lint-workflows, lint-prose | license-check, node-lint, lint-containers, lint-shell, lint-workflows, lint-prose | license-check, py-lint, lint-containers, lint-shell, lint-workflows, lint-prose | license-check, swift-lint, lint-containers, lint-shell, lint-workflows, lint-prose | tf-lint, lint-containers, lint-shell, lint-workflows, lint-prose | license-check, lint-containers, lint-shell, lint-workflows, lint-prose |
+| `build` | —                                                                      | go-build                                                                        | node-build                                                                        | py-build                                                                        | swift-build                                                                        | —                                                                | containers-build, site-build                                           |
+| `test`  | —                                                                      | go-test                                                                         | node-test                                                                         | py-test                                                                         | swift-test                                                                         | —                                                                | — (repo-local)                                                         |
+| `docs`  | —                                                                      | — (repo-local)                                                                  | —                                                                                 | —                                                                               | —                                                                                  | tf-docs                                                          | —                                                                      |
+| `ci`    | lint                                                                   | lint, test, build                                                               | lint, build, test                                                                 | lint, test, build                                                               | lint, test, build                                                                  | lint, docs                                                       | lint, build                                                            |
+| `pr`    | fmt, lint                                                              | tidy, fmt, lint, test, build, commit                                            | fmt, lint, build, test, commit                                                    | fmt, lint, test, build, commit                                                  | fmt, lint, test, build, commit                                                     | fmt, lint, docs                                                  | fmt, lint, build, commit                                               |
 
 ## common
 
@@ -112,19 +112,42 @@ Defined in `archetypes/terraform/tasks.toml`. Every task runs in the invoking di
 
 `<binary>` is the `terraform_binary` knob: `terraform` by default, or `tofu`.
 
+## containers
+
+Defined in `archetypes/containers/tasks.toml`. Every task runs from the repo root. `ENTRY` selects entries (all when
+unset) and `REGISTRY` narrows publishing, both through `scripts/patchy.sh`; anything after `--` on `mise run` is
+appended.
+
+| Task                | Hidden | Runs                                                                                   |
+| ------------------- | ------ | -------------------------------------------------------------------------------------- |
+| `containers-build`  | yes    | `scripts/patchy.sh build --dry-run`: `patchy build --all --dry-run`.                   |
+| `site-build`        | yes    | `scripts/site.sh`: `mise run docs-build` when there is a `zensical.toml`, else a skip. |
+| `publish`           |        | `scripts/patchy.sh build`: build, scan, publish, sign.                                 |
+| `update-allowlists` |        | `scripts/patchy.sh build --update-allowlists`.                                         |
+| `mirror-add`        |        | `patchy mirror add [$ENTRY] --url $URL`.                                               |
+| `mirror-check`      |        | `scripts/patchy.sh mirror upgrade --check`.                                            |
+| `mirror-upgrade`    |        | `scripts/patchy.sh mirror upgrade`.                                                    |
+| `mirror-validate`   |        | `scripts/patchy.sh mirror validate`.                                                   |
+| `mirror-lint`       |        | `scripts/patchy.sh mirror validate --only lint`.                                       |
+| `mirror-publish`    |        | `scripts/patchy.sh mirror sync`.                                                       |
+
+`scripts/flux-substitute.sh` and `scripts/kubeconform.sh` back no task: they are helpers for a repo's own Flux
+validation harness. See [containers](../archetypes/containers.md#flux-validation-helpers).
+
 ## make targets
 
 The make shim declares these names `.PHONY` and forwards them explicitly, so a same-named file or directory can't shadow
 them:
 
-| Shim                | Names                                                                                              |
-| ------------------- | -------------------------------------------------------------------------------------------------- |
-| `common/include.mk` | `lint build test e2e fmt ci pr commit license docs docs-build serve actionlint zizmor`, and `help` |
-| go                  | adds `tidy snapshot release fuzz`                                                                  |
-| python              | adds `sync`                                                                                        |
-| swift               | adds `resolve update snapshot release`                                                             |
-| terraform           | adds `init plan apply`                                                                             |
-| node                | adds nothing                                                                                       |
+| Shim                | Names                                                                                                              |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `common/include.mk` | `lint build test e2e fmt ci pr commit license docs docs-build serve actionlint zizmor`, and `help`                 |
+| go                  | adds `tidy snapshot release fuzz`                                                                                  |
+| python              | adds `sync`                                                                                                        |
+| swift               | adds `resolve update snapshot release`                                                                             |
+| terraform           | adds `init plan apply`                                                                                             |
+| containers          | adds `publish update-allowlists mirror-add mirror-check mirror-upgrade mirror-validate mirror-lint mirror-publish` |
+| node                | adds nothing                                                                                                       |
 
 Any other target, including every repo-local task, forwards through the `.DEFAULT` catch-all. An unknown name gets
 mise's "no task" error.

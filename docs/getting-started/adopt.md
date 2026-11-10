@@ -92,6 +92,17 @@ The root `mise.toml` does four jobs:
     includes = [".mise/common/tasks.toml", ".mise/archetypes/terraform/tasks.toml"]
     ```
 
+=== "containers"
+
+    ```toml
+    # mise.toml — OCI artifacts published with patchy (a mirror store,
+    # images or Flux manifests); no [tools]: every pipeline tool is shared,
+    # and patchy reads its own patchy.yaml
+
+    [task_config]
+    includes = [".mise/common/tasks.toml", ".mise/archetypes/containers/tasks.toml"]
+    ```
+
 === "common only"
 
     ```toml

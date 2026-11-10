@@ -24,7 +24,8 @@ toolchain/                    # this repo == the consumer's .mise/ directory
 │   ├── node/                 #   package.json-script contract (npm/pnpm/bun)
 │   ├── python/               #   uv-native: ruff + pytest + uv build + zensical
 │   ├── swift/                #   SwiftPM: swift format + swift test + GoReleaser
-│   └── terraform/            #   init/plan/apply + tf fmt/lint/docs
+│   ├── terraform/            #   init/plan/apply + tf fmt/lint/docs
+│   └── containers/           #   patchy mirror + build: OCI artifacts, Flux manifests
 │       ├── tasks.toml        #   each archetype: its tasks + fmt/lint/ci/pr rollups
 │       ├── include.mk        #   its make shim (pulls in common/include.mk)
 │       └── scripts/          #   its task scripts
