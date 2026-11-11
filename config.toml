@@ -160,7 +160,7 @@ minimum_release_age_excludes = [
 "aqua:pnpm/pnpm" = { version = "12.18.0", lazy = true, lazy_bins = "pnpm" }
 "aqua:sigstore/cosign" = { version = "3.1.4", lazy = true, lazy_bins = "cosign" }
 "aqua:terraform-docs/terraform-docs" = { version = "0.24.0", lazy = true, lazy_bins = "terraform-docs" }
-"aqua:terraform-linters/tflint" = { version = "0.65.0", lazy = true, lazy_bins = "tflint" }
+"aqua:terraform-linters/tflint" = { version = "0.66.0", lazy = true, lazy_bins = "tflint" }
 "aqua:yannh/kubeconform" = { version = "0.8.0", lazy = true, lazy_bins = "kubeconform" }
 "github:bitwise-media-group/patchy" = { version = "v0.12.2", matching = "patchy-cli", lazy = true, lazy_bins = "patchy" }
 "github:controlplaneio-fluxcd/flux-operator" = { version = "v0.62.1", lazy = true, lazy_bins = "flux-operator" }
