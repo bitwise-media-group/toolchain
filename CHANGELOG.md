@@ -1,5 +1,15 @@
 # Changelog
 
+## [4.1.2](https://github.com/bitwise-media-group/toolchain/compare/v4.1.1...v4.1.2) (2026-11-11)
+
+
+### Bug Fixes
+
+* **deps:** lock file maintenance ([#235](https://github.com/bitwise-media-group/toolchain/issues/235)) ([2e80666](https://github.com/bitwise-media-group/toolchain/commit/2e8066686c25212f2eef74a7d93628babcc93fb8))
+* **deps:** update dependency aqua:terraform-linters/tflint to v0.66.0 ([#240](https://github.com/bitwise-media-group/toolchain/issues/240)) ([a7e2bde](https://github.com/bitwise-media-group/toolchain/commit/a7e2bde58f68a36b7ee1a6117dd8f1195625d782))
+* **deps:** update dependency github:bitwise-media-group/patchy to v0.12.2 ([083f458](https://github.com/bitwise-media-group/toolchain/commit/083f4587027ccc6380eaddc599b2383b0a2e55da))
+* update locks for markdownlint ([f22f254](https://github.com/bitwise-media-group/toolchain/commit/f22f2547124ee45cf8d2b0fe28b9028cd77cc7d6))
+
 ## [4.1.1](https://github.com/bitwise-media-group/toolchain/compare/v4.1.0...v4.1.1) (2026-11-11)
 
 
