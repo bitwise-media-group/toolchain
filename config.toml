@@ -162,7 +162,7 @@ minimum_release_age_excludes = [
 "aqua:terraform-docs/terraform-docs" = { version = "0.24.0", lazy = true, lazy_bins = "terraform-docs" }
 "aqua:terraform-linters/tflint" = { version = "0.65.0", lazy = true, lazy_bins = "tflint" }
 "aqua:yannh/kubeconform" = { version = "0.8.0", lazy = true, lazy_bins = "kubeconform" }
-"github:bitwise-media-group/patchy" = { version = "v0.12.0", matching = "patchy-cli", lazy = true, lazy_bins = "patchy" }
+"github:bitwise-media-group/patchy" = { version = "v0.12.1", matching = "patchy-cli", lazy = true, lazy_bins = "patchy" }
 "github:controlplaneio-fluxcd/flux-operator" = { version = "v0.62.1", lazy = true, lazy_bins = "flux-operator" }
 "aqua:docker/buildx" = { version = "0.38.2", postinstall = 'dir="${DOCKER_CONFIG:-$HOME/.docker}/cli-plugins" && mkdir -p "$dir" && ln -sf "$MISE_TOOL_INSTALL_PATH/docker-cli-plugin-docker-buildx" "$dir/docker-buildx"' }
 
