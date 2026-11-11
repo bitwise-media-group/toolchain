@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.1.1](https://github.com/bitwise-media-group/toolchain/compare/v4.1.0...v4.1.1) (2026-11-11)
+
+
+### Bug Fixes
+
+* **deps:** update dependency github:bitwise-media-group/patchy to v0.12.1 ([6417b94](https://github.com/bitwise-media-group/toolchain/commit/6417b940b502b362655edd1eae06fc3a782630fd))
+
 ## [4.1.0](https://github.com/bitwise-media-group/toolchain/compare/v4.0.0...v4.1.0) (2026-11-10)
 
 
