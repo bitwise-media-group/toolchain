@@ -3,39 +3,39 @@
 lockfile_version = 4
 
 [[tools."aqua:anchore/grype"]]
-version = "0.121.2"
+version = "0.121.3"
 backend = "aqua:anchore/grype"
-specifiers = ["0.121.2"]
+specifiers = ["0.121.3"]
 
 [tools."aqua:anchore/grype"."platforms.linux-arm64"]
-checksum = "sha256:d7d2e160255b0f087280feabf6f213cf4c45d475690f3f1fe5dc336eb1037bf0"
+checksum = "sha256:b7815598d48da78bfd16f5b98ef28e1bb09c03d34fc8c3e350f99b6ccb3c7cba"
 checksum_source = "mise-versions"
-url = "https://github.com/anchore/grype/releases/download/v0.121.2/grype_0.121.2_linux_arm64.tar.gz"
-url_api = "https://api.github.com/repos/anchore/grype/releases/assets/714864297"
+url = "https://github.com/anchore/grype/releases/download/v0.121.3/grype_0.121.3_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/anchore/grype/releases/assets/727934776"
 
 [tools."aqua:anchore/grype"."platforms.linux-arm64-musl"]
-checksum = "sha256:d7d2e160255b0f087280feabf6f213cf4c45d475690f3f1fe5dc336eb1037bf0"
+checksum = "sha256:b7815598d48da78bfd16f5b98ef28e1bb09c03d34fc8c3e350f99b6ccb3c7cba"
 checksum_source = "mise-versions"
-url = "https://github.com/anchore/grype/releases/download/v0.121.2/grype_0.121.2_linux_arm64.tar.gz"
-url_api = "https://api.github.com/repos/anchore/grype/releases/assets/714864297"
+url = "https://github.com/anchore/grype/releases/download/v0.121.3/grype_0.121.3_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/anchore/grype/releases/assets/727934776"
 
 [tools."aqua:anchore/grype"."platforms.linux-x64"]
-checksum = "sha256:9c8965ced9df657e5e851c14021bae838802f711edd7a48f9bc3c923a8d28f12"
+checksum = "sha256:e9da18cc1429e786722e32161288103600efffd8e483c90761f90485bd1bec85"
 checksum_source = "mise-versions"
-url = "https://github.com/anchore/grype/releases/download/v0.121.2/grype_0.121.2_linux_amd64.tar.gz"
-url_api = "https://api.github.com/repos/anchore/grype/releases/assets/714864298"
+url = "https://github.com/anchore/grype/releases/download/v0.121.3/grype_0.121.3_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/anchore/grype/releases/assets/727934779"
 
 [tools."aqua:anchore/grype"."platforms.linux-x64-musl"]
-checksum = "sha256:9c8965ced9df657e5e851c14021bae838802f711edd7a48f9bc3c923a8d28f12"
+checksum = "sha256:e9da18cc1429e786722e32161288103600efffd8e483c90761f90485bd1bec85"
 checksum_source = "mise-versions"
-url = "https://github.com/anchore/grype/releases/download/v0.121.2/grype_0.121.2_linux_amd64.tar.gz"
-url_api = "https://api.github.com/repos/anchore/grype/releases/assets/714864298"
+url = "https://github.com/anchore/grype/releases/download/v0.121.3/grype_0.121.3_linux_amd64.tar.gz"
+url_api = "https://api.github.com/repos/anchore/grype/releases/assets/727934779"
 
 [tools."aqua:anchore/grype"."platforms.macos-arm64"]
-checksum = "sha256:3633c113d81ec1460b0520e23633d72a25caae62875fd48a8b0e4f22dcc7c704"
+checksum = "sha256:54336f2cd8cdee8b3d8ea83462561ff7fa9293498054c7c53a193db44bfea4c8"
 checksum_source = "mise-versions"
-url = "https://github.com/anchore/grype/releases/download/v0.121.2/grype_0.121.2_darwin_arm64.tar.gz"
-url_api = "https://api.github.com/repos/anchore/grype/releases/assets/714864396"
+url = "https://github.com/anchore/grype/releases/download/v0.121.3/grype_0.121.3_darwin_arm64.tar.gz"
+url_api = "https://api.github.com/repos/anchore/grype/releases/assets/727934898"
 
 [[tools."aqua:anchore/syft"]]
 version = "1.57.0"
