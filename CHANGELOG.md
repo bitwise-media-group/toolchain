@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.1.3](https://github.com/bitwise-media-group/toolchain/compare/v4.1.2...v4.1.3) (2026-11-12)
+
+
+### Bug Fixes
+
+* **deps:** update patchy and other tools ([36d2cfc](https://github.com/bitwise-media-group/toolchain/commit/36d2cfcfd13d79a4994815f88b406756f359e0af))
+
 ## [4.1.2](https://github.com/bitwise-media-group/toolchain/compare/v4.1.1...v4.1.2) (2026-11-11)
 
 
