@@ -152,7 +152,7 @@ minimum_release_age_excludes = [
 "aqua:hadolint/hadolint" = { version = "2.15.1", lazy = true, lazy_bins = "hadolint" }
 "aqua:hashicorp/terraform" = { version = "1.17.1", lazy = true, lazy_bins = "terraform" }
 "aqua:helm/helm" = { version = "4.3.1", lazy = true, lazy_bins = "helm" }
-"aqua:jdx/fnox" = { version = "1.47.0", lazy = true, lazy_bins = "fnox" }
+"aqua:jdx/fnox" = { version = "1.48.0", lazy = true, lazy_bins = "fnox" }
 "aqua:kubernetes-sigs/kustomize" = { version = "5.8.3", lazy = true, lazy_bins = ["kustomize"] }
 "aqua:kubescape/kubescape" = { version = "4.0.20", lazy = true, lazy_bins = "kubescape" }
 "aqua:mikefarah/yq" = { version = "4.54.3", lazy = true, lazy_bins = ["yq"] }
