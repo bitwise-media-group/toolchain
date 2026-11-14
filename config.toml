@@ -163,7 +163,7 @@ minimum_release_age_excludes = [
 "aqua:yannh/kubeconform" = { version = "0.8.0", lazy = true, lazy_bins = "kubeconform" }
 "github:bitwise-media-group/patchy" = { version = "v0.12.4", matching = "patchy-cli", lazy = true, lazy_bins = ["patchy"] }
 "github:controlplaneio-fluxcd/flux-operator" = { version = "v0.62.1", lazy = true, lazy_bins = "flux-operator" }
-"aqua:docker/buildx" = { version = "0.38.2", postinstall = 'dir="${DOCKER_CONFIG:-$HOME/.docker}/cli-plugins" && mkdir -p "$dir" && ln -sf "$MISE_TOOL_INSTALL_PATH/docker-cli-plugin-docker-buildx" "$dir/docker-buildx"' }
+"aqua:docker/buildx" = { version = "0.39.0", postinstall = 'dir="${DOCKER_CONFIG:-$HOME/.docker}/cli-plugins" && mkdir -p "$dir" && ln -sf "$MISE_TOOL_INSTALL_PATH/docker-cli-plugin-docker-buildx" "$dir/docker-buildx"' }
 go = { version = "1.27.4", lazy = true }
 
 # Structural per-repo knobs, referenced as {{vars.name}} in the task files.
