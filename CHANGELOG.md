@@ -1,5 +1,17 @@
 # Changelog
 
+## [4.1.4](https://github.com/bitwise-media-group/toolchain/compare/v4.1.3...v4.1.4) (2026-11-14)
+
+
+### Bug Fixes
+
+* **deps:** update dependency aqua:anchore/grype to v0.121.3 ([#245](https://github.com/bitwise-media-group/toolchain/issues/245)) ([20673f3](https://github.com/bitwise-media-group/toolchain/commit/20673f37e3e675c5b9bc996ad08b533898fec072))
+* **deps:** update dependency aqua:anchore/syft to v1.57.1 ([#246](https://github.com/bitwise-media-group/toolchain/issues/246)) ([96e9367](https://github.com/bitwise-media-group/toolchain/commit/96e9367ac02b577e29ea72175550951b0724df14))
+* **deps:** update dependency aqua:goreleaser/goreleaser to v2.20.1 ([#249](https://github.com/bitwise-media-group/toolchain/issues/249)) ([75aaf1d](https://github.com/bitwise-media-group/toolchain/commit/75aaf1dd5c7b4b096be5625fe6758405e0c88890))
+* **deps:** update dependency aqua:jdx/fnox to v1.48.0 ([#247](https://github.com/bitwise-media-group/toolchain/issues/247)) ([5288687](https://github.com/bitwise-media-group/toolchain/commit/52886873e888fd7fb293d7938d13527764eeee94))
+* **deps:** update dependency aqua:pnpm/pnpm to v12.19.0 ([#248](https://github.com/bitwise-media-group/toolchain/issues/248)) ([7b68542](https://github.com/bitwise-media-group/toolchain/commit/7b6854237b5f24ae2df6bf8a59acd24e01465525))
+* **deps:** update dependency github:bitwise-media-group/patchy to v0.12.4 ([#238](https://github.com/bitwise-media-group/toolchain/issues/238)) ([56cb52c](https://github.com/bitwise-media-group/toolchain/commit/56cb52c73fb0713d1f827598dd460350a1638e46))
+
 ## [4.1.3](https://github.com/bitwise-media-group/toolchain/compare/v4.1.2...v4.1.3) (2026-11-12)
 
 
