@@ -147,7 +147,7 @@ minimum_release_age_excludes = [
 "aqua:golangci/golangci-lint" = { version = "2.15.0", lazy = true, lazy_bins = "golangci-lint" }
 "aqua:google/go-containerregistry" = { version = "0.22.1", lazy = true, lazy_bins = "crane" }
 "aqua:google/osv-scanner" = { version = "2.7.1", lazy = true, lazy_bins = ["osv-scanner"] }
-"aqua:goreleaser/goreleaser" = { version = "2.20.0", lazy = true, lazy_bins = "goreleaser" }
+"aqua:goreleaser/goreleaser" = { version = "2.20.1", lazy = true, lazy_bins = "goreleaser" }
 "aqua:gotestyourself/gotestsum" = { version = "1.13.0", lazy = true, lazy_bins = "gotestsum" }
 "aqua:hadolint/hadolint" = { version = "2.15.1", lazy = true, lazy_bins = "hadolint" }
 "aqua:hashicorp/terraform" = { version = "1.17.1", lazy = true, lazy_bins = "terraform" }
