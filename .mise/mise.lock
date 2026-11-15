@@ -970,10 +970,10 @@ checksum = "sha256:91a44a2b8a716600ad94a4f143e156116620db8828086a6e3602291be9bd0
 url = "https://dl.google.com/go/go1.27.4.darwin-arm64.tar.gz"
 
 [[tools."npm:markdownlint-cli2"]]
-version = "0.24.0"
-aube = { path = "locks/npm-markdownlint-cli2/0.24.0", digest = "sha256:a0011c3d108f98555e9459eece07e5d9115965a7913a8f0c94c1ef68a95da3e5" }
+version = "0.24.1"
+aube = { path = "locks/npm-markdownlint-cli2/0.24.1", digest = "sha256:6737143ae7b051a66903dc3736b592c8d9c2bc14ea0e67c82cad855dd2506792" }
 backend = "npm:markdownlint-cli2"
-specifiers = ["0.24.0"]
+specifiers = ["0.24.1"]
 
 [[tools.python]]
 version = "3.15.2"
