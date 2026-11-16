@@ -154,7 +154,7 @@ minimum_release_age_excludes = [
 "aqua:helm/helm" = { version = "4.3.2", lazy = true, lazy_bins = "helm" }
 "aqua:jdx/fnox" = { version = "1.48.0", lazy = true, lazy_bins = "fnox" }
 "aqua:kubernetes-sigs/kustomize" = { version = "5.8.3", lazy = true, lazy_bins = ["kustomize"] }
-"aqua:kubescape/kubescape" = { version = "4.0.20", lazy = true, lazy_bins = "kubescape" }
+"aqua:kubescape/kubescape" = { version = "4.0.21", lazy = true, lazy_bins = "kubescape" }
 "aqua:mikefarah/yq" = { version = "4.54.3", lazy = true, lazy_bins = ["yq"] }
 "aqua:pnpm/pnpm" = { version = "12.20.0", lazy = true, lazy_bins = "pnpm" }
 "aqua:sigstore/cosign" = { version = "3.1.4", lazy = true, lazy_bins = "cosign" }
