@@ -10,7 +10,7 @@ unconditionally.
 | [prose](#prose)                               | every `*.md`                        | always                  | any finding             |
 | [workflows](#github-actions-workflows)        | `.github/workflows`                 | the directory exists    | zizmor `low` and up     |
 | [docker](#containers-and-deploy-manifests)    | root `Dockerfile`, `Dockerfile.*`   | a Dockerfile exists     | grype `high` and up     |
-| [helm](#containers-and-deploy-manifests)      | `helm/*/Chart.yaml`                 | a chart exists          | kubescape `high` and up |
+| [helm](#containers-and-deploy-manifests)      | `helm/*/`, `charts/*/` `Chart.yaml` | a chart exists          | kubescape `high` and up |
 | [kustomize](#containers-and-deploy-manifests) | `kustomization.yaml` directories    | a kustomization exists  | kubescape `high` and up |
 | [shell](#shell-scripts)                       | `*.sh` under `scripts/` and `hack/` | either directory exists | any shellcheck finding  |
 
@@ -111,8 +111,10 @@ meaning a newer base would fix it, is actionable enough to gate on.
 
 ### Helm charts
 
-`lint-helm` finds every chart at `helm/*/Chart.yaml` and runs `helm lint`, then a **kubescape** misconfiguration scan.
-kubescape renders the chart natively with its default values.
+`lint-helm` finds every chart at `helm/*/Chart.yaml` or `charts/*/Chart.yaml` and runs `helm lint`, then a **kubescape**
+misconfiguration scan. kubescape renders the chart natively with its default values. A chart whose defaults render
+nothing kubescape can scan (only custom resources, or nothing until values opt in) still gets `helm lint`, and its scan
+is reported as skipped instead of failing.
 
 ### Kustomizations
 

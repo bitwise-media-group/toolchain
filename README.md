@@ -311,16 +311,17 @@ scripts also accept the old spellings (`APP`, `APP_PKG`, …) from the environme
   `lint` runs runtime-detected passes (scripts in `common/scripts/`) that no-op silently when a repo has none of the
   artifacts. A root `Dockerfile`/`Dockerfile.*` gets hadolint plus a grype vulnerability scan of the external base
   images named in its `FROM` lines (pulled straight from the registry — no docker daemon; build-stage aliases,
-  `scratch`, and unresolvable `${ARG}` refs are skipped, simple `ARG` defaults resolved). Each `helm/*/Chart.yaml` chart
-  gets `helm lint` plus a kubescape misconfiguration scan; every `kustomization.yaml`/`.yml` directory gets a kubescape
-  scan (`kind: Component` dirs are skipped — they only build through an overlay). Any `*.sh` under `scripts/` or `hack/`
-  gets shellcheck. Gates fail at **high** severity by default (`grype_fail_on` / `kubescape_severity` in `[vars]`);
-  grype passes `--only-fixed`, so only vulnerabilities an updated base image would fix break the build. Repos silence
-  accepted findings with their own `.grype.yaml` / `.hadolint.yaml` (auto-loaded by the tools from the repo root) or a
-  `.kubescape/exceptions.json` (passed as `--exceptions`). hadolint fails on any warning by default — use inline
-  `# hadolint ignore=…` comments or `.hadolint.yaml`. First run on a machine downloads grype's vulnerability database
-  (~200 MB, cached in `~/.cache/grype`) and kubescape's controls artifacts (`~/.kubescape`), so it needs network; the
-  scans never contact a Kubernetes cluster (`KUBECONFIG` is pointed at nothing).
+  `scratch`, and unresolvable `${ARG}` refs are skipped, simple `ARG` defaults resolved). Each `helm/*/Chart.yaml` or
+  `charts/*/Chart.yaml` chart gets `helm lint` plus a kubescape misconfiguration scan; every `kustomization.yaml`/`.yml`
+  directory gets a kubescape scan (`kind: Component` dirs are skipped — they only build through an overlay). Any `*.sh`
+  under `scripts/` or `hack/` gets shellcheck. Gates fail at **high** severity by default (`grype_fail_on` /
+  `kubescape_severity` in `[vars]`); grype passes `--only-fixed`, so only vulnerabilities an updated base image would
+  fix break the build. Repos silence accepted findings with their own `.grype.yaml` / `.hadolint.yaml` (auto-loaded by
+  the tools from the repo root) or a `.kubescape/exceptions.json` (passed as `--exceptions`). hadolint fails on any
+  warning by default — use inline `# hadolint ignore=…` comments or `.hadolint.yaml`. First run on a machine downloads
+  grype's vulnerability database (~200 MB, cached in `~/.cache/grype`) and kubescape's controls artifacts
+  (`~/.kubescape`), so it needs network; the scans never contact a Kubernetes cluster (`KUBECONFIG` is pointed at
+  nothing).
 - **This repo's own layout is inverted**: `config.toml`, `common/` and `archetypes/` sit at the root (it _is_ the
   consumer's `.mise/`), the dogfood include lives in `.config/mise.toml`, and `.mise/` here contains symlinks back to
   the root entries so mise resolves tools and scripts the same way it does in a consumer. The dogfood includes `common`
