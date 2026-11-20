@@ -1,5 +1,30 @@
 # Changelog
 
+## [4.2.0](https://github.com/bitwise-media-group/toolchain/compare/v4.1.4...v4.2.0) (2026-11-20)
+
+
+### Features
+
+* **lint:** scan Helm charts under charts/ as well as helm/ ([5155b6b](https://github.com/bitwise-media-group/toolchain/commit/5155b6b1b80d36581b9671be6413344da06ad8ea))
+
+
+### Bug Fixes
+
+* **deps:** lock file maintenance ([#262](https://github.com/bitwise-media-group/toolchain/issues/262)) ([0900b2c](https://github.com/bitwise-media-group/toolchain/commit/0900b2cf74af0538316ceb3d0f75c4d81cbb7444))
+* **deps:** update dependency aqua:anchore/grype to v0.122.0 ([#264](https://github.com/bitwise-media-group/toolchain/issues/264)) ([2155902](https://github.com/bitwise-media-group/toolchain/commit/215590209c8e0617c53375012f950c3ee736fe57))
+* **deps:** update dependency aqua:anchore/syft to v1.57.2 ([#263](https://github.com/bitwise-media-group/toolchain/issues/263)) ([6a08868](https://github.com/bitwise-media-group/toolchain/commit/6a08868970e958c48cd89e033923e99b11a5c841))
+* **deps:** update dependency aqua:astral-sh/uv to v0.13.8 ([#257](https://github.com/bitwise-media-group/toolchain/issues/257)) ([04ff97f](https://github.com/bitwise-media-group/toolchain/commit/04ff97fdea98c3ddae6e5bb3ed740e69de35b86a))
+* **deps:** update dependency aqua:docker/buildx to v0.39.0 ([#251](https://github.com/bitwise-media-group/toolchain/issues/251)) ([95a62da](https://github.com/bitwise-media-group/toolchain/commit/95a62da4bc02b163f92a13df2a191933444194d5))
+* **deps:** update dependency aqua:goreleaser/goreleaser to v2.20.2 ([#255](https://github.com/bitwise-media-group/toolchain/issues/255)) ([ba40527](https://github.com/bitwise-media-group/toolchain/commit/ba40527d0615966c987629032f55a01825bb73c0))
+* **deps:** update dependency aqua:helm/helm to v4.3.2 ([#258](https://github.com/bitwise-media-group/toolchain/issues/258)) ([d2e7603](https://github.com/bitwise-media-group/toolchain/commit/d2e76039b609ad7dd672fdf6311fd62e406938bd))
+* **deps:** update dependency aqua:jdx/fnox to v1.49.0 ([#265](https://github.com/bitwise-media-group/toolchain/issues/265)) ([579ea56](https://github.com/bitwise-media-group/toolchain/commit/579ea56dc3ed2598008919c0eb526ba8cb33c7b7))
+* **deps:** update dependency aqua:kubescape/kubescape to v4.0.21 ([#259](https://github.com/bitwise-media-group/toolchain/issues/259)) ([31b7f75](https://github.com/bitwise-media-group/toolchain/commit/31b7f75daa6197b276647119b785f455755e8e42))
+* **deps:** update dependency aqua:pnpm/pnpm to v12.20.0 ([#253](https://github.com/bitwise-media-group/toolchain/issues/253)) ([378904e](https://github.com/bitwise-media-group/toolchain/commit/378904ed2ae9670ca3313b29ee2baecfda643a61))
+* **deps:** update dependency aqua:pnpm/pnpm to v12.21.0 ([#261](https://github.com/bitwise-media-group/toolchain/issues/261)) ([1d23d0b](https://github.com/bitwise-media-group/toolchain/commit/1d23d0bf87f67d457a818a64bac7573e8d1bd4cc))
+* **deps:** update dependency aqua:terraform-docs/terraform-docs to v0.25.1 ([#256](https://github.com/bitwise-media-group/toolchain/issues/256)) ([d5bfe78](https://github.com/bitwise-media-group/toolchain/commit/d5bfe780ffefa0dd1c2a39e0b631ebd2f15353e5))
+* **deps:** update dependency github:bitwise-media-group/patchy to v0.13.0 ([#232](https://github.com/bitwise-media-group/toolchain/issues/232)) ([d2731e0](https://github.com/bitwise-media-group/toolchain/commit/d2731e03afda0459dc4612414030fe624c1a33d4))
+* **deps:** update dependency npm:markdownlint-cli2 to v0.24.1 ([#254](https://github.com/bitwise-media-group/toolchain/issues/254)) ([1f8bd51](https://github.com/bitwise-media-group/toolchain/commit/1f8bd511b96428187110cd90455e0dc0f6bd9476))
+
 ## [4.1.4](https://github.com/bitwise-media-group/toolchain/compare/v4.1.3...v4.1.4) (2026-11-14)
 
 
