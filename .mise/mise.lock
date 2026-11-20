@@ -946,7 +946,7 @@ url = "https://dl.google.com/go/go1.27.4.darwin-arm64.tar.gz"
 
 [[tools."npm:markdownlint-cli2"]]
 version = "0.24.1"
-aube = { path = "locks/npm-markdownlint-cli2/0.24.1", digest = "sha256:6737143ae7b051a66903dc3736b592c8d9c2bc14ea0e67c82cad855dd2506792" }
+aube = { path = "locks/npm-markdownlint-cli2/0.24.1", digest = "sha256:97418abec0a8de4ca28d2ffc156b7c59183a36225c0913917c4bd832054eba30" }
 backend = "npm:markdownlint-cli2"
 specifiers = ["0.24.1"]
 
