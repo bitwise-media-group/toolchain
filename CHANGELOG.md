@@ -1,5 +1,18 @@
 # Changelog
 
+## [4.2.1](https://github.com/bitwise-media-group/toolchain/compare/v4.2.0...v4.2.1) (2026-11-21)
+
+
+### Bug Fixes
+
+* **deps:** lock file maintenance ([#267](https://github.com/bitwise-media-group/toolchain/issues/267)) ([d695c6a](https://github.com/bitwise-media-group/toolchain/commit/d695c6a3b30c6f80e21ba2a46ba4cc33f521f43e))
+* **deps:** lock file maintenance ([#272](https://github.com/bitwise-media-group/toolchain/issues/272)) ([bee51b2](https://github.com/bitwise-media-group/toolchain/commit/bee51b22f4c5aa1daad88607a220ac68bf3e9341))
+* **deps:** lock file maintenance ([#273](https://github.com/bitwise-media-group/toolchain/issues/273)) ([f2b347b](https://github.com/bitwise-media-group/toolchain/commit/f2b347bf7038915ccee757374f71de5f90181c73))
+* **deps:** update dependency aqua:astral-sh/uv to v0.13.9 ([#269](https://github.com/bitwise-media-group/toolchain/issues/269)) ([ece2a89](https://github.com/bitwise-media-group/toolchain/commit/ece2a89baf6498b9ad4dc5da19d69e30b24b716e))
+* **deps:** update dependency aqua:jdx/fnox to v1.50.0 ([#274](https://github.com/bitwise-media-group/toolchain/issues/274)) ([759cdd0](https://github.com/bitwise-media-group/toolchain/commit/759cdd068e0823754565500249a639e1a4758ec8))
+* **deps:** update dependency aqua:pnpm/pnpm to v12.22.0 ([#271](https://github.com/bitwise-media-group/toolchain/issues/271)) ([665a966](https://github.com/bitwise-media-group/toolchain/commit/665a9660b45f50b0065fd18d759c5f9cce2c5f77))
+* **deps:** update dependency github:bitwise-media-group/patchy to v0.14.0 ([#270](https://github.com/bitwise-media-group/toolchain/issues/270)) ([936d7b9](https://github.com/bitwise-media-group/toolchain/commit/936d7b9965f85c800b610dfc1509ab5652f97047))
+
 ## [4.2.0](https://github.com/bitwise-media-group/toolchain/compare/v4.1.4...v4.2.0) (2026-11-20)
 
 
