@@ -398,9 +398,39 @@ checksum = "sha256:6f3421de3a8cc2ac578c8cfb33b8edde290dde2871bc1bab12e24f2e5caea
 url = "https://get.helm.sh/helm-v4.3.2-darwin-arm64.tar.gz"
 
 [[tools."aqua:jdx/fnox"]]
-version = "1.49.0"
+version = "1.50.0"
 backend = "aqua:jdx/fnox"
-specifiers = ["1.49.0"]
+specifiers = ["1.50.0"]
+
+[tools."aqua:jdx/fnox"."platforms.linux-arm64"]
+checksum = "sha256:605b3f5fdd8cf4806d7be63ca4ef52c6fa26d86ac7c97a04a3263daf990233dd"
+checksum_source = "mise-versions"
+url = "https://github.com/jdx/fnox/releases/download/v1.50.0/fnox-aarch64-unknown-linux-gnu.tar.gz"
+url_api = "https://api.github.com/repos/jdx/fnox/releases/assets/762180636"
+
+[tools."aqua:jdx/fnox"."platforms.linux-arm64-musl"]
+checksum = "sha256:6dd97b15ca535e52813ad01f4e6e14e0b630fcd18cfaf439a8b9dd76ffd74e85"
+checksum_source = "mise-versions"
+url = "https://github.com/jdx/fnox/releases/download/v1.50.0/fnox-aarch64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/jdx/fnox/releases/assets/762180651"
+
+[tools."aqua:jdx/fnox"."platforms.linux-x64"]
+checksum = "sha256:f08da606e120c676fc3a4f3def970a4ade82e3857841a3961afbdd337a88e30b"
+checksum_source = "mise-versions"
+url = "https://github.com/jdx/fnox/releases/download/v1.50.0/fnox-x86_64-unknown-linux-gnu.tar.gz"
+url_api = "https://api.github.com/repos/jdx/fnox/releases/assets/762180807"
+
+[tools."aqua:jdx/fnox"."platforms.linux-x64-musl"]
+checksum = "sha256:3ad4c13244cd9fb6ae45931cc22f876a3ee8608a0fcc7e429c2f890ff6d7da18"
+checksum_source = "mise-versions"
+url = "https://github.com/jdx/fnox/releases/download/v1.50.0/fnox-x86_64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/jdx/fnox/releases/assets/762180821"
+
+[tools."aqua:jdx/fnox"."platforms.macos-arm64"]
+checksum = "sha256:cf8301a5355c3249284b4102c871b0c4b5e5924cd7b61397f7539f4328041eff"
+checksum_source = "mise-versions"
+url = "https://github.com/jdx/fnox/releases/download/v1.50.0/fnox-aarch64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/jdx/fnox/releases/assets/762180647"
 
 [[tools."aqua:koalaman/shellcheck"]]
 version = "0.11.0"
