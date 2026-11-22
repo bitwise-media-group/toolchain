@@ -108,39 +108,39 @@ url_api = "https://api.github.com/repos/astral-sh/uv/releases/assets/758513631"
 provenance = "github-attestations"
 
 [[tools."aqua:docker/buildx"]]
-version = "0.39.0"
+version = "0.39.1"
 backend = "aqua:docker/buildx"
-specifiers = ["0.39.0"]
+specifiers = ["0.39.1"]
 
 [tools."aqua:docker/buildx"."platforms.linux-arm64"]
-checksum = "sha256:722cdcdfdd6f3fb943fa1ba75102d057feb18ba72aab93b1b0a8cf2b2b48a25f"
-url = "https://github.com/docker/buildx/releases/download/v0.39.0/buildx-v0.39.0.linux-arm64"
-url_api = "https://api.github.com/repos/docker/buildx/releases/assets/736606975"
+checksum = "sha256:05c88e0f9152825e609a1cdb391faf14d5f94d23d071eaecb87bae69d98da8b8"
+url = "https://github.com/docker/buildx/releases/download/v0.39.1/buildx-v0.39.1.linux-arm64"
+url_api = "https://api.github.com/repos/docker/buildx/releases/assets/769011475"
 provenance = "cosign"
 
 [tools."aqua:docker/buildx"."platforms.linux-arm64-musl"]
-checksum = "sha256:722cdcdfdd6f3fb943fa1ba75102d057feb18ba72aab93b1b0a8cf2b2b48a25f"
-url = "https://github.com/docker/buildx/releases/download/v0.39.0/buildx-v0.39.0.linux-arm64"
-url_api = "https://api.github.com/repos/docker/buildx/releases/assets/736606975"
+checksum = "sha256:05c88e0f9152825e609a1cdb391faf14d5f94d23d071eaecb87bae69d98da8b8"
+url = "https://github.com/docker/buildx/releases/download/v0.39.1/buildx-v0.39.1.linux-arm64"
+url_api = "https://api.github.com/repos/docker/buildx/releases/assets/769011475"
 provenance = "cosign"
 
 [tools."aqua:docker/buildx"."platforms.linux-x64"]
-checksum = "sha256:5fb31a097304fbf6dd4038649a0decf32c2b9510e4047acd7d68b9d700c46194"
-url = "https://github.com/docker/buildx/releases/download/v0.39.0/buildx-v0.39.0.linux-amd64"
-url_api = "https://api.github.com/repos/docker/buildx/releases/assets/736607008"
+checksum = "sha256:903090816da68f8bc1a2ff5346dd163a5adacfce4548d003c75df42cd47a9bf4"
+url = "https://github.com/docker/buildx/releases/download/v0.39.1/buildx-v0.39.1.linux-amd64"
+url_api = "https://api.github.com/repos/docker/buildx/releases/assets/769011482"
 provenance = "cosign"
 
 [tools."aqua:docker/buildx"."platforms.linux-x64-musl"]
-checksum = "sha256:5fb31a097304fbf6dd4038649a0decf32c2b9510e4047acd7d68b9d700c46194"
-url = "https://github.com/docker/buildx/releases/download/v0.39.0/buildx-v0.39.0.linux-amd64"
-url_api = "https://api.github.com/repos/docker/buildx/releases/assets/736607008"
+checksum = "sha256:903090816da68f8bc1a2ff5346dd163a5adacfce4548d003c75df42cd47a9bf4"
+url = "https://github.com/docker/buildx/releases/download/v0.39.1/buildx-v0.39.1.linux-amd64"
+url_api = "https://api.github.com/repos/docker/buildx/releases/assets/769011482"
 provenance = "cosign"
 
 [tools."aqua:docker/buildx"."platforms.macos-arm64"]
-checksum = "sha256:0190e4b9c85510974290f9a597e86c4d8200be782aeaa3df7d756ab4423d6b2d"
+checksum = "sha256:7a7f10602f0826d36b046e8db012b4cbfaa4ba56f9d2a5d374fe5bb7ae864fc4"
 checksum_source = "mise-versions"
-url = "https://github.com/docker/buildx/releases/download/v0.39.0/buildx-v0.39.0.darwin-arm64"
-url_api = "https://api.github.com/repos/docker/buildx/releases/assets/737261062"
+url = "https://github.com/docker/buildx/releases/download/v0.39.1/buildx-v0.39.1.darwin-arm64"
+url_api = "https://api.github.com/repos/docker/buildx/releases/assets/769871902"
 
 [[tools."aqua:golangci/golangci-lint"]]
 version = "2.15.0"
