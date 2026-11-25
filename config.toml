@@ -140,7 +140,7 @@ minimum_release_age_excludes = [
 
 "aqua:koalaman/shellcheck" = "0.11.0"
 "aqua:rhysd/actionlint" = "1.7.12"
-"aqua:zizmorcore/zizmor" = "1.32.0"
+"aqua:zizmorcore/zizmor" = "1.33.1"
 "aqua:anchore/grype" = { version = "0.122.1", lazy = true, lazy_bins = "grype" }
 "aqua:anchore/syft" = { version = "1.57.2", lazy = true, lazy_bins = "syft" }
 "aqua:astral-sh/uv" = { version = "0.13.9", lazy = true, lazy_bins = "uv" }
