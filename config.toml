@@ -157,7 +157,7 @@ minimum_release_age_excludes = [
 "aqua:kubescape/kubescape" = { version = "4.0.21", lazy = true, lazy_bins = "kubescape" }
 "aqua:mikefarah/yq" = { version = "4.54.3", lazy = true, lazy_bins = ["yq"] }
 "aqua:pnpm/pnpm" = { version = "12.23.0", lazy = true, lazy_bins = "pnpm" }
-"aqua:sigstore/cosign" = { version = "3.1.4", lazy = true, lazy_bins = "cosign" }
+"aqua:sigstore/cosign" = { version = "3.1.5", lazy = true, lazy_bins = "cosign" }
 "aqua:terraform-docs/terraform-docs" = { version = "0.25.1", lazy = true, lazy_bins = "terraform-docs" }
 "aqua:terraform-linters/tflint" = { version = "0.66.0", lazy = true, lazy_bins = "tflint" }
 "aqua:yannh/kubeconform" = { version = "0.8.0", lazy = true, lazy_bins = "kubeconform" }
