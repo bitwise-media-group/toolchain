@@ -1,5 +1,34 @@
 # Changelog
 
+## [4.2.1](https://github.com/bitwise-media-group/toolchain/compare/v4.2.0...v4.2.1) (2026-11-28)
+
+
+### Bug Fixes
+
+* **deps:** lock file maintenance ([#267](https://github.com/bitwise-media-group/toolchain/issues/267)) ([d695c6a](https://github.com/bitwise-media-group/toolchain/commit/d695c6a3b30c6f80e21ba2a46ba4cc33f521f43e))
+* **deps:** lock file maintenance ([#272](https://github.com/bitwise-media-group/toolchain/issues/272)) ([bee51b2](https://github.com/bitwise-media-group/toolchain/commit/bee51b22f4c5aa1daad88607a220ac68bf3e9341))
+* **deps:** lock file maintenance ([#273](https://github.com/bitwise-media-group/toolchain/issues/273)) ([f2b347b](https://github.com/bitwise-media-group/toolchain/commit/f2b347bf7038915ccee757374f71de5f90181c73))
+* **deps:** lock file maintenance ([#285](https://github.com/bitwise-media-group/toolchain/issues/285)) ([4fd1e57](https://github.com/bitwise-media-group/toolchain/commit/4fd1e57af3060cf49d31c211b5ceeaf95669ab52))
+* **deps:** lock file maintenance ([#290](https://github.com/bitwise-media-group/toolchain/issues/290)) ([9257bdc](https://github.com/bitwise-media-group/toolchain/commit/9257bdc35fc2df73589ad0f5c140ab3a7596aaee))
+* **deps:** lock file maintenance ([#292](https://github.com/bitwise-media-group/toolchain/issues/292)) ([ba3cf20](https://github.com/bitwise-media-group/toolchain/commit/ba3cf205ee624a2dd8222aeb12e9a2d34ec81019))
+* **deps:** update dependency aqua:anchore/grype to v0.122.1 ([#275](https://github.com/bitwise-media-group/toolchain/issues/275)) ([4555ca7](https://github.com/bitwise-media-group/toolchain/commit/4555ca7631a4f761b505ab88940b0f25db0c3db5))
+* **deps:** update dependency aqua:astral-sh/uv to v0.13.10 ([#291](https://github.com/bitwise-media-group/toolchain/issues/291)) ([4fcede4](https://github.com/bitwise-media-group/toolchain/commit/4fcede47ee4dbcc133b2506499436caf765fe909))
+* **deps:** update dependency aqua:astral-sh/uv to v0.13.9 ([#269](https://github.com/bitwise-media-group/toolchain/issues/269)) ([ece2a89](https://github.com/bitwise-media-group/toolchain/commit/ece2a89baf6498b9ad4dc5da19d69e30b24b716e))
+* **deps:** update dependency aqua:docker/buildx to v0.39.1 ([#277](https://github.com/bitwise-media-group/toolchain/issues/277)) ([5dfefa4](https://github.com/bitwise-media-group/toolchain/commit/5dfefa4e81ddac55947f49d639cc3344c16f9a4b))
+* **deps:** update dependency aqua:goreleaser/goreleaser to v2.20.3 ([#279](https://github.com/bitwise-media-group/toolchain/issues/279)) ([f25ea64](https://github.com/bitwise-media-group/toolchain/commit/f25ea64b5e2c16782bb5f51a7eb9bc8c651d9fca))
+* **deps:** update dependency aqua:jdx/fnox to v1.50.0 ([#274](https://github.com/bitwise-media-group/toolchain/issues/274)) ([759cdd0](https://github.com/bitwise-media-group/toolchain/commit/759cdd068e0823754565500249a639e1a4758ec8))
+* **deps:** update dependency aqua:pnpm/pnpm to v12.22.0 ([#271](https://github.com/bitwise-media-group/toolchain/issues/271)) ([665a966](https://github.com/bitwise-media-group/toolchain/commit/665a9660b45f50b0065fd18d759c5f9cce2c5f77))
+* **deps:** update dependency aqua:pnpm/pnpm to v12.23.0 ([#283](https://github.com/bitwise-media-group/toolchain/issues/283)) ([9ab748c](https://github.com/bitwise-media-group/toolchain/commit/9ab748c809275d6ee68de77f541d390cb627a072))
+* **deps:** update dependency aqua:sigstore/cosign to v3.1.5 ([#287](https://github.com/bitwise-media-group/toolchain/issues/287)) ([a795328](https://github.com/bitwise-media-group/toolchain/commit/a79532859451f9641a77811d46217d5f6597b773))
+* **deps:** update dependency aqua:zizmorcore/zizmor to v1.33.1 ([#284](https://github.com/bitwise-media-group/toolchain/issues/284)) ([d46eb82](https://github.com/bitwise-media-group/toolchain/commit/d46eb82516a2fe87bf7ad19f1cebd7546279db65))
+* **deps:** update dependency github:bitwise-media-group/patchy to v0.14.0 ([#270](https://github.com/bitwise-media-group/toolchain/issues/270)) ([936d7b9](https://github.com/bitwise-media-group/toolchain/commit/936d7b9965f85c800b610dfc1509ab5652f97047))
+* **deps:** update dependency github:bitwise-media-group/patchy to v0.14.1 ([#278](https://github.com/bitwise-media-group/toolchain/issues/278)) ([3df696b](https://github.com/bitwise-media-group/toolchain/commit/3df696b74feace162501e72a05ab62c0112a4bb4))
+* **deps:** update dependency github:bitwise-media-group/patchy to v0.15.0 ([#286](https://github.com/bitwise-media-group/toolchain/issues/286)) ([2c8c8c0](https://github.com/bitwise-media-group/toolchain/commit/2c8c8c011518424c8cb4f64a3e92b5f56956ef63))
+* **deps:** update dependency github:bitwise-media-group/patchy to v0.16.0 ([#289](https://github.com/bitwise-media-group/toolchain/issues/289)) ([604f269](https://github.com/bitwise-media-group/toolchain/commit/604f269f60dfe07e4080e9d1d14b799d9ab47621))
+* **deps:** update dependency github:controlplaneio-fluxcd/flux-operator to v0.63.0 ([#281](https://github.com/bitwise-media-group/toolchain/issues/281)) ([c765279](https://github.com/bitwise-media-group/toolchain/commit/c76527934eebcc4994349b60e58564d5832e03e3))
+* **deps:** update dependency github:controlplaneio-fluxcd/flux-operator to v0.63.1 ([#282](https://github.com/bitwise-media-group/toolchain/issues/282)) ([7ca8cfe](https://github.com/bitwise-media-group/toolchain/commit/7ca8cfed3d2c8a8b4a1844586cf5d3e80b83cc2f))
+* **deps:** update dependency npm:markdownlint-cli2 to v0.24.2 ([#280](https://github.com/bitwise-media-group/toolchain/issues/280)) ([849111e](https://github.com/bitwise-media-group/toolchain/commit/849111e0ad0fa310cc6dcfd8930f3f56d29f51fc))
+
 ## [4.2.0](https://github.com/bitwise-media-group/toolchain/compare/v4.1.4...v4.2.0) (2026-11-20)
 
 
